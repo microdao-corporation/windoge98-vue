@@ -23,6 +23,10 @@ const activateWindow = (windowNumber: number) => {
   console.log("Activating window " + windowNumber);
   activeWindow.value = windowNumber;
 };
+
+const zIndexForWindow = (windowNumber: number) => {
+  return activeWindow.value === windowNumber ? 100 : 1;
+};
 </script>
 
 <template>
@@ -31,6 +35,7 @@ const activateWindow = (windowNumber: number) => {
       class="responsive-container"
       :active="activeWindow == 1"
       @activated="activateWindow(1)"
+      :style="{ zIndex: zIndexForWindow(1) }"
       :w="600"
       :h="520"
       :minw="minWidth"
@@ -46,6 +51,8 @@ const activateWindow = (windowNumber: number) => {
       class="responsive-container"
       :active="activeWindow == 2"
       @activated="activateWindow(2)"
+      :style="{ zIndex: zIndexForWindow(2) }"
+
       :w="initialWidth"
       :h="initialHeight"
       :minw="minWidth"
