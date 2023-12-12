@@ -1,0 +1,160 @@
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
+
+@font-face {
+  font-family: 'VT323';
+  src: url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+}
+
+body {
+  font-family: 'VT323', monospace;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0em;
+}
+
+.start-menu-title {
+  font-family: "Pixelated MS Sans Serif" !important;
+}
+
+.toolbar-right, .time, .hour, .minutes {
+  font-family: Arial !important;
+  font-size: 0.75rem;
+}
+
+.box {
+  box-shadow: -2px -2px #818181, -2px 0 #818181, 0 -2px #818181, -2px -2px black, -2px 0 black, 0 -2px black, 2px 2px #e0dede, 0 2px #e0dede, 2px 0 #e0dede,  2px -2px #818181, -2px 2px #e0dede, -2px 2px black, -2px 2px white, 2px 2px white, 2px 0 white, 0 2px white, 2px -2px black, 2px -2px white;
+  overflow-y: scroll;  
+}
+
+h5 {
+  font-family: Arial, monospace;
+  font-size: 1.1rem;
+  font-weight: bold;
+  letter-spacing: 0em;
+  text-align: left;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;  
+}
+
+.start-menu-item {
+  font-family: Arial, monospace;
+  font-size: 0.75rem;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0em;
+  display: flex;
+  align-items: center;
+  padding: 10px 0px 10px 10px;
+}
+
+.start-menu-item:hover {
+  background-color: #00007b;
+  color: white; 
+}
+
+.start-menu-title {
+    height: 95%;
+    padding: 5px 5px;
+    background: linear-gradient(45deg, #00007b 0%, #0000ff 5%, #00007b 100%);
+    color: #fff;
+    width: 40px;
+    float: left;
+    text-transform: uppercase;
+    font-size: 20px;
+    position: absolute;
+}
+
+.window-logo {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.window-logo img {
+  width: 90%;
+}
+hr.start-menu {
+  border: 0;
+  height: 1px;
+  background: #efefef;
+}
+.vue-draggable-resizable.active {
+  z-index: 999 !important; /* A high value to ensure it's on top */
+}
+.window-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.responsive-container {
+  margin: 0 auto;
+  max-width: 100%;
+  max-height: 100%;
+  width: 100%;
+}
+.window {
+  overflow: auto;
+  min-width: 100%;
+  min-height: 100%;
+}
+.def-height {
+  min-height: 500px;
+  max-height: 100%;
+}
+
+.window-logo {
+  display: flex;
+  justify-content: center;
+}
+
+.video {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+/* Media query for mobile screens */
+@media (max-width: 768px) {
+  .responsive-container {
+    width: 100%;
+  }
+}
+
+/* Styles for vue-draggable-resizable */
+.vue-draggable-resizable {
+  border: 1px solid #ddd;
+}
+.vue-draggable-resizable.active {
+  z-index: 10;
+}
+
+.window-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap; /* Allow the items to wrap */
+}
+
+.responsive-container {
+  margin: 0 auto;
+}
+
+.window-logo {
+  display: flex;
+  justify-content: center;
+}
+
+.video {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+/* Media query for mobile screens */
+@media (max-width: 768px) {
+  .responsive-container {
+    width: 100%; /* Full width on mobile screens */
+  }
+}
