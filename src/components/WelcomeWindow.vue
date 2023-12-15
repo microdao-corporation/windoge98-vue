@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
+import WindowLogo from "./WindowLogo.vue";
 import { useIcrc1Agent } from "../hooks/useIcrc1Agent";
 import { calculateBurned, natToFormattedString } from "../utils/numberUtils";
 
@@ -20,13 +21,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="window-logo">
-    <img
-      src="../assets/windoge98-pixel-banner.png"
-      target="_blank"
-      style="margin-left: -20px"
-    />
-  </div>
+  <WindowLogo />
   <p>
     Windoge 98 is a nostalgic take on memecoins, designed as an ICRC-1 token on
     the Internet Computer (IC), this token is a nod to the Windows 98 operating

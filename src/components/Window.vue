@@ -1,15 +1,15 @@
 <script setup lang="ts">
-const emit = defineEmits(["onClose"]);
+const emit = defineEmits(["onClose", "onMaximise", "onMinimise"]);
 const props = defineProps(["title"]);
 </script>
 
 <template>
   <div class="window">
-    <div class="title-bar">
+    <div class="title-bar" @dblclick="emit('onMaximise')">
       <div class="title-bar-text">{{ props.title }}</div>
       <div class="title-bar-controls">
-        <button aria-label="Minimize" />
-        <button aria-label="Maximize" />
+        <button aria-label="Minimize" @click="emit('onMinimise')" />
+        <button aria-label="Maximize" @click="emit('onMaximise')" />
         <button aria-label="Close" @click="emit('onClose')" />
       </div>
     </div>

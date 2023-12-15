@@ -5,6 +5,7 @@ import pinballIcon from "../assets/pinball-icon.png";
 import junoIcon from "../assets/juno_icon.png";
 import computerIcon from "../assets/computer-5.png";
 import { eventBus } from "../utils/bus";
+import { VirtualWindowType } from "../utils/windowTypes";
 
 const currentHours = ref(new Date().getHours());
 const currentMinutes = ref(new Date().getMinutes());
@@ -14,7 +15,7 @@ const isStartMenuVisible = ref(false);
 
 type MenuItem = {
   url: string;
-  virtualWindow: boolean;
+  virtualWindow: VirtualWindowType;
 };
 
 type ToolbarItem = MenuItem & {
@@ -39,14 +40,14 @@ const startMenuData: StartMenuData = {
       icon: icpcoinsLogo,
       url: "https://icpcoins.com/#/token/EXE",
       iconHeight: 30,
-      virtualWindow: false,
+      virtualWindow: "none",
     },
     {
       name: "3D Pinball",
       icon: pinballIcon,
       url: "https://windoge98.com/spacecadetpinball.html",
       iconHeight: 28,
-      virtualWindow: false,
+      virtualWindow: "none",
     },
   ],
   bottom: [
@@ -55,14 +56,14 @@ const startMenuData: StartMenuData = {
       icon: junoIcon,
       url: "https://juno.build/",
       iconHeight: 25,
-      virtualWindow: false,
+      virtualWindow: "none",
     },
     {
       name: "Shut Down",
       icon: computerIcon,
       url: "https://windoge98.com/spacecadetpinball.com",
       iconHeight: 30,
-      virtualWindow: false,
+      virtualWindow: "none",
     },
   ],
 };
@@ -71,27 +72,27 @@ const toolbarLeftData: ToolbarItem[] = [
   {
     class: "oc",
     url: "https://oc.app/community/ow6el-gyaaa-aaaar-av5na-cai/?ref=y3rqn-fyaaa-aaaaf-a7z6a-cai",
-    virtualWindow: true,
+    virtualWindow: "openchat",
   },
   {
     class: "discord",
     url: "https://discord.gg/CnMRrtaj3h",
-    virtualWindow: false,
+    virtualWindow: "none",
   },
   {
     class: "sourceforge",
     url: "https://sourceforge.net/p/windoge98-token/code/ci/master/tree/",
-    virtualWindow: false,
+    virtualWindow: "none",
   },
   {
     class: "twitter",
     url: "https://x.com/windoge_98",
-    virtualWindow: false,
+    virtualWindow: "none",
   },
   {
     class: "telegram",
     url: "https://t.me/windoge98",
-    virtualWindow: false,
+    virtualWindow: "none",
   },
 ];
 
@@ -116,9 +117,9 @@ function updateTime() {
 }
 
 function openNewWindow(item: MenuItem) {
-  if (item.virtualWindow) {
+  if (item.virtualWindow !== "none") {
     console.log("We'll open this in a virtual window");
-    eventBus.openOC();
+    eventBus.openVirtualWindow(item.virtualWindow);
   } else {
     window.open(item.url, "_blank");
   }

@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { reactive, watch, onMounted } from "vue";
+import { reactive, watch, onMounted, ref, onUnmounted } from "vue";
 import Window from "../components/Window.vue";
 import WelcomeWindow from "../components/WelcomeWindow.vue";
 import OpenChatWindow from "../components/OpenChatWindow.vue";
 import DevelopersWindow from "../components/DevelopersWindow.vue";
 import { eventBus } from "../utils/bus";
+import { VirtualWindowType } from "../utils/windowTypes";
 
 type Dimensions = {
   height: number;
@@ -18,21 +19,25 @@ type Window = {
   type: WindowType;
   visible: boolean;
   active: boolean;
+  maximised: boolean;
   dimensions: Dimensions;
 };
 
-type WindowType = "welcome" | "developers" | "openchat";
+type WindowType = "welcome" | "developers" | VirtualWindowType;
 
 const DEFAULT_WIDTH = 600; // Set initial width
 const DEFAULT_HEIGHT = 420; // Set initial height
 const MIN_WIDTH = 550; // Minimum width
 const MIN_HEIGHT = 300; // Minimum height
 const STATE_KEY = "windoge98_window_state";
+const screenWidth = ref(window.innerWidth);
+const screenHeight = ref(window.innerHeight - 40);
 
 const WELCOME_WINDOW: Window = {
   id: 0,
   visible: true,
   active: true,
+  maximised: false,
   type: "welcome",
   dimensions: {
     height: DEFAULT_HEIGHT,
@@ -46,32 +51,46 @@ const DEV_WINDOW: Window = {
   id: 1,
   visible: true,
   active: false,
+  maximised: false,
   type: "developers",
   dimensions: {
     height: DEFAULT_HEIGHT,
     width: DEFAULT_WIDTH,
     x: 200,
-    y: 540,
+    y: 600,
   },
 };
 
 let initialised = false;
 let windows: Window[] = reactive([WELCOME_WINDOW, DEV_WINDOW]);
 
+function updateScreenDimensions() {
+  screenWidth.value = window.innerWidth;
+  screenHeight.value = window.innerHeight - 40;
+}
+
+onUnmounted(() => {
+  window.removeEventListener("resize", updateScreenDimensions);
+});
+
 onMounted(() => {
   const state = localStorage.getItem(STATE_KEY);
   if (state) {
-    Object.assign(windows, JSON.parse(state) as Window[]);
+    const wins = JSON.parse(state) as Window[];
+    Object.assign(windows, [...windows, ...wins]);
   }
   initialised = true;
 
-  eventBus.onOpenOC(() => {
+  window.addEventListener("resize", updateScreenDimensions);
+
+  eventBus.onOpenVirtualWindow((winType: VirtualWindowType) => {
     const id = windows.length;
     windows.push({
       id,
       visible: true,
       active: false,
-      type: "openchat",
+      type: winType,
+      maximised: false,
       dimensions: {
         height: DEFAULT_HEIGHT,
         width: DEFAULT_WIDTH,
@@ -87,9 +106,10 @@ onMounted(() => {
 watch(windows, (val) => {
   if (!initialised) return;
 
-  console.log("Windows: ", val);
+  const filtered = val.filter((w) => w.id > 1);
+
   // let's store the window state in local storage
-  localStorage.setItem(STATE_KEY, JSON.stringify(val));
+  localStorage.setItem(STATE_KEY, JSON.stringify(filtered));
 });
 
 const activateWindow = (id: number) => {
@@ -132,11 +152,20 @@ function onDrag(id: number, left: number, top: number) {
   });
 }
 
-function closeTheWindow(id: number) {
+function closeWindow(id: number) {
+  windows.splice(id, 1);
+}
+
+function maximiseWindow(id: number) {
   const win = windows.find((w) => w.id === id);
   if (win !== undefined) {
-    win.visible = false;
+    win.maximised = !win.maximised;
   }
+}
+
+function minimiseWindow(id: number) {
+  // just close it for now
+  closeWindow(id);
 }
 </script>
 
@@ -149,18 +178,20 @@ function closeTheWindow(id: number) {
       @resizestop="(left: number, top: number, width: number, height: number) => onResize(win.id, left, top, width, height)"
       @dragstop="(left: number, top: number) => onDrag(win.id, left, top)"
       :style="{ zIndex: zIndexForWindow(win.id) }"
-      :w="win.dimensions.width"
-      :h="win.dimensions.height"
+      :w="win.maximised ? screenWidth : win.dimensions.width"
+      :h="win.maximised ? screenHeight : win.dimensions.height"
       :minw="MIN_WIDTH"
       :minh="MIN_HEIGHT"
-      :x="win.dimensions.x"
-      :y="win.dimensions.y"
+      :x="win.maximised ? 0 : win.dimensions.x"
+      :y="win.maximised ? 0 : win.dimensions.y"
       v-if="win.visible"
     >
       <Window
         v-if="win.type === 'welcome'"
         title="Welcome to Windoge98"
-        @onClose="closeTheWindow(win.id)"
+        @onMinimise="minimiseWindow(win.id)"
+        @onMaximise="maximiseWindow(win.id)"
+        @onClose="closeWindow(win.id)"
       >
         <WelcomeWindow />
       </Window>
@@ -168,7 +199,9 @@ function closeTheWindow(id: number) {
       <Window
         v-if="win.type === 'developers'"
         title="Developers"
-        @onClose="closeTheWindow(win.id)"
+        @onMinimise="minimiseWindow(win.id)"
+        @onMaximise="maximiseWindow(win.id)"
+        @onClose="closeWindow(win.id)"
       >
         <DevelopersWindow />
       </Window>
@@ -176,7 +209,9 @@ function closeTheWindow(id: number) {
       <Window
         v-if="win.type === 'openchat'"
         title="OpenChat"
-        @onClose="closeTheWindow(win.id)"
+        @onMinimise="minimiseWindow(win.id)"
+        @onMaximise="maximiseWindow(win.id)"
+        @onClose="closeWindow(win.id)"
       >
         <OpenChatWindow />
       </Window>

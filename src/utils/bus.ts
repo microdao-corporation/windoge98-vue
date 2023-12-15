@@ -1,12 +1,16 @@
-class EventBus {
-  private _onOpenOC: (() => void) | undefined = undefined;
+import { VirtualWindowType } from "./windowTypes";
 
-  onOpenOC(fn: () => void) {
-    this._onOpenOC = fn;
+class EventBus {
+  private _onOpenVirtualWindow:
+    | ((winType: VirtualWindowType) => void)
+    | undefined = undefined;
+
+  onOpenVirtualWindow(fn: (winType: VirtualWindowType) => void) {
+    this._onOpenVirtualWindow = fn;
   }
-  openOC() {
-    if (this._onOpenOC) {
-      this._onOpenOC();
+  openVirtualWindow(winType: VirtualWindowType) {
+    if (this._onOpenVirtualWindow) {
+      this._onOpenVirtualWindow(winType);
     }
   }
 }
