@@ -8,7 +8,7 @@ onMounted(() => {
   console.log("XFRAME_HOST: setting client in store");
   if (iframe.value) {
     initialise(iframe.value, {
-      targetOrigin: "http://localhost:5001",
+      targetOrigin: "https://oc.app",
       theme: {
         base: "light",
         name: "windoge98",
