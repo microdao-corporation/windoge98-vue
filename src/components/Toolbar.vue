@@ -118,7 +118,6 @@ function updateTime() {
 
 function openNewWindow(item: MenuItem) {
   if (item.virtualWindow !== "none") {
-    console.log("We'll open this in a virtual window");
     eventBus.openVirtualWindow(item.virtualWindow);
   } else {
     window.open(item.url, "_blank");
