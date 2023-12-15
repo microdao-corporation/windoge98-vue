@@ -4,5 +4,5 @@ import Toolbar from "./components/Toolbar.vue";
 
 <template>
   <RouterView></RouterView>
-  <Toolbar @open-virtual-window="" />
+  <Toolbar />
 </template>
