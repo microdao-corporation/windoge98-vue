@@ -1,13 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
-
+@import url("https://fonts.googleapis.com/css2?family=VT323&display=swap");
 
 @font-face {
-  font-family: 'VT323';
-  src: url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+  font-family: "VT323";
+  src: url("https://fonts.googleapis.com/css2?family=VT323&display=swap");
 }
 
 body {
-  font-family: 'VT323', monospace;
+  font-family: "VT323", monospace;
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
@@ -18,14 +17,20 @@ body {
   font-family: "Pixelated MS Sans Serif" !important;
 }
 
-.toolbar-right, .time, .hour, .minutes {
+.toolbar-right,
+.time,
+.hour,
+.minutes {
   font-family: Arial !important;
   font-size: 0.75rem;
 }
 
 .box {
-  box-shadow: -2px -2px #818181, -2px 0 #818181, 0 -2px #818181, -2px -2px black, -2px 0 black, 0 -2px black, 2px 2px #e0dede, 0 2px #e0dede, 2px 0 #e0dede,  2px -2px #818181, -2px 2px #e0dede, -2px 2px black, -2px 2px white, 2px 2px white, 2px 0 white, 0 2px white, 2px -2px black, 2px -2px white;
-  overflow-y: scroll;  
+  box-shadow: -2px -2px #818181, -2px 0 #818181, 0 -2px #818181, -2px -2px black,
+    -2px 0 black, 0 -2px black, 2px 2px #e0dede, 0 2px #e0dede, 2px 0 #e0dede,
+    2px -2px #818181, -2px 2px #e0dede, -2px 2px black, -2px 2px white,
+    2px 2px white, 2px 0 white, 0 2px white, 2px -2px black, 2px -2px white;
+  overflow-y: scroll;
 }
 
 h5 {
@@ -35,7 +40,7 @@ h5 {
   letter-spacing: 0em;
   text-align: left;
   -webkit-font-smoothing: antialiased !important;
-  -moz-osx-font-smoothing: grayscale !important;  
+  -moz-osx-font-smoothing: grayscale !important;
 }
 
 .start-menu-item {
@@ -51,19 +56,19 @@ h5 {
 
 .start-menu-item:hover {
   background-color: #00007b;
-  color: white; 
+  color: white;
 }
 
 .start-menu-title {
-    height: 95%;
-    padding: 5px 5px;
-    background: linear-gradient(45deg, #00007b 0%, #0000ff 5%, #00007b 100%);
-    color: #fff;
-    width: 40px;
-    float: left;
-    text-transform: uppercase;
-    font-size: 20px;
-    position: absolute;
+  height: 95%;
+  padding: 5px 5px;
+  background: linear-gradient(45deg, #00007b 0%, #0000ff 5%, #00007b 100%);
+  color: #fff;
+  width: 40px;
+  float: left;
+  text-transform: uppercase;
+  font-size: 20px;
+  position: absolute;
 }
 
 .window-logo {
@@ -83,22 +88,11 @@ hr.start-menu {
 .vue-draggable-resizable.active {
   z-index: 999 !important; /* A high value to ensure it's on top */
 }
-.window-container {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
 .responsive-container {
   margin: 0 auto;
   max-width: 100%;
   max-height: 100%;
   width: 100%;
-}
-.window {
-  overflow: auto;
-  min-width: 100%;
-  min-height: 100%;
 }
 .def-height {
   min-height: 500px;

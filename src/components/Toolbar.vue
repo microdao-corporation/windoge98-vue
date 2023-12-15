@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from "vue";
-import icpcoinsLogo from '../assets/icpcoins_logo.png';
-import pinballIcon from '../assets/pinball-icon.png';
-import junoIcon from '../assets/juno_icon.png';
-import computerIcon from '../assets/computer-5.png';
+import icpcoinsLogo from "../assets/icpcoins_logo.png";
+import pinballIcon from "../assets/pinball-icon.png";
+import junoIcon from "../assets/juno_icon.png";
+import computerIcon from "../assets/computer-5.png";
+import { eventBus } from "../utils/bus";
 
 const currentHours = ref(new Date().getHours());
 const currentMinutes = ref(new Date().getMinutes());
@@ -11,58 +12,87 @@ const amPm = ref(currentHours.value >= 12 ? "PM" : "AM");
 const showColon = ref(true);
 const isStartMenuVisible = ref(false);
 
-const startMenuData = {
+type MenuItem = {
+  url: string;
+  virtualWindow: boolean;
+};
+
+type ToolbarItem = MenuItem & {
+  class: string;
+};
+
+type StartMenuData = {
+  main: StartMenuItem[];
+  bottom: StartMenuItem[];
+};
+
+type StartMenuItem = MenuItem & {
+  name: string;
+  icon: string;
+  iconHeight: number;
+};
+
+const startMenuData: StartMenuData = {
   main: [
     {
       name: "ICPCoins",
       icon: icpcoinsLogo,
       url: "https://icpcoins.com/#/token/EXE",
-      iconHeight: "30",
+      iconHeight: 30,
+      virtualWindow: false,
     },
     {
       name: "3D Pinball",
       icon: pinballIcon,
       url: "https://windoge98.com/spacecadetpinball.html",
-      iconHeight: "28",
-    }
+      iconHeight: 28,
+      virtualWindow: false,
+    },
   ],
   bottom: [
     {
       name: "Deployed with Juno",
       icon: junoIcon,
       url: "https://juno.build/",
-      iconHeight: "25",
+      iconHeight: 25,
+      virtualWindow: false,
     },
     {
       name: "Shut Down",
       icon: computerIcon,
       url: "https://windoge98.com/spacecadetpinball.com",
-      iconHeight: "30",
+      iconHeight: 30,
+      virtualWindow: false,
     },
-  ]
+  ],
 };
 
-const toolbarLeftData = [
+const toolbarLeftData: ToolbarItem[] = [
   {
     class: "oc",
     url: "https://oc.app/community/ow6el-gyaaa-aaaar-av5na-cai/?ref=y3rqn-fyaaa-aaaaf-a7z6a-cai",
+    virtualWindow: true,
   },
   {
     class: "discord",
     url: "https://discord.gg/CnMRrtaj3h",
+    virtualWindow: false,
   },
   {
     class: "sourceforge",
     url: "https://sourceforge.net/p/windoge98-token/code/ci/master/tree/",
+    virtualWindow: false,
   },
   {
     class: "twitter",
     url: "https://x.com/windoge_98",
+    virtualWindow: false,
   },
   {
     class: "telegram",
     url: "https://t.me/windoge98",
-  }
+    virtualWindow: false,
+  },
 ];
 
 function toggleStartMenu() {
@@ -85,14 +115,19 @@ function updateTime() {
   showColon.value = !showColon.value;
 }
 
-function openNewWindow(url: string) {
-  window.open(url, "_blank");
+function openNewWindow(item: MenuItem) {
+  if (item.virtualWindow) {
+    console.log("We'll open this in a virtual window");
+    eventBus.openOC();
+  } else {
+    window.open(item.url, "_blank");
+  }
 }
 
 let intervalId: number;
 
 onMounted(() => {
-  intervalId = setInterval(updateTime, 1000);
+  intervalId = window.setInterval(updateTime, 1000);
 });
 
 onBeforeUnmount(() => {
@@ -113,7 +148,7 @@ onBeforeUnmount(() => {
         <div class="start-menu">
           <div
             v-for="item in startMenuData.main"
-            @click="openNewWindow(item.url)"
+            @click="openNewWindow(item)"
             class="start-menu-item"
           >
             <div style="float: left; margin-right: 10px">
@@ -124,7 +159,7 @@ onBeforeUnmount(() => {
           <hr />
           <div
             v-for="item in startMenuData.bottom"
-            @click="openNewWindow(item.url)"
+            @click="openNewWindow(item)"
             class="start-menu-item"
           >
             <div style="float: left; margin-right: 10px">
@@ -141,7 +176,7 @@ onBeforeUnmount(() => {
       <button
         v-for="item in toolbarLeftData"
         :class="`toolbar-icon ${item.class}`"
-        @click="() => openNewWindow(item.url)"
+        @click="() => openNewWindow(item)"
       ></button>
     </div>
 
@@ -269,7 +304,12 @@ strong {
       .start-menu-title {
         height: 95%;
         padding: 5px 5px;
-        background: linear-gradient(135deg, #00007b 0%, #0000ff 5%, #00007b 100%);
+        background: linear-gradient(
+          135deg,
+          #00007b 0%,
+          #0000ff 5%,
+          #00007b 100%
+        );
         color: #fff;
         width: 30px;
         float: left;
