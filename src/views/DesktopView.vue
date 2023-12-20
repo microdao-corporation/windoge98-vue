@@ -6,10 +6,11 @@ import OpenChatWindow from "../components/OpenChatWindow.vue";
 import DevelopersWindow from "../components/DevelopersWindow.vue";
 import { eventBus } from "../utils/bus";
 import { VirtualWindowType } from "../utils/windowTypes";
+// import DaoWindow from "../components/DaoWindow.vue";
 
 type Dimensions = {
-  height: number;
-  width: number;
+  height: number | string;
+  width: number | string;
   x: number;
   y: number;
 };
@@ -26,7 +27,7 @@ type Window = {
 type WindowType = "welcome" | "developers" | VirtualWindowType;
 
 const DEFAULT_WIDTH = 600; // Set initial width
-const DEFAULT_HEIGHT = 420; // Set initial height
+const DEFAULT_HEIGHT = "100%"; // Set initial height
 const MIN_WIDTH = 550; // Minimum width
 const MIN_HEIGHT = 300; // Minimum height
 const STATE_KEY = "windoge98_window_state";
@@ -92,7 +93,7 @@ onMounted(() => {
       type: winType,
       maximised: false,
       dimensions: {
-        height: DEFAULT_HEIGHT,
+        height: 420,
         width: DEFAULT_WIDTH,
         x: 200,
         y: 540,
@@ -143,15 +144,6 @@ function onResize(
   });
 }
 
-function onDrag(id: number, left: number, top: number) {
-  windows.forEach((win) => {
-    if (win.id === id) {
-      win.dimensions.x = left;
-      win.dimensions.y = top;
-    }
-  });
-}
-
 function closeWindow(id: number) {
   windows.splice(id, 1);
 }
@@ -176,7 +168,6 @@ function minimiseWindow(id: number) {
       :active="win.active"
       @activated="activateWindow(win.id)"
       @resizestop="(left: number, top: number, width: number, height: number) => onResize(win.id, left, top, width, height)"
-      @dragstop="(left: number, top: number) => onDrag(win.id, left, top)"
       :style="{ zIndex: zIndexForWindow(win.id) }"
       :w="win.maximised ? screenWidth : win.dimensions.width"
       :h="win.maximised ? screenHeight : win.dimensions.height"
@@ -185,6 +176,7 @@ function minimiseWindow(id: number) {
       :x="win.maximised ? 0 : win.dimensions.x"
       :y="win.maximised ? 0 : win.dimensions.y"
       v-if="win.visible"
+      :handles="['tr','tl','bl','br']"
     >
       <Window
         v-if="win.type === 'welcome'"
@@ -216,6 +208,23 @@ function minimiseWindow(id: number) {
         <OpenChatWindow />
       </Window>
     </vue-draggable-resizable>
+
+    <!-- <vue-draggable-resizable
+      class="responsive-container"
+      :active="activeWindow == 3"
+      @activated="activateWindow(3)"
+      :style="{ zIndex: zIndexForWindow(3) }"
+
+      :w="initialWidth"
+      :h="initialHeight"
+      :minw="minWidth"
+      :minh="minHeight"
+      :x="20"
+      :y="540"
+      v-if="windowStatus.window2"
+    >
+      <DaoWindow @onClose="closeWindow" :windowNumber="3" />
+    </vue-draggable-resizable> -->
   </div>
 </template>
 

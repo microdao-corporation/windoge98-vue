@@ -71,7 +71,7 @@ const startMenuData: StartMenuData = {
 const toolbarLeftData: ToolbarItem[] = [
   {
     class: "oc",
-    url: "https://oc.app/community/ow6el-gyaaa-aaaar-av5na-cai/?ref=y3rqn-fyaaa-aaaaf-a7z6a-cai",
+    url: "https://oc.app/community/ow6el-gyaaa-aaaar-av5na-cai",
     virtualWindow: "openchat",
   },
   {
@@ -264,6 +264,7 @@ strong {
 }
 
 #toolbar {
+  z-index: 999;
   background: #c0c0c0;
   height: 35px;
   width: 100%;
@@ -387,33 +388,6 @@ strong {
 
     .time {
       padding: 6px 10px;
-    }
-  }
-}
-
-.desktop-icons {
-  .desktop-icon {
-    width: 115px;
-    height: 100px;
-    color: #fff;
-    text-align: center;
-    background: no-repeat center top;
-    padding-top: 55px;
-    margin: 10px;
-
-    &.my-computer {
-      background-image: url(https://win98icons.alexmeub.com/icons/png/computer_explorer-5.png);
-    }
-    &.my-documents {
-      background-image: url(https://win98icons.alexmeub.com/icons/png/directory_open_file_mydocs-4.png);
-    }
-
-    &.network {
-      background-image: url(https://win98icons.alexmeub.com/icons/png/network_cool_two_pcs-0.png);
-    }
-
-    &.trash-empty {
-      background-image: url(https://win98icons.alexmeub.com/icons/png/recycle_bin_empty-4.png);
     }
   }
 }
