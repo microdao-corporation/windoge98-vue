@@ -1,67 +1,222 @@
 <script setup lang="ts">
-import { ref, reactive } from "vue";
+import { reactive, watch, onMounted, ref, onUnmounted } from "vue";
+import Window from "../components/Window.vue";
 import WelcomeWindow from "../components/WelcomeWindow.vue";
+import OpenChatWindow from "../components/OpenChatWindow.vue";
 import DevelopersWindow from "../components/DevelopersWindow.vue";
+import { eventBus } from "../utils/bus";
+import { VirtualWindowType } from "../utils/windowTypes";
 
-const activeWindow = ref(1);
-const initialWidth = 600; // Set initial width
-const initialHeight = 420; // Set initial height
-const minWidth = 550; // Minimum width
-const minHeight = 300; // Minimum height
-const windowStatus: any = reactive({
-  window1: true,
-  window2: true,
-});
+type Dimensions = {
+  height: number;
+  width: number;
+  x: number;
+  y: number;
+};
 
-function closeWindow(window: number) {
-  console.log("Closing window " + window);
-  windowStatus["window" + window] = false;
+type Window = {
+  id: number;
+  type: WindowType;
+  visible: boolean;
+  active: boolean;
+  maximised: boolean;
+  dimensions: Dimensions;
+};
+
+type WindowType = "welcome" | "developers" | VirtualWindowType;
+
+const DEFAULT_WIDTH = 600; // Set initial width
+const DEFAULT_HEIGHT = 420; // Set initial height
+const MIN_WIDTH = 550; // Minimum width
+const MIN_HEIGHT = 300; // Minimum height
+const STATE_KEY = "windoge98_window_state";
+const screenWidth = ref(window.innerWidth);
+const screenHeight = ref(window.innerHeight - 40);
+
+const WELCOME_WINDOW: Window = {
+  id: 0,
+  visible: true,
+  active: true,
+  maximised: false,
+  type: "welcome",
+  dimensions: {
+    height: DEFAULT_HEIGHT,
+    width: DEFAULT_WIDTH,
+    x: 100,
+    y: 5,
+  },
+};
+
+const DEV_WINDOW: Window = {
+  id: 1,
+  visible: true,
+  active: false,
+  maximised: false,
+  type: "developers",
+  dimensions: {
+    height: DEFAULT_HEIGHT,
+    width: DEFAULT_WIDTH,
+    x: 200,
+    y: 600,
+  },
+};
+
+let initialised = false;
+let windows: Window[] = reactive([WELCOME_WINDOW, DEV_WINDOW]);
+
+function updateScreenDimensions() {
+  screenWidth.value = window.innerWidth;
+  screenHeight.value = window.innerHeight - 40;
 }
 
-// Function to activate a window
-const activateWindow = (windowNumber: number) => {
-  console.log("Activating window " + windowNumber);
-  activeWindow.value = windowNumber;
+onUnmounted(() => {
+  window.removeEventListener("resize", updateScreenDimensions);
+});
+
+onMounted(() => {
+  const state = localStorage.getItem(STATE_KEY);
+  if (state) {
+    const wins = JSON.parse(state) as Window[];
+    Object.assign(windows, [...windows, ...wins]);
+  }
+  initialised = true;
+
+  window.addEventListener("resize", updateScreenDimensions);
+
+  eventBus.onOpenVirtualWindow((winType: VirtualWindowType) => {
+    const id = windows.length;
+    windows.push({
+      id,
+      visible: true,
+      active: false,
+      type: winType,
+      maximised: false,
+      dimensions: {
+        height: DEFAULT_HEIGHT,
+        width: DEFAULT_WIDTH,
+        x: 200,
+        y: 540,
+      },
+    });
+
+    activateWindow(id);
+  });
+});
+
+watch(windows, (val) => {
+  if (!initialised) return;
+
+  const filtered = val.filter((w) => w.id > 1);
+
+  // let's store the window state in local storage
+  localStorage.setItem(STATE_KEY, JSON.stringify(filtered));
+});
+
+const activateWindow = (id: number) => {
+  windows.forEach((w) => {
+    w.active = w.id === id;
+  });
 };
 
-const zIndexForWindow = (windowNumber: number) => {
-  return activeWindow.value === windowNumber ? 100 : 1;
+const zIndexForWindow = (id: number) => {
+  return findWindow(id)?.active ? 100 : 1;
 };
+
+function findWindow(id: number): Window | undefined {
+  return windows.find((w) => w.id === id);
+}
+
+function onResize(
+  id: number,
+  left: number,
+  top: number,
+  width: number,
+  height: number
+) {
+  windows.forEach((win) => {
+    if (win.id === id) {
+      win.dimensions.x = left;
+      win.dimensions.y = top;
+      win.dimensions.width = width;
+      win.dimensions.height = height;
+    }
+  });
+}
+
+function onDrag(id: number, left: number, top: number) {
+  windows.forEach((win) => {
+    if (win.id === id) {
+      win.dimensions.x = left;
+      win.dimensions.y = top;
+    }
+  });
+}
+
+function closeWindow(id: number) {
+  windows.splice(id, 1);
+}
+
+function maximiseWindow(id: number) {
+  const win = windows.find((w) => w.id === id);
+  if (win !== undefined) {
+    win.maximised = !win.maximised;
+  }
+}
+
+function minimiseWindow(id: number) {
+  // just close it for now
+  closeWindow(id);
+}
 </script>
 
 <template>
-  <div class="window-container">
+  <div v-for="win in windows" :key="win.id">
     <vue-draggable-resizable
       class="responsive-container"
-      :active="activeWindow == 1"
-      @activated="activateWindow(1)"
-      :style="{ zIndex: zIndexForWindow(1) }"
-      :w="600"
-      :h="520"
-      :minw="minWidth"
-      :minh="minHeight"
-      :x="-20"
-      :y="5"
-      v-if="windowStatus.window1"
+      :active="win.active"
+      @activated="activateWindow(win.id)"
+      @resizestop="(left: number, top: number, width: number, height: number) => onResize(win.id, left, top, width, height)"
+      @dragstop="(left: number, top: number) => onDrag(win.id, left, top)"
+      :style="{ zIndex: zIndexForWindow(win.id) }"
+      :w="win.maximised ? screenWidth : win.dimensions.width"
+      :h="win.maximised ? screenHeight : win.dimensions.height"
+      :minw="MIN_WIDTH"
+      :minh="MIN_HEIGHT"
+      :x="win.maximised ? 0 : win.dimensions.x"
+      :y="win.maximised ? 0 : win.dimensions.y"
+      v-if="win.visible"
     >
-      <WelcomeWindow @onClose="closeWindow" :windowNumber="1" />
-    </vue-draggable-resizable>
+      <Window
+        v-if="win.type === 'welcome'"
+        title="Welcome to Windoge98"
+        @onMinimise="minimiseWindow(win.id)"
+        @onMaximise="maximiseWindow(win.id)"
+        @onClose="closeWindow(win.id)"
+      >
+        <WelcomeWindow />
+      </Window>
 
-    <vue-draggable-resizable
-      class="responsive-container"
-      :active="activeWindow == 2"
-      @activated="activateWindow(2)"
-      :style="{ zIndex: zIndexForWindow(2) }"
+      <Window
+        v-if="win.type === 'developers'"
+        title="Developers"
+        @onMinimise="minimiseWindow(win.id)"
+        @onMaximise="maximiseWindow(win.id)"
+        @onClose="closeWindow(win.id)"
+      >
+        <DevelopersWindow />
+      </Window>
 
-      :w="initialWidth"
-      :h="initialHeight"
-      :minw="minWidth"
-      :minh="minHeight"
-      :x="20"
-      :y="540"
-      v-if="windowStatus.window2"
-    >
-      <DevelopersWindow @onClose="closeWindow" :windowNumber="2" />
+      <Window
+        v-if="win.type === 'openchat'"
+        title="OpenChat"
+        @onMinimise="minimiseWindow(win.id)"
+        @onMaximise="maximiseWindow(win.id)"
+        @onClose="closeWindow(win.id)"
+      >
+        <OpenChatWindow />
+      </Window>
     </vue-draggable-resizable>
   </div>
 </template>
+
+<style></style>
