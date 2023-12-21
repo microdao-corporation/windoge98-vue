@@ -6,6 +6,7 @@ import pinballIcon from "../assets/pinball-icon.png";
 import junoIcon from "../assets/juno_icon.png";
 import computerIcon from "../assets/computer-5.png";
 import programsIcon from "../assets/programs_icon.png";
+import taggrIcon from "../assets/taggr_icon.png";
 import { openNewWindow } from "../utils/windowUtils";
 
 const isStartMenuVisible = ref(false);
@@ -32,11 +33,11 @@ const startMenuData: StartMenuData = {
       icon: programsIcon,
       submenu: [
         {
-          name: "OpenChat",
-          icon: ocDogeIcon,
-          url: "https://oc.app/community/ow6el-gyaaa-aaaar-av5na-cai",
-          iconHeight: 30,
-          virtualWindow: "openchat",
+          name: "3D Pinball",
+          icon: pinballIcon,
+          url: "https://windoge98.com/spacecadetpinball.html",
+          iconHeight: 28,
+          virtualWindow: "none",
         },
         {
           name: "ICPCoins",
@@ -46,11 +47,18 @@ const startMenuData: StartMenuData = {
           virtualWindow: "none",
         },
         {
-          name: "3D Pinball",
-          icon: pinballIcon,
-          url: "https://windoge98.com/spacecadetpinball.html",
-          iconHeight: 28,
-          virtualWindow: "none",
+          name: "OpenChat",
+          icon: ocDogeIcon,
+          url: "https://oc.app/community/ow6el-gyaaa-aaaar-av5na-cai",
+          iconHeight: 30,
+          virtualWindow: "openchat",
+        },
+        {
+          name: "Taggr",
+          icon: taggrIcon,
+          url: "https://taggr.top",
+          iconHeight: 30,
+          virtualWindow: "taggr",
         },
       ],
     },

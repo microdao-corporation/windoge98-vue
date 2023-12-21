@@ -11,4 +11,4 @@ type MenuItem = {
   virtualWindow: VirtualWindowType;
 };
 
-type VirtualWindowType = "openchat" | "none";
+type VirtualWindowType = "openchat" | "taggr" | "none";

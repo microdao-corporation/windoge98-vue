@@ -4,6 +4,7 @@ import Window from "../components/Window.vue";
 import WelcomeWindow from "../components/WelcomeWindow.vue";
 import OpenChatWindow from "../components/OpenChatWindow.vue";
 import DevelopersWindow from "../components/DevelopersWindow.vue";
+import TaggrWindow from "../components/TaggrWindow.vue";
 import { eventBus } from "../utils/bus";
 // import DaoWindow from "../components/DaoWindow.vue";
 
@@ -203,24 +204,16 @@ async function minimiseWindow(id: number) {
       >
         <OpenChatWindow />
       </Window>
+      <Window
+        v-if="win.type === 'taggr'"
+        title="Taggr"
+        @onMinimise="minimiseWindow(win.id)"
+        @onMaximise="maximiseWindow(win.id)"
+        @onClose="closeWindow(win.id)"
+      >
+        <TaggrWindow />
+      </Window>
     </vue-draggable-resizable>
-
-    <!-- <vue-draggable-resizable
-      class="responsive-container"
-      :active="activeWindow == 3"
-      @activated="activateWindow(3)"
-      :style="{ zIndex: zIndexForWindow(3) }"
-
-      :w="initialWidth"
-      :h="initialHeight"
-      :minw="minWidth"
-      :minh="minHeight"
-      :x="20"
-      :y="540"
-      v-if="windowStatus.window2"
-    >
-      <DaoWindow @onClose="closeWindow" :windowNumber="3" />
-    </vue-draggable-resizable> -->
   </div>
 </template>
 
