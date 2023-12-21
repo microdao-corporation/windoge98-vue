@@ -23,7 +23,7 @@ onMounted(() => {
   <iframe ref="iframe" title="OpenChat" frameborder="0" />
 </template>
 
-<style lang="css">
+<style lang="css" scoped>
 .chat {
   height: 100%;
   display: flex;
