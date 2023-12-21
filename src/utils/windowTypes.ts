@@ -1,1 +1,1 @@
-export type VirtualWindowType = "openchat" | "none";
+export type VirtualWindowType = "taggr" | "openchat" | "none";

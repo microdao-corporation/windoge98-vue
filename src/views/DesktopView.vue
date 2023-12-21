@@ -3,6 +3,7 @@ import { reactive, watch, onMounted, ref, onUnmounted } from "vue";
 import Window from "../components/Window.vue";
 import WelcomeWindow from "../components/WelcomeWindow.vue";
 import OpenChatWindow from "../components/OpenChatWindow.vue";
+import TaggrWindow from "../components/TaggrWindow.vue";
 import DevelopersWindow from "../components/DevelopersWindow.vue";
 import { eventBus } from "../utils/bus";
 import { VirtualWindowType } from "../utils/windowTypes";
@@ -214,6 +215,16 @@ function minimiseWindow(id: number) {
         @onClose="closeWindow(win.id)"
       >
         <OpenChatWindow />
+      </Window>
+
+      <Window
+        v-if="win.type === 'taggr'"
+        title="Taggr"
+        @onMinimise="minimiseWindow(win.id)"
+        @onMaximise="maximiseWindow(win.id)"
+        @onClose="closeWindow(win.id)"
+      >
+        <TaggrWindow />
       </Window>
     </vue-draggable-resizable>
   </div>

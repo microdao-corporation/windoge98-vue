@@ -94,6 +94,11 @@ const toolbarLeftData: ToolbarItem[] = [
     url: "https://t.me/windoge98",
     virtualWindow: "none",
   },
+  {
+    class: "taggr",
+    url: "https://taggr.link",
+    virtualWindow: "taggr",
+  },
 ];
 
 function toggleStartMenu() {
@@ -373,6 +378,10 @@ strong {
     }
     &.telegram {
       background-image: url("../assets/telegram-pixel.png");
+    }
+
+    &.taggr {
+      background-image: url("../assets/taggr-pixel.png");
     }
   }
 

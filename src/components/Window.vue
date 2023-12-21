@@ -34,4 +34,12 @@ const props = defineProps(["title"]);
   display: flex;
   flex-direction: column;
 }
+.handle {
+  background-color: transparent;
+  border: none;
+}
+
+.vdr {
+  border: none;
+}
 </style>
