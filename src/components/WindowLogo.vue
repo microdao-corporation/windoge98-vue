@@ -1,10 +1,6 @@
 <template>
   <div class="window-logo">
-    <img
-      src="../assets/windoge98-pixel-banner.png"
-      target="_blank"
-      style="margin-left: -20px"
-    />
+    <img src="../assets/logo_xmas.png" target="_blank" style="margin-left: -20px" />
   </div>
 </template>
 

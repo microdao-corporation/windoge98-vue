@@ -5,6 +5,7 @@ import { VueDraggableResizable } from "vue-draggable-resizable-vue3";
 import { createRouter, createWebHashHistory } from "vue-router";
 import DesktopView from "./views/DesktopView.vue";
 import "./style.css";
+import "./assets/snow.css";
 
 const app = createApp(App);
 
@@ -19,10 +20,10 @@ const router = createRouter({
   routes, // short for `routes: routes`
 });
 
-app.use(router);
 
 // Define `global` if it's not already defined
 window.global = window;
 
+app.use(router);
 app.use(VueDraggableResizable);
 app.mount("#app");

@@ -5,7 +5,6 @@ import WelcomeWindow from "../components/WelcomeWindow.vue";
 import OpenChatWindow from "../components/OpenChatWindow.vue";
 import DevelopersWindow from "../components/DevelopersWindow.vue";
 import { eventBus } from "../utils/bus";
-import { VirtualWindowType } from "../utils/windowTypes";
 // import DaoWindow from "../components/DaoWindow.vue";
 
 type Dimensions = {
@@ -17,6 +16,7 @@ type Dimensions = {
 
 type Window = {
   id: number;
+  title?: string;
   type: WindowType;
   visible: boolean;
   active: boolean;
@@ -27,21 +27,22 @@ type Window = {
 type WindowType = "welcome" | "developers" | VirtualWindowType;
 
 const DEFAULT_WIDTH = 600; // Set initial width
-const DEFAULT_HEIGHT = "100%"; // Set initial height
+const DEFAULT_HEIGHT = 440; // Set initial height
 const MIN_WIDTH = 550; // Minimum width
-const MIN_HEIGHT = 300; // Minimum height
+const MIN_HEIGHT = "100%"; // Minimum height
 const STATE_KEY = "windoge98_window_state";
 const screenWidth = ref(window.innerWidth);
 const screenHeight = ref(window.innerHeight - 40);
 
 const WELCOME_WINDOW: Window = {
   id: 0,
+  title: "Welcome to Windoge98",
   visible: true,
   active: true,
   maximised: false,
   type: "welcome",
   dimensions: {
-    height: DEFAULT_HEIGHT,
+    height: 570,
     width: DEFAULT_WIDTH,
     x: 100,
     y: 5,
@@ -50,6 +51,7 @@ const WELCOME_WINDOW: Window = {
 
 const DEV_WINDOW: Window = {
   id: 1,
+  title: "Developers",
   visible: true,
   active: false,
   maximised: false,
@@ -127,13 +129,7 @@ function findWindow(id: number): Window | undefined {
   return windows.find((w) => w.id === id);
 }
 
-function onResize(
-  id: number,
-  left: number,
-  top: number,
-  width: number,
-  height: number
-) {
+function onResize(id: number, left: number, top: number, width: number, height: number) {
   windows.forEach((win) => {
     if (win.id === id) {
       win.dimensions.x = left;
@@ -144,7 +140,7 @@ function onResize(
   });
 }
 
-function closeWindow(id: number) {
+async function closeWindow(id: number) {
   windows.splice(id, 1);
 }
 
@@ -155,7 +151,7 @@ function maximiseWindow(id: number) {
   }
 }
 
-function minimiseWindow(id: number) {
+async function minimiseWindow(id: number) {
   // just close it for now
   closeWindow(id);
 }
@@ -176,7 +172,7 @@ function minimiseWindow(id: number) {
       :x="win.maximised ? 0 : win.dimensions.x"
       :y="win.maximised ? 0 : win.dimensions.y"
       v-if="win.visible"
-      :handles="['tr','tl','bl','br']"
+      :handles="['tr', 'tl', 'bl', 'br']"
     >
       <Window
         v-if="win.type === 'welcome'"

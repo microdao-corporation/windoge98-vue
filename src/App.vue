@@ -2,6 +2,7 @@
 import { onMounted } from "vue";
 import Toolbar from "./components/Toolbar.vue";
 import { initOrbiter } from "@junobuild/analytics";
+import Snowfall from "./components/Snowfall.vue";
 
 onMounted(async () => {
   await initOrbiter({
@@ -12,12 +13,8 @@ onMounted(async () => {
 </script>
 
 <template>
-
-  <!-- <div class="desktop-icon">
-    <img src="./assets/dao_icon.png" alt="desktop" />
-    <div class="icon-title">MicroDAO</div>
-  </div> -->
-  <RouterView></RouterView>
+  <Snowfall />
+  <RouterView />
   <Toolbar />
 </template>
 
