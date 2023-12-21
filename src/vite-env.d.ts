@@ -11,4 +11,4 @@ type MenuItem = {
   virtualWindow: VirtualWindowType;
 };
 
-type VirtualWindowType = "openchat" | "taggr" | "none";
+type VirtualWindowType = "dmail" | "icpcoins" | "openchat" | "taggr" | "none";

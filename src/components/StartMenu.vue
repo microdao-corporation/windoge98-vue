@@ -7,6 +7,7 @@ import junoIcon from "../assets/juno_icon.png";
 import computerIcon from "../assets/computer-5.png";
 import programsIcon from "../assets/programs_icon.png";
 import taggrIcon from "../assets/taggr_icon.png";
+import dmailIcon from "../assets/dmail_icon.png";
 import { openNewWindow } from "../utils/windowUtils";
 
 const isStartMenuVisible = ref(false);
@@ -40,11 +41,18 @@ const startMenuData: StartMenuData = {
           virtualWindow: "none",
         },
         {
+          name: "Dmail",
+          icon: dmailIcon,
+          url: "https://oc.app/community/ow6el-gyaaa-aaaar-av5na-cai",
+          iconHeight: 30,
+          virtualWindow: "dmail",
+        },
+        {
           name: "ICPCoins",
           icon: icpcoinsLogo,
           url: "https://icpcoins.com/#/token/EXE",
           iconHeight: 30,
-          virtualWindow: "none",
+          virtualWindow: "icpcoins",
         },
         {
           name: "OpenChat",

@@ -5,6 +5,8 @@ import WelcomeWindow from "../components/WelcomeWindow.vue";
 import OpenChatWindow from "../components/OpenChatWindow.vue";
 import DevelopersWindow from "../components/DevelopersWindow.vue";
 import TaggrWindow from "../components/TaggrWindow.vue";
+import DmailWindow from "../components/DmailWindow.vue";
+import IcpCoinsWindow from "../components/IcpCoinsWindow.vue";
 import { eventBus } from "../utils/bus";
 // import DaoWindow from "../components/DaoWindow.vue";
 
@@ -213,6 +215,23 @@ async function minimiseWindow(id: number) {
       >
         <TaggrWindow />
       </Window>
+      <Window
+        v-if="win.type === 'dmail'"
+        title="Dmail"
+        @onMinimise="minimiseWindow(win.id)"
+        @onMaximise="maximiseWindow(win.id)"
+        @onClose="closeWindow(win.id)"
+      >
+        <DmailWindow />
+      </Window>
+      <Window
+        v-if="win.type === 'icpcoins'"
+        title="ICPCoins"
+        @onMinimise="minimiseWindow(win.id)"
+        @onMaximise="maximiseWindow(win.id)"
+        @onClose="closeWindow(win.id)">
+        <IcpCoinsWindow />
+        </Window>
     </vue-draggable-resizable>
   </div>
 </template>
