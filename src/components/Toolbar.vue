@@ -1,71 +1,15 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from "vue";
-import icpcoinsLogo from "../assets/icpcoins_logo.png";
-import pinballIcon from "../assets/pinball-icon.png";
-import junoIcon from "../assets/juno_icon.png";
-import computerIcon from "../assets/computer-5.png";
-import { eventBus } from "../utils/bus";
-import { VirtualWindowType } from "../utils/windowTypes";
+import { openNewWindow } from "../utils/windowUtils";
+import StartMenu from "./StartMenu.vue";
 
 const currentHours = ref(new Date().getHours());
 const currentMinutes = ref(new Date().getMinutes());
 const amPm = ref(currentHours.value >= 12 ? "PM" : "AM");
 const showColon = ref(true);
-const isStartMenuVisible = ref(false);
-
-type MenuItem = {
-  url: string;
-  virtualWindow: VirtualWindowType;
-};
 
 type ToolbarItem = MenuItem & {
   class: string;
-};
-
-type StartMenuData = {
-  main: StartMenuItem[];
-  bottom: StartMenuItem[];
-};
-
-type StartMenuItem = MenuItem & {
-  name: string;
-  icon: string;
-  iconHeight: number;
-};
-
-const startMenuData: StartMenuData = {
-  main: [
-    {
-      name: "ICPCoins",
-      icon: icpcoinsLogo,
-      url: "https://icpcoins.com/#/token/EXE",
-      iconHeight: 30,
-      virtualWindow: "none",
-    },
-    {
-      name: "3D Pinball",
-      icon: pinballIcon,
-      url: "https://windoge98.com/spacecadetpinball.html",
-      iconHeight: 28,
-      virtualWindow: "none",
-    },
-  ],
-  bottom: [
-    {
-      name: "Deployed with Juno",
-      icon: junoIcon,
-      url: "https://juno.build/",
-      iconHeight: 25,
-      virtualWindow: "none",
-    },
-    {
-      name: "Shut Down",
-      icon: computerIcon,
-      url: "https://windoge98.com/spacecadetpinball.com",
-      iconHeight: 30,
-      virtualWindow: "none",
-    },
-  ],
 };
 
 const toolbarLeftData: ToolbarItem[] = [
@@ -96,10 +40,6 @@ const toolbarLeftData: ToolbarItem[] = [
   },
 ];
 
-function toggleStartMenu() {
-  isStartMenuVisible.value = !isStartMenuVisible.value;
-}
-
 function addZero(i: number) {
   return i < 10 ? "0" + i : i;
 }
@@ -116,15 +56,6 @@ function updateTime() {
   showColon.value = !showColon.value;
 }
 
-function openNewWindow(item: MenuItem) {
-  if (item.virtualWindow !== "none") {
-    console.log("We'll open this in a virtual window");
-    eventBus.openVirtualWindow(item.virtualWindow);
-  } else {
-    window.open(item.url, "_blank");
-  }
-}
-
 let intervalId: number;
 
 onMounted(() => {
@@ -138,39 +69,7 @@ onBeforeUnmount(() => {
 
 <template>
   <div id="toolbar">
-    <div class="toolbar-start-menu">
-      <button class="start-button" @click="toggleStartMenu">Start</button>
-
-      <div class="start-menu-wrapper" v-show="isStartMenuVisible">
-        <div class="start-menu-title">
-          <span class="title"><strong>Windoge</strong>98</span>
-        </div>
-
-        <div class="start-menu">
-          <div
-            v-for="item in startMenuData.main"
-            @click="openNewWindow(item)"
-            class="start-menu-item"
-          >
-            <div style="float: left; margin-right: 10px">
-              <img :src="item.icon" :height="item.iconHeight" />
-            </div>
-            {{ item.name }}
-          </div>
-          <hr />
-          <div
-            v-for="item in startMenuData.bottom"
-            @click="openNewWindow(item)"
-            class="start-menu-item"
-          >
-            <div style="float: left; margin-right: 10px">
-              <img :src="item.icon" :height="item.iconHeight" />
-            </div>
-            {{ item.name }}
-          </div>
-        </div>
-      </div>
-    </div>
+    <StartMenu />
     <div class="toolbar-separator"></div>
 
     <div class="toolbar-left">
@@ -234,10 +133,6 @@ strong {
     no-repeat center -25px / cover;
 }
 
-.start-menu-item {
-  padding: 10px 10px;
-  cursor: pointer;
-}
 .loading-bar {
   position: absolute;
   width: 100%;
@@ -272,67 +167,6 @@ strong {
   bottom: 0;
   left: 0;
   border-top: 2px solid #fff;
-
-  .toolbar-start-menu {
-    float: left;
-
-    .start-button {
-      background: url("../assets/start-icon.png") no-repeat 2px center / 24px;
-      padding-left: 28px;
-      padding-right: 5px;
-      height: 29px;
-      margin: 2px 3px;
-      font-weight: bold;
-      border: 2px solid #7c7c7c;
-      border-top-color: #fff;
-      border-left-color: #fff;
-
-      &:hover {
-        background-color: darken(#c0c0c0, 10%);
-      }
-    }
-
-    .start-menu-wrapper {
-      border: 2px solid #7c7c7c;
-      border-top-color: #fff;
-      border-left-color: #fff;
-      background: #c0c0c0;
-      position: fixed;
-      left: 2px;
-      bottom: 35px;
-      width: 250px;
-      min-height: 300px;
-
-      .start-menu-title {
-        height: 95%;
-        padding: 5px 5px;
-        background: linear-gradient(
-          135deg,
-          #00007b 0%,
-          #0000ff 5%,
-          #00007b 100%
-        );
-        color: #fff;
-        width: 30px;
-        float: left;
-        text-transform: uppercase;
-        font-size: 18px;
-        position: absolute;
-
-        .title {
-          transform: rotate(-90deg);
-          transform-origin: left 0 !important;
-          position: absolute;
-          left: 10px;
-          bottom: -5px;
-        }
-      }
-
-      .start-menu {
-        margin-left: 40px;
-      }
-    }
-  }
 
   .toolbar-separator {
     width: 2px;

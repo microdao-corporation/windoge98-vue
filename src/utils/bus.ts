@@ -1,5 +1,3 @@
-import { VirtualWindowType } from "./windowTypes";
-
 class EventBus {
   private _onOpenVirtualWindow:
     | ((winType: VirtualWindowType) => void)

@@ -146,3 +146,12 @@ hr.start-menu {
     width: 100%; /* Full width on mobile screens */
   }
 }
+
+.handle {
+  background-color: transparent;
+  border: none;
+}
+
+.vdr{
+  border: none;
+}
