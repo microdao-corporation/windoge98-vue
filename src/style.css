@@ -29,10 +29,25 @@ body {
 }
 
 .box {
-  box-shadow: -2px -2px #818181, -2px 0 #818181, 0 -2px #818181, -2px -2px black,
-    -2px 0 black, 0 -2px black, 2px 2px #e0dede, 0 2px #e0dede, 2px 0 #e0dede,
-    2px -2px #818181, -2px 2px #e0dede, -2px 2px black, -2px 2px white,
-    2px 2px white, 2px 0 white, 0 2px white, 2px -2px black, 2px -2px white;
+  box-shadow:
+    -2px -2px #818181,
+    -2px 0 #818181,
+    0 -2px #818181,
+    -2px -2px black,
+    -2px 0 black,
+    0 -2px black,
+    2px 2px #e0dede,
+    0 2px #e0dede,
+    2px 0 #e0dede,
+    2px -2px #818181,
+    -2px 2px #e0dede,
+    -2px 2px black,
+    -2px 2px white,
+    2px 2px white,
+    2px 0 white,
+    0 2px white,
+    2px -2px black,
+    2px -2px white;
   overflow-y: scroll;
 }
 
@@ -152,6 +167,6 @@ hr.start-menu {
   border: none;
 }
 
-.vdr{
+.vdr {
   border: none;
 }

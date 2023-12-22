@@ -2,32 +2,12 @@
 import { reactive, watch, onMounted, ref, onUnmounted } from "vue";
 import Window from "../components/Window.vue";
 import WelcomeWindow from "../components/WelcomeWindow.vue";
-import OpenChatWindow from "../components/OpenChatWindow.vue";
 import DevelopersWindow from "../components/DevelopersWindow.vue";
-import TaggrWindow from "../components/TaggrWindow.vue";
-import DmailWindow from "../components/DmailWindow.vue";
-import IcpCoinsWindow from "../components/IcpCoinsWindow.vue";
+import IframeWindow from "../components/IframeWindow.vue";
 import { eventBus } from "../utils/bus";
+import Toolbar from "../components/Toolbar.vue";
+import Snowfall from "../components/Snowfall.vue";
 // import DaoWindow from "../components/DaoWindow.vue";
-
-type Dimensions = {
-  height: number | string;
-  width: number | string;
-  x: number;
-  y: number;
-};
-
-type Window = {
-  id: number;
-  title?: string;
-  type: WindowType;
-  visible: boolean;
-  active: boolean;
-  maximised: boolean;
-  dimensions: Dimensions;
-};
-
-type WindowType = "welcome" | "developers" | VirtualWindowType;
 
 const DEFAULT_WIDTH = 600; // Set initial width
 const DEFAULT_HEIGHT = 440; // Set initial height
@@ -37,7 +17,7 @@ const STATE_KEY = "windoge98_window_state";
 const screenWidth = ref(window.innerWidth);
 const screenHeight = ref(window.innerHeight - 40);
 
-const WELCOME_WINDOW: Window = {
+const WELCOME_WINDOW: DesktopWindow = {
   id: 0,
   title: "Welcome to Windoge98",
   visible: true,
@@ -52,7 +32,7 @@ const WELCOME_WINDOW: Window = {
   },
 };
 
-const DEV_WINDOW: Window = {
+const DEV_WINDOW: DesktopWindow = {
   id: 1,
   title: "Developers",
   visible: true,
@@ -68,7 +48,7 @@ const DEV_WINDOW: Window = {
 };
 
 let initialised = false;
-let windows: Window[] = reactive([WELCOME_WINDOW, DEV_WINDOW]);
+let windows: DesktopWindow[] = reactive([WELCOME_WINDOW, DEV_WINDOW]);
 
 function updateScreenDimensions() {
   screenWidth.value = window.innerWidth;
@@ -89,13 +69,15 @@ onMounted(() => {
 
   window.addEventListener("resize", updateScreenDimensions);
 
-  eventBus.onOpenVirtualWindow((winType: VirtualWindowType) => {
+  eventBus.onOpenVirtualWindow((item: MenuItem) => {
     const id = windows.length;
     windows.push({
       id,
+      title: item.name,
+      url: item.url,
       visible: true,
       active: false,
-      type: winType,
+      type: item.virtualWindow,
       maximised: false,
       dimensions: {
         height: 420,
@@ -128,7 +110,7 @@ const zIndexForWindow = (id: number) => {
   return findWindow(id)?.active ? 100 : 1;
 };
 
-function findWindow(id: number): Window | undefined {
+function findWindow(id: number): DesktopWindow | undefined {
   return windows.find((w) => w.id === id);
 }
 
@@ -158,15 +140,35 @@ async function minimiseWindow(id: number) {
   // just close it for now
   closeWindow(id);
 }
+
+const getComponentForWindowType = (windowData: DesktopWindow) => {
+  switch (windowData.type) {
+    case "welcome":
+      return { component: WelcomeWindow, props: {} };
+    case "developers":
+      return { component: DevelopersWindow, props: {} };
+    default:
+      return {
+        component: IframeWindow,
+        props: { title: windowData.title, url: windowData.url },
+      };
+    // Add other cases as necessary
+  }
+};
 </script>
 
 <template>
+  <Snowfall />
+
   <div v-for="win in windows" :key="win.id">
     <vue-draggable-resizable
       class="responsive-container"
       :active="win.active"
       @activated="activateWindow(win.id)"
-      @resizestop="(left: number, top: number, width: number, height: number) => onResize(win.id, left, top, width, height)"
+      @resizestop="
+        (left: number, top: number, width: number, height: number) =>
+          onResize(win.id, left, top, width, height)
+      "
       :style="{ zIndex: zIndexForWindow(win.id) }"
       :w="win.maximised ? screenWidth : win.dimensions.width"
       :h="win.maximised ? screenHeight : win.dimensions.height"
@@ -178,62 +180,26 @@ async function minimiseWindow(id: number) {
       :handles="['tr', 'tl', 'bl', 'br']"
     >
       <Window
-        v-if="win.type === 'welcome'"
-        title="Welcome to Windoge98"
+        :title="win.title"
         @onMinimise="minimiseWindow(win.id)"
         @onMaximise="maximiseWindow(win.id)"
         @onClose="closeWindow(win.id)"
       >
-        <WelcomeWindow />
+        <component
+          :is="getComponentForWindowType(win).component"
+          v-bind="getComponentForWindowType(win).props"
+        />
       </Window>
-
-      <Window
-        v-if="win.type === 'developers'"
-        title="Developers"
-        @onMinimise="minimiseWindow(win.id)"
-        @onMaximise="maximiseWindow(win.id)"
-        @onClose="closeWindow(win.id)"
-      >
-        <DevelopersWindow />
-      </Window>
-
-      <Window
-        v-if="win.type === 'openchat'"
-        title="OpenChat"
-        @onMinimise="minimiseWindow(win.id)"
-        @onMaximise="maximiseWindow(win.id)"
-        @onClose="closeWindow(win.id)"
-      >
-        <OpenChatWindow />
-      </Window>
-      <Window
-        v-if="win.type === 'taggr'"
-        title="Taggr"
-        @onMinimise="minimiseWindow(win.id)"
-        @onMaximise="maximiseWindow(win.id)"
-        @onClose="closeWindow(win.id)"
-      >
-        <TaggrWindow />
-      </Window>
-      <Window
-        v-if="win.type === 'dmail'"
-        title="Dmail"
-        @onMinimise="minimiseWindow(win.id)"
-        @onMaximise="maximiseWindow(win.id)"
-        @onClose="closeWindow(win.id)"
-      >
-        <DmailWindow />
-      </Window>
-      <Window
-        v-if="win.type === 'icpcoins'"
-        title="ICPCoins"
-        @onMinimise="minimiseWindow(win.id)"
-        @onMaximise="maximiseWindow(win.id)"
-        @onClose="closeWindow(win.id)">
-        <IcpCoinsWindow />
-        </Window>
     </vue-draggable-resizable>
+    <Toolbar />
   </div>
 </template>
 
-<style></style>
+<style>
+body {
+  background-color: teal;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+</style>

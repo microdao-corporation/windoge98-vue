@@ -1,5 +1,7 @@
 # Windoge98 Website
+
 ## Running Locally
+
 ```
 npm install
 npm run dev

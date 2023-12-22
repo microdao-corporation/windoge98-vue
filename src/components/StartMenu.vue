@@ -1,93 +1,9 @@
 <script setup lang="ts">
 import { ref, Ref, onMounted, onUnmounted } from "vue";
-import icpcoinsLogo from "../assets/icpcoins_logo.png";
-import ocDogeIcon from "../assets/oc_doge_icon.png";
-import pinballIcon from "../assets/pinball-icon.png";
-import junoIcon from "../assets/juno_icon.png";
-import computerIcon from "../assets/computer-5.png";
-import programsIcon from "../assets/programs_icon.png";
-import taggrIcon from "../assets/taggr_icon.png";
-import dmailIcon from "../assets/dmail_icon.png";
+import { startMenuData } from "../data/menuItems";
 import { openNewWindow } from "../utils/windowUtils";
 
 const isStartMenuVisible = ref(false);
-
-type StartMenuItem = MenuItem & {
-  name: string;
-  icon?: string;
-  iconHeight: number;
-  submenu?: StartMenuItem[];
-};
-
-type StartMenuData = {
-  main: StartMenuItem[];
-  bottom: StartMenuItem[];
-};
-
-const startMenuData: StartMenuData = {
-  main: [
-    {
-      name: "Programs",
-      iconHeight: 30,
-      url: "#",
-      virtualWindow: "none",
-      icon: programsIcon,
-      submenu: [
-        {
-          name: "3D Pinball",
-          icon: pinballIcon,
-          url: "https://windoge98.com/spacecadetpinball.html",
-          iconHeight: 28,
-          virtualWindow: "none",
-        },
-        {
-          name: "Dmail",
-          icon: dmailIcon,
-          url: "https://oc.app/community/ow6el-gyaaa-aaaar-av5na-cai",
-          iconHeight: 30,
-          virtualWindow: "dmail",
-        },
-        {
-          name: "ICPCoins",
-          icon: icpcoinsLogo,
-          url: "https://icpcoins.com/#/token/EXE",
-          iconHeight: 30,
-          virtualWindow: "icpcoins",
-        },
-        {
-          name: "OpenChat",
-          icon: ocDogeIcon,
-          url: "https://oc.app/community/ow6el-gyaaa-aaaar-av5na-cai",
-          iconHeight: 30,
-          virtualWindow: "openchat",
-        },
-        {
-          name: "Taggr",
-          icon: taggrIcon,
-          url: "https://taggr.top",
-          iconHeight: 30,
-          virtualWindow: "taggr",
-        },
-      ],
-    },
-  ],
-  bottom: [
-    {
-      name: "Deployed with Juno",
-      icon: junoIcon,
-      url: "https://juno.build/",
-      iconHeight: 25,
-      virtualWindow: "none",
-    },
-    {
-      name: "Shut Down",
-      icon: computerIcon,
-      url: "https://windoge98.com/spacecadetpinball.com",
-      iconHeight: 30,
-      virtualWindow: "none",
-    },
-  ],
-};
 
 onMounted(() => {
   document.addEventListener("click", handleOutsideClick);
@@ -113,13 +29,13 @@ function toggleStartMenu() {
 
 const visibleSubMenu: Ref<string | null> = ref(null);
 
-function toggleSubMenu(item: StartMenuItem) {
+function toggleSubMenu(item: MenuItem) {
   console.log("toggleSubMenu", item);
   visibleSubMenu.value = item.name;
   console.log("visibleSubMenu", visibleSubMenu.value);
 }
 
-function isSubMenuVisible(item: StartMenuItem) {
+function isSubMenuVisible(item: MenuItem) {
   const isVisible = visibleSubMenu.value == item.name;
   console.log("isSubMenuVisible", isVisible);
   return isVisible;

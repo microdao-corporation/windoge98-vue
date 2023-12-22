@@ -1,12 +1,11 @@
 class EventBus {
-  private _onOpenVirtualWindow:
-    | ((winType: VirtualWindowType) => void)
-    | undefined = undefined;
+  private _onOpenVirtualWindow: ((winType: MenuItem) => void) | undefined =
+    undefined;
 
-  onOpenVirtualWindow(fn: (winType: VirtualWindowType) => void) {
+  onOpenVirtualWindow(fn: (winType: MenuItem) => void) {
     this._onOpenVirtualWindow = fn;
   }
-  openVirtualWindow(winType: VirtualWindowType) {
+  openVirtualWindow(winType: MenuItem) {
     if (this._onOpenVirtualWindow) {
       this._onOpenVirtualWindow(winType);
     }

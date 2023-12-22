@@ -1,44 +1,13 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import { openNewWindow } from "../utils/windowUtils";
+import { toolbarLeftData } from "../data/menuItems";
 import StartMenu from "./StartMenu.vue";
 
 const currentHours = ref(new Date().getHours());
 const currentMinutes = ref(new Date().getMinutes());
 const amPm = ref(currentHours.value >= 12 ? "PM" : "AM");
 const showColon = ref(true);
-
-type ToolbarItem = MenuItem & {
-  class: string;
-};
-
-const toolbarLeftData: ToolbarItem[] = [
-  {
-    class: "oc",
-    url: "https://oc.app/community/ow6el-gyaaa-aaaar-av5na-cai",
-    virtualWindow: "openchat",
-  },
-  {
-    class: "discord",
-    url: "https://discord.gg/CnMRrtaj3h",
-    virtualWindow: "none",
-  },
-  {
-    class: "sourceforge",
-    url: "https://sourceforge.net/p/windoge98-token/code/ci/master/tree/",
-    virtualWindow: "none",
-  },
-  {
-    class: "twitter",
-    url: "https://x.com/windoge_98",
-    virtualWindow: "none",
-  },
-  {
-    class: "telegram",
-    url: "https://t.me/windoge98",
-    virtualWindow: "none",
-  },
-];
 
 function addZero(i: number) {
   return i < 10 ? "0" + i : i;
@@ -226,3 +195,4 @@ strong {
   }
 }
 </style>
+../data/menuItems

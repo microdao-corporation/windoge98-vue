@@ -11,11 +11,11 @@ onMounted(() => {
   windogeAgent.fetchMaxSupply();
   icpAgent.fetchIcrc1BalanceOf(
     "3scjg-z33zr-ll3bt-hdsov-kkitm-3tsml-tvgkt-d6jwa-onz35-hkfq5-zae",
-    "treasury_icp"
+    "treasury_icp",
   );
   windogeAgent.fetchIcrc1BalanceOf(
     "3scjg-z33zr-ll3bt-hdsov-kkitm-3tsml-tvgkt-d6jwa-onz35-hkfq5-zae",
-    "treasury_exe"
+    "treasury_exe",
   );
 });
 </script>

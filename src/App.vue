@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
-import Toolbar from "./components/Toolbar.vue";
 import { initOrbiter } from "@junobuild/analytics";
-import Snowfall from "./components/Snowfall.vue";
 
 onMounted(async () => {
   await initOrbiter({
@@ -13,9 +11,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <Snowfall />
   <RouterView />
-  <Toolbar />
 </template>
 
 <style scoped>
