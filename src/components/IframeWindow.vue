@@ -1,5 +1,10 @@
 <script setup lang="ts">
-defineProps({
+import { onMounted } from "vue";
+import { useGtag } from "vue-gtag-next";
+
+const { event } = useGtag();
+
+const props = defineProps({
   url: {
     type: String,
     required: true,
@@ -12,6 +17,13 @@ defineProps({
     type: Number,
     default: 0,
   },
+});
+
+onMounted(() => {
+  event("window.open", {
+    url: props.url,
+    title: props.title,
+  });
 });
 </script>
 

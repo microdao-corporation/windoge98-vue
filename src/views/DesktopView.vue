@@ -7,8 +7,10 @@ import IframeWindow from "../components/IframeWindow.vue";
 import { eventBus } from "../utils/bus";
 import Toolbar from "../components/Toolbar.vue";
 import Snowfall from "../components/Snowfall.vue";
+import { useGtag } from "vue-gtag-next";
 // import DaoWindow from "../components/DaoWindow.vue";
 
+const { event } = useGtag();
 const DEFAULT_WIDTH = 600; // Set initial width
 const DEFAULT_HEIGHT = 440; // Set initial height
 const MIN_WIDTH = 550; // Minimum width
@@ -125,20 +127,31 @@ function onResize(id: number, left: number, top: number, width: number, height: 
   });
 }
 
-async function closeWindow(id: number) {
-  windows.splice(id, 1);
+async function closeWindow(win: DesktopWindow) {
+  event("window.close", {
+    url: win.url,
+    title: win.title,
+  });
+  windows.splice(win.id, 1);
 }
 
-function maximiseWindow(id: number) {
-  const win = windows.find((w) => w.id === id);
+function maximiseWindow(win: DesktopWindow) {
+  event("window.maximize", {
+    url: win.url,
+    title: win.title,
+  });
   if (win !== undefined) {
     win.maximised = !win.maximised;
   }
 }
 
-async function minimiseWindow(id: number) {
+async function minimiseWindow(win: DesktopWindow) {
+  event("window.minimize", {
+    url: win.url,
+    title: win.title,
+  });
   // just close it for now
-  closeWindow(id);
+  closeWindow(win);
 }
 
 const getComponentForWindowType = (windowData: DesktopWindow) => {
@@ -181,9 +194,9 @@ const getComponentForWindowType = (windowData: DesktopWindow) => {
     >
       <Window
         :title="win.title"
-        @onMinimise="minimiseWindow(win.id)"
-        @onMaximise="maximiseWindow(win.id)"
-        @onClose="closeWindow(win.id)"
+        @onMinimise="minimiseWindow(win)"
+        @onMaximise="maximiseWindow(win)"
+        @onClose="closeWindow(win)"
       >
         <component
           :is="getComponentForWindowType(win).component"
