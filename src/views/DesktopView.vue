@@ -87,6 +87,7 @@ onMounted(() => {
         x: 200,
         y: 540,
       },
+      init: item.init,
     });
 
     activateWindow(id);
@@ -116,7 +117,13 @@ function findWindow(id: number): DesktopWindow | undefined {
   return windows.find((w) => w.id === id);
 }
 
-function onResize(id: number, left: number, top: number, width: number, height: number) {
+function onResize(
+  id: number,
+  left: number,
+  top: number,
+  width: number,
+  height: number
+) {
   windows.forEach((win) => {
     if (win.id === id) {
       win.dimensions.x = left;
@@ -163,7 +170,11 @@ const getComponentForWindowType = (windowData: DesktopWindow) => {
     default:
       return {
         component: IframeWindow,
-        props: { title: windowData.title, url: windowData.url },
+        props: {
+          title: windowData.title,
+          url: windowData.url,
+          onMount: windowData.init,
+        },
       };
     // Add other cases as necessary
   }
