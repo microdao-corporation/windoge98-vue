@@ -6,13 +6,26 @@ import computerIcon from "../assets/computer-5.png";
 import programsIcon from "../assets/programs_icon.png";
 import taggrIcon from "../assets/taggr_icon.png";
 import dmailIcon from "../assets/dmail_icon.png";
+import { initialise } from "@open-ic/openchat-xframe";
 
 export const toolbarLeftData: ToolbarItem[] = [
   {
     name: "OpenChat",
     class: "oc",
-    url: "https://oc.app/community/ow6el-gyaaa-aaaar-av5na-cai/?ref=y3rqn-fyaaa-aaaaf-a7z6a-cai",
+    url: "",
     virtualWindow: "iframe",
+    init: (frame) => {
+      initialise(frame, {
+        targetOrigin: "https://oc.app",
+        initialPath:
+          "/community/ow6el-gyaaa-aaaar-av5na-cai/?ref=y3rqn-fyaaa-aaaaf-a7z6a-cai",
+        theme: {
+          base: "light",
+          name: "windoge98",
+          overrides: {},
+        },
+      });
+    },
   },
   {
     name: "Discord",

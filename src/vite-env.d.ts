@@ -2,7 +2,6 @@
 declare module "vue-draggable-resizable-vue3";
 declare module "./hooks/icrc1-idl";
 
-
 type WindowType = "welcome" | "developers" | VirtualWindowType;
 
 type Dimensions = {
@@ -21,6 +20,7 @@ type DesktopWindow = {
   active: boolean;
   maximised: boolean;
   dimensions: Dimensions;
+  init?: (frame: HTMLIFrameElement) => void;
 };
 
 type MenuItem = {
@@ -30,6 +30,7 @@ type MenuItem = {
   icon?: string;
   iconHeight?: number;
   submenu?: StartMenuItem[];
+  init?: (frame: HTMLIFrameElement) => void;
 };
 
 type ToolbarItem = MenuItem & {
