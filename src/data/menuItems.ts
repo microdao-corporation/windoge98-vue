@@ -6,50 +6,44 @@ import computerIcon from "../assets/computer-5.png";
 import programsIcon from "../assets/programs_icon.png";
 import taggrIcon from "../assets/taggr_icon.png";
 import dmailIcon from "../assets/dmail_icon.png";
-import { initialise } from "@open-ic/openchat-xframe";
+import { initialiseOpenChat } from "../utils/windowUtils";
 
 export const toolbarLeftData: ToolbarItem[] = [
   {
     name: "OpenChat",
     class: "oc",
-    url: "",
+    url: "https://oc.app/community/ow6el-gyaaa-aaaar-av5na-cai/?ref=y3rqn-fyaaa-aaaaf-a7z6a-cai",
     virtualWindow: "iframe",
-    init: (frame) => {
-      initialise(frame, {
-        targetOrigin: "https://oc.app",
-        initialPath:
-          "/community/ow6el-gyaaa-aaaar-av5na-cai/?ref=y3rqn-fyaaa-aaaaf-a7z6a-cai",
-        theme: {
-          base: "light",
-          name: "windoge98",
-          overrides: {},
-        },
-      });
-    },
+    subType: "openchat",
+    init: initialiseOpenChat,
   },
   {
     name: "Discord",
     class: "discord",
     url: "https://discord.gg/CnMRrtaj3h",
     virtualWindow: "none",
+    subType: "unknown",
   },
   {
     name: "SourceForge",
     class: "sourceforge",
     url: "https://sourceforge.net/p/windoge98-token/code/ci/main/tree/",
     virtualWindow: "none",
+    subType: "unknown",
   },
   {
     name: "Twitter",
     class: "twitter",
     url: "https://x.com/windoge_98",
     virtualWindow: "none",
+    subType: "unknown",
   },
   {
     name: "Telegram",
     class: "telegram",
     url: "https://t.me/windoge98",
     virtualWindow: "none",
+    subType: "unknown",
   },
 ];
 
@@ -61,6 +55,7 @@ export const startMenuData: StartMenuData = {
       url: "#",
       virtualWindow: "none",
       icon: programsIcon,
+      subType: "unknown",
       submenu: [
         {
           name: "3D Pinball",
@@ -68,6 +63,7 @@ export const startMenuData: StartMenuData = {
           url: "https://windoge98.com/spacecadetpinball.html",
           iconHeight: 28,
           virtualWindow: "none",
+          subType: "unknown",
         },
         {
           name: "Dmail",
@@ -75,6 +71,7 @@ export const startMenuData: StartMenuData = {
           url: "https://mail.dmail.ai/",
           iconHeight: 30,
           virtualWindow: "iframe",
+          subType: "unknown",
         },
         {
           name: "ICPCoins",
@@ -82,6 +79,7 @@ export const startMenuData: StartMenuData = {
           url: "https://icpcoins.com/#/token/EXE",
           iconHeight: 30,
           virtualWindow: "iframe",
+          subType: "unknown",
         },
         {
           name: "OpenChat",
@@ -89,6 +87,8 @@ export const startMenuData: StartMenuData = {
           url: "https://oc.app/community/ow6el-gyaaa-aaaar-av5na-cai/?ref=y3rqn-fyaaa-aaaaf-a7z6a-cai",
           iconHeight: 30,
           virtualWindow: "iframe",
+          init: initialiseOpenChat,
+          subType: "openchat",
         },
         {
           name: "Taggr",
@@ -96,6 +96,7 @@ export const startMenuData: StartMenuData = {
           url: "https://taggr.top",
           iconHeight: 30,
           virtualWindow: "iframe",
+          subType: "unknown",
         },
       ],
     },
@@ -107,6 +108,7 @@ export const startMenuData: StartMenuData = {
       url: "https://juno.build/",
       iconHeight: 25,
       virtualWindow: "none",
+      subType: "unknown",
     },
     {
       name: "Shut Down",
@@ -114,6 +116,7 @@ export const startMenuData: StartMenuData = {
       url: "https://windoge98.com/#/shutdown",
       iconHeight: 30,
       virtualWindow: "none",
+      subType: "unknown",
     },
   ],
 };

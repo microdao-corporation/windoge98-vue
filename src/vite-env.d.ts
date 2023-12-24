@@ -16,6 +16,7 @@ type DesktopWindow = {
   url?: string;
   title?: string;
   type: WindowType;
+  subType: VirtualWindowSubtype;
   visible: boolean;
   active: boolean;
   maximised: boolean;
@@ -27,6 +28,7 @@ type MenuItem = {
   name: string;
   url: string;
   virtualWindow: VirtualWindowType;
+  subType: VirtualWindowSubtype;
   icon?: string;
   iconHeight?: number;
   submenu?: StartMenuItem[];
@@ -43,3 +45,5 @@ type StartMenuData = {
 };
 
 type VirtualWindowType = "iframe" | "none";
+
+type VirtualWindowSubtype = "openchat" | "unknown";
