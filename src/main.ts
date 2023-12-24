@@ -19,3 +19,4 @@ app.use(VueGtag, {
   property: { id: "G-VTN5H782M8" }
 });
 app.mount("#app");
+

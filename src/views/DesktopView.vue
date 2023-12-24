@@ -117,13 +117,7 @@ function findWindow(id: number): DesktopWindow | undefined {
   return windows.find((w) => w.id === id);
 }
 
-function onResize(
-  id: number,
-  left: number,
-  top: number,
-  width: number,
-  height: number
-) {
+function onResize(id: number, left: number, top: number, width: number, height: number) {
   windows.forEach((win) => {
     if (win.id === id) {
       win.dimensions.x = left;
@@ -179,6 +173,14 @@ const getComponentForWindowType = (windowData: DesktopWindow) => {
     // Add other cases as necessary
   }
 };
+
+const onDragEnd = (id: number, left: number, top: number) => {
+  const winIndex = windows.findIndex((win) => win.id === id);
+  if (winIndex !== -1) {
+    windows[winIndex].dimensions.x = left;
+    windows[winIndex].dimensions.y = top;
+  }
+};
 </script>
 
 <template>
@@ -189,6 +191,8 @@ const getComponentForWindowType = (windowData: DesktopWindow) => {
       class="responsive-container"
       :active="win.active"
       @activated="activateWindow(win.id)"
+      @dragstop="
+        (left: number, top: number) => onDragEnd(win.id, left, top)"
       @resizestop="
         (left: number, top: number, width: number, height: number) =>
           onResize(win.id, left, top, width, height)
