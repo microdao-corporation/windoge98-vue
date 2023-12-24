@@ -8,6 +8,7 @@ import { eventBus } from "../utils/bus";
 import Toolbar from "../components/Toolbar.vue";
 import Snowfall from "../components/Snowfall.vue";
 import { useGtag } from "vue-gtag-next";
+import { initialiseOpenChat } from "../utils/windowUtils";
 // import DaoWindow from "../components/DaoWindow.vue";
 
 const { event } = useGtag();
@@ -26,6 +27,7 @@ const WELCOME_WINDOW: DesktopWindow = {
   active: true,
   maximised: false,
   type: "welcome",
+  subType: "unknown",
   dimensions: {
     height: 570,
     width: DEFAULT_WIDTH,
@@ -41,6 +43,7 @@ const DEV_WINDOW: DesktopWindow = {
   active: false,
   maximised: false,
   type: "developers",
+  subType: "unknown",
   dimensions: {
     height: DEFAULT_HEIGHT,
     width: DEFAULT_WIDTH,
@@ -64,7 +67,12 @@ onUnmounted(() => {
 onMounted(() => {
   const state = localStorage.getItem(STATE_KEY);
   if (state) {
-    const wins = JSON.parse(state) as Window[];
+    const wins = JSON.parse(state) as DesktopWindow[];
+    wins.forEach((w) => {
+      if (w.subType === "openchat") {
+        w.init = initialiseOpenChat;
+      }
+    });
     Object.assign(windows, [...windows, ...wins]);
   }
   initialised = true;
@@ -80,6 +88,7 @@ onMounted(() => {
       visible: true,
       active: false,
       type: item.virtualWindow,
+      subType: item.subType,
       maximised: false,
       dimensions: {
         height: 420,
