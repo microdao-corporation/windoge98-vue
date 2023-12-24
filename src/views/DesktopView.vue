@@ -69,7 +69,7 @@ onMounted(() => {
   if (state) {
     const wins = JSON.parse(state) as DesktopWindow[];
     wins.forEach((w) => {
-      if (w.subType === "openchat") {
+      if ("subType" in w && w.subType === "openchat") {
         w.init = initialiseOpenChat;
       }
     });
@@ -126,7 +126,13 @@ function findWindow(id: number): DesktopWindow | undefined {
   return windows.find((w) => w.id === id);
 }
 
-function onResize(id: number, left: number, top: number, width: number, height: number) {
+function onResize(
+  id: number,
+  left: number,
+  top: number,
+  width: number,
+  height: number
+) {
   windows.forEach((win) => {
     if (win.id === id) {
       win.dimensions.x = left;
@@ -200,8 +206,7 @@ const onDragEnd = (id: number, left: number, top: number) => {
       class="responsive-container"
       :active="win.active"
       @activated="activateWindow(win.id)"
-      @dragstop="
-        (left: number, top: number) => onDragEnd(win.id, left, top)"
+      @dragstop="(left: number, top: number) => onDragEnd(win.id, left, top)"
       @resizestop="
         (left: number, top: number, width: number, height: number) =>
           onResize(win.id, left, top, width, height)
