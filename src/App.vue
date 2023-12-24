@@ -1,14 +1,4 @@
-<script setup lang="ts">
-import { onMounted } from "vue";
-import { initOrbiter } from "@junobuild/analytics";
-
-onMounted(async () => {
-  await initOrbiter({
-    satelliteId: "4hy5z-qaaaa-aaaal-addrq-cai",
-    orbiterId: "ikgsc-2qaaa-aaaal-adagq-cai",
-  });
-});
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <RouterView />
