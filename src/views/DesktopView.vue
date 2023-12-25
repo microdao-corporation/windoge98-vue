@@ -84,6 +84,7 @@ onMounted(() => {
     windows.push({
       id,
       title: item.name,
+      icon: item.icon,
       url: item.url,
       visible: true,
       active: false,
@@ -126,13 +127,7 @@ function findWindow(id: number): DesktopWindow | undefined {
   return windows.find((w) => w.id === id);
 }
 
-function onResize(
-  id: number,
-  left: number,
-  top: number,
-  width: number,
-  height: number
-) {
+function onResize(id: number, left: number, top: number, width: number, height: number) {
   windows.forEach((win) => {
     if (win.id === id) {
       win.dimensions.x = left;
@@ -223,6 +218,7 @@ const onDragEnd = (id: number, left: number, top: number) => {
     >
       <Window
         :title="win.title"
+        :icon="win.icon"
         @onMinimise="minimiseWindow(win)"
         @onMaximise="maximiseWindow(win)"
         @onClose="closeWindow(win)"

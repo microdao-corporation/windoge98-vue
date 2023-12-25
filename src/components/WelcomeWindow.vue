@@ -11,11 +11,11 @@ onMounted(() => {
   windogeAgent.fetchMaxSupply();
   icpAgent.fetchIcrc1BalanceOf(
     "3scjg-z33zr-ll3bt-hdsov-kkitm-3tsml-tvgkt-d6jwa-onz35-hkfq5-zae",
-    "treasury_icp",
+    "treasury_icp"
   );
   windogeAgent.fetchIcrc1BalanceOf(
     "3scjg-z33zr-ll3bt-hdsov-kkitm-3tsml-tvgkt-d6jwa-onz35-hkfq5-zae",
-    "treasury_exe",
+    "treasury_exe"
   );
 });
 </script>
@@ -23,14 +23,14 @@ onMounted(() => {
 <template>
   <WindowLogo />
   <p>
-    Windoge 98 is a nostalgic take on memecoins, designed as an ICRC-1 token on
-    the Internet Computer (IC), this token is a nod to the Windows 98 operating
-    system many of us grew up on, blending the world of classic computing and
-    90's aesthetic with state of the art blockchain technology.
+    Windoge 98 is a nostalgic take on memecoins, designed as an ICRC-1 token on the
+    Internet Computer (IC), this token is a nod to the Windows 98 operating system many of
+    us grew up on, blending the world of classic computing and 90's aesthetic with state
+    of the art blockchain technology.
   </p>
   <p>
-    Windoge 98 doesn't just aim to be another memecoin; it plans to power the
-    entire Internet Computer!
+    Windoge 98 doesn't just aim to be another memecoin; it plans to power the entire
+    Internet Computer!
   </p>
 
   <div>
@@ -45,16 +45,12 @@ onMounted(() => {
       10,000,000 EXE<br />
       <strong>Circulating supply: </strong>
       {{
-        windogeAgent.data.max_supply &&
-        natToFormattedString(windogeAgent.data.max_supply)
+        windogeAgent.data.max_supply && natToFormattedString(windogeAgent.data.max_supply)
       }}
       EXE<br />
       <strong>Total burned: </strong>
       🔥
-      {{
-        windogeAgent.data.max_supply &&
-        calculateBurned(windogeAgent.data.max_supply)
-      }}
+      {{ windogeAgent.data.max_supply && calculateBurned(windogeAgent.data.max_supply) }}
       EXE <br />
       <strong
         ><a
@@ -64,15 +60,10 @@ onMounted(() => {
         >
         ICP:
       </strong>
-      {{
-        icpAgent.data.treasury_icp &&
-        natToFormattedString(icpAgent.data.treasury_icp)
-      }}
+      {{ icpAgent.data.treasury_icp && natToFormattedString(icpAgent.data.treasury_icp) }}
       ICP<br />
       <strong
-        ><a
-          href="https://sneed.one/?token=rh2pm-ryaaa-aaaan-qeniq-cai"
-          targer="_blank"
+        ><a href="https://sneed.one/?token=rh2pm-ryaaa-aaaan-qeniq-cai" targer="_blank"
           >Treasury</a
         >
         EXE:
@@ -99,22 +90,19 @@ onMounted(() => {
     <a href="https://discord.gg/CnMRrtaj3h" target="_blank">Discord</a>
     |
     <a href="/whitepaper.pdf" target="_blank">Whitepaper</a> |
-    <a
-      href="https://sneed.one/?token=rh2pm-ryaaa-aaaan-qeniq-cai"
-      target="_blank"
+    <a href="https://sneed.one/?token=rh2pm-ryaaa-aaaan-qeniq-cai" target="_blank"
       >Explorer</a
     >
+    |
+    <a href="https://www.coingecko.com/en/coins/windoge98" target="_blank">CoinGecko</a>
   </p>
 
   <p style="text-align: center; float: bottom">
     <strong>Exchanges: </strong>
-    <a
-      href="https://info.icpswap.com/swap/token/details/rh2pm-ryaaa-aaaan-qeniq-cai"
+    <a href="https://info.icpswap.com/swap/token/details/rh2pm-ryaaa-aaaan-qeniq-cai"
       >ICPSwap</a
     >
     |
-    <a href="https://data.sonic.ooo/tokens/rh2pm-ryaaa-aaaan-qeniq-cai"
-      >Sonic</a
-    >
+    <a href="https://data.sonic.ooo/tokens/rh2pm-ryaaa-aaaan-qeniq-cai">Sonic</a>
   </p>
 </template>

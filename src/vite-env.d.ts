@@ -14,6 +14,7 @@ type Dimensions = {
 type DesktopWindow = {
   id: number;
   url?: string;
+  icon?: string;
   title?: string;
   type: WindowType;
   subType: VirtualWindowSubtype;

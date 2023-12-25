@@ -12,6 +12,7 @@ export const toolbarLeftData: ToolbarItem[] = [
   {
     name: "OpenChat",
     class: "oc",
+    icon: ocDogeIcon,
     url: "https://oc.app/community/ow6el-gyaaa-aaaar-av5na-cai/?ref=y3rqn-fyaaa-aaaaf-a7z6a-cai",
     virtualWindow: "iframe",
     subType: "openchat",

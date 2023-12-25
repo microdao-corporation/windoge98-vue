@@ -1,12 +1,19 @@
 <script setup lang="ts">
 const emit = defineEmits(["onClose", "onMaximise", "onMinimise"]);
-const props = defineProps(["title"]);
+const props = defineProps(["title", "icon"]);
 </script>
 
 <template>
   <div class="window">
     <div class="title-bar" @dblclick="emit('onMaximise')">
-      <div class="title-bar-text">{{ props.title }}</div>
+      <div class="title-bar-text" style="display: flex; align-items: center">
+        <img
+          :src="props.icon"
+          style="width: 16px; height: 16px; margin-right: 4px"
+          v-if="props.icon"
+        />
+        {{ props.title }}
+      </div>
       <div class="title-bar-controls">
         <button aria-label="Minimize" @click="emit('onMinimise')" />
         <button aria-label="Maximize" @click="emit('onMaximise')" />

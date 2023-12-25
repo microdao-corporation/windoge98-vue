@@ -1,9 +1,13 @@
 <script setup lang="ts">
-import { ref, Ref, onMounted, onUnmounted } from "vue";
+import { ref, Ref, onMounted, onUnmounted, onBeforeMount } from "vue";
 import { startMenuData } from "../data/menuItems";
 import { openNewWindow } from "../utils/windowUtils";
 
 const isStartMenuVisible = ref(false);
+
+onBeforeMount(() => {
+  preloadImages();
+});
 
 onMounted(() => {
   document.addEventListener("click", handleOutsideClick);
@@ -40,6 +44,28 @@ function isSubMenuVisible(item: MenuItem) {
   console.log("isSubMenuVisible", isVisible);
   return isVisible;
 }
+
+const preloadImages = () => {
+  startMenuData.main.forEach((item) => {
+    if (item.icon) {
+      const img = new Image();
+      img.src = item.icon;
+    }
+    item.submenu?.forEach((subItem) => {
+      if (subItem.icon) {
+        const img = new Image();
+        img.src = subItem.icon;
+      }
+    });
+  });
+
+  startMenuData.bottom.forEach((item) => {
+    if (item.icon) {
+      const img = new Image();
+      img.src = item.icon;
+    }
+  });
+};
 </script>
 
 <template>
@@ -59,7 +85,12 @@ function isSubMenuVisible(item: MenuItem) {
           @mouseleave="visibleSubMenu = null"
         >
           <div class="start-menu-item-icon">
-            <img :src="item.icon" :height="item.iconHeight" v-if="item.icon" />
+            <img
+              :src="item.icon"
+              :height="item.iconHeight"
+              v-if="item.icon"
+              rel="preload"
+            />
           </div>
           <div
             style="
@@ -91,7 +122,7 @@ function isSubMenuVisible(item: MenuItem) {
               class="start-menu-item"
             >
               <div class="start-menu-item-icon">
-                <img :src="subItem.icon" :width="16" />
+                <img :src="subItem.icon" :width="16" rel="preload" />
               </div>
               {{ subItem.name }}
             </div>
@@ -104,7 +135,7 @@ function isSubMenuVisible(item: MenuItem) {
           class="start-menu-item"
         >
           <div class="start-menu-item-icon">
-            <img :src="item.icon" :height="item.iconHeight" />
+            <img :src="item.icon" :height="item.iconHeight" rel="preload" />
           </div>
           {{ item.name }}
         </div>
@@ -114,17 +145,17 @@ function isSubMenuVisible(item: MenuItem) {
 </template>
 
 <style scoped>
-  .submenu-expand-icon {
-    margin-right: 0.8rem;
-    margin-top: 2px;
-    cursor: pointer; /* Optional, to change the mouse cursor on hover */
-  }
+.submenu-expand-icon {
+  margin-right: 0.8rem;
+  margin-top: 2px;
+  cursor: pointer; /* Optional, to change the mouse cursor on hover */
+}
 
-  .start-menu-item:hover svg {
-    fill: white;
-    stroke: white;
-    color: white;
-  }
+.start-menu-item:hover svg {
+  fill: white;
+  stroke: white;
+  color: white;
+}
 
 .start-menu-item-icon {
   float: left;
