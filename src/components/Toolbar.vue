@@ -162,7 +162,7 @@ strong {
     margin: 3px 2px;
 
     &.oc {
-      background-image: url("../assets/oc-pixel.png");
+      background-image: url("../assets/oc_doge_icon.png");
     }
 
     &.discord {
@@ -195,4 +195,3 @@ strong {
   }
 }
 </style>
-../data/menuItems

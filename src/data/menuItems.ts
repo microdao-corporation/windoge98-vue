@@ -6,6 +6,7 @@ import computerIcon from "../assets/computer-5.png";
 import programsIcon from "../assets/programs_icon.png";
 import taggrIcon from "../assets/taggr_icon.png";
 import dmailIcon from "../assets/dmail_icon.png";
+import beaconIcon from "../assets/beacon_icon.png";
 import { initialiseOpenChat } from "../utils/windowUtils";
 
 export const toolbarLeftData: ToolbarItem[] = [
@@ -64,6 +65,14 @@ export const startMenuData: StartMenuData = {
           url: "https://windoge98.com/spacecadetpinball.html",
           iconHeight: 28,
           virtualWindow: "none",
+          subType: "unknown",
+        },
+        {
+          name: "Beacon DEX (Experimental!)",
+          icon: beaconIcon,
+          url: "https://beacondex.link/#/rh2pm-ryaaa-aaaan-qeniq-cai",
+          iconHeight: 30,
+          virtualWindow: "iframe",
           subType: "unknown",
         },
         {
