@@ -7,6 +7,7 @@ import programsIcon from "../assets/programs_icon.png";
 import taggrIcon from "../assets/taggr_icon.png";
 import dmailIcon from "../assets/dmail_icon.png";
 import beaconIcon from "../assets/beacon_icon.png";
+import icdrawIcon from "../assets/icdraw_icon.png";
 import { initialiseOpenChat } from "../utils/windowUtils";
 
 export const toolbarLeftData: ToolbarItem[] = [
@@ -104,6 +105,14 @@ export const startMenuData: StartMenuData = {
           name: "Taggr",
           icon: taggrIcon,
           url: "https://taggr.top",
+          iconHeight: 30,
+          virtualWindow: "iframe",
+          subType: "unknown",
+        },
+        {
+          name: "ICDraw",
+          icon: icdrawIcon,
+          url: "https://icdraw.com",
           iconHeight: 30,
           virtualWindow: "iframe",
           subType: "unknown",
