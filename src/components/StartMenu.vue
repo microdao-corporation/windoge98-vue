@@ -117,7 +117,9 @@ const preloadImages = () => {
           <!-- Render submenu if it exists -->
           <div v-if="isSubMenuVisible(item)" class="submenu">
             <div
-              v-for="subItem in item.submenu"
+              v-for="subItem in item.submenu?.sort((a, b) =>
+                a.name.localeCompare(b.name)
+              )"
               @click="openNewWindow(subItem)"
               class="start-menu-item"
             >

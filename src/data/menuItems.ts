@@ -8,6 +8,8 @@ import taggrIcon from "../assets/taggr_icon.png";
 import dmailIcon from "../assets/dmail_icon.png";
 import beaconIcon from "../assets/beacon_icon.png";
 import icdrawIcon from "../assets/icdraw_icon.png";
+import icpSwapIcon from "../assets/icpswap_icon.png";
+import sonicIcon from "../assets/sonic_icon.png";
 import { initialiseOpenChat } from "../utils/windowUtils";
 
 export const toolbarLeftData: ToolbarItem[] = [
@@ -93,6 +95,14 @@ export const startMenuData: StartMenuData = {
           subType: "unknown",
         },
         {
+          name: "ICPSwap",
+          icon: icpSwapIcon,
+          url: "https://app.icpswap.com/swap?input=ryjl3-tyaaa-aaaaa-aaaba-cai&output=rh2pm-ryaaa-aaaan-qeniq-cai",
+          iconHeight: 30,
+          virtualWindow: "iframe",
+          subType: "unknown",
+        },
+        {
           name: "OpenChat",
           icon: ocDogeIcon,
           url: "https://oc.app/community/ow6el-gyaaa-aaaar-av5na-cai/?ref=y3rqn-fyaaa-aaaaf-a7z6a-cai",
@@ -100,6 +110,14 @@ export const startMenuData: StartMenuData = {
           virtualWindow: "iframe",
           init: initialiseOpenChat,
           subType: "openchat",
+        },
+        {
+          name: "Sonic",
+          icon: sonicIcon,
+          url: "https://app.sonic.ooo/swap?from=rh2pm-ryaaa-aaaan-qeniq-cai&to=ryjl3-tyaaa-aaaaa-aaaba-cai",
+          iconHeight: 30,
+          virtualWindow: "none",
+          subType: "unknown",
         },
         {
           name: "Taggr",

@@ -6,7 +6,6 @@ import DevelopersWindow from "../components/DevelopersWindow.vue";
 import IframeWindow from "../components/IframeWindow.vue";
 import { eventBus } from "../utils/bus";
 import Toolbar from "../components/Toolbar.vue";
-import Snowfall from "../components/Snowfall.vue";
 import { useGtag } from "vue-gtag-next";
 import { initialiseOpenChat } from "../utils/windowUtils";
 // import DaoWindow from "../components/DaoWindow.vue";
@@ -38,7 +37,7 @@ const WELCOME_WINDOW: DesktopWindow = {
 
 const DEV_WINDOW: DesktopWindow = {
   id: 1,
-  title: "Developers",
+  title: "Happy New Year!",
   visible: true,
   active: false,
   maximised: false,
@@ -48,7 +47,7 @@ const DEV_WINDOW: DesktopWindow = {
     height: DEFAULT_HEIGHT,
     width: DEFAULT_WIDTH,
     x: 200,
-    y: 600,
+    y: 400,
   },
 };
 
@@ -112,6 +111,35 @@ watch(windows, (val) => {
   // let's store the window state in local storage
   localStorage.setItem(STATE_KEY, JSON.stringify(filtered));
 });
+
+declare global {
+  interface Window {
+    createWindow: (url: string, title: string, height: number, width: number) => void;
+  }
+}
+
+function createWindow(url: string, title: string, height: number, width: number) {
+  const id = windows.length;
+  windows.push({
+    id,
+    title,
+    url,
+    visible: true,
+    active: false,
+    type: "none",
+    subType: "unknown",
+    maximised: false,
+    dimensions: {
+      height,
+      width,
+      x: 200,
+      y: 540,
+    },
+  });
+
+  activateWindow(id);
+}
+window.createWindow = createWindow;
 
 const activateWindow = (id: number) => {
   windows.forEach((w) => {
@@ -194,8 +222,6 @@ const onDragEnd = (id: number, left: number, top: number) => {
 </script>
 
 <template>
-  <Snowfall />
-
   <div v-for="win in windows" :key="win.id">
     <vue-draggable-resizable
       class="responsive-container"
@@ -236,6 +262,7 @@ const onDragEnd = (id: number, left: number, top: number) => {
 <style>
 body {
   background-color: teal;
+  background-size: initial;
   height: 100vh;
   width: 100vw;
   overflow: hidden;
