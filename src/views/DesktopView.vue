@@ -37,7 +37,7 @@ const WELCOME_WINDOW: DesktopWindow = {
 
 const DEV_WINDOW: DesktopWindow = {
   id: 1,
-  title: "Happy New Year!",
+  title: "Developers",
   visible: true,
   active: false,
   maximised: false,
