@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from "vue";
-import { openNewWindow } from "../utils/windowUtils";
-import { toolbarLeftData } from "../data/menuItems";
+import { ref, onMounted, onBeforeUnmount, watch } from "vue";
+import { useWindowStore } from "../stores/useWindowStore";
 import StartMenu from "./StartMenu.vue";
+
+const emit = defineEmits(["activateToolbarWindow"]);
+const windowStore = useWindowStore();
 
 const currentHours = ref(new Date().getHours());
 const currentMinutes = ref(new Date().getMinutes());
@@ -34,23 +36,45 @@ onMounted(() => {
 onBeforeUnmount(() => {
   clearInterval(intervalId);
 });
+
+function handleWindowClick(windowId: number) {
+  windowStore.activateWindow(windowId);
+  emit("activateToolbarWindow", windowId);
+}
+
+function getButtonStyle(windowId: number) {
+  return {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: windowStore.windows[windowId].active ? "#fff" : "#c0c0c0",
+  };
+}
+
+watch(windowStore.windows, () => {
+  console.log("windows changed", windowStore.windows);
+});
 </script>
 
 <template>
   <div id="toolbar">
     <StartMenu />
-    <div class="toolbar-separator"></div>
 
+    <div class="toolbar-separator"></div>
     <div class="toolbar-left">
-      <button
-        v-for="item in toolbarLeftData"
-        :class="`toolbar-icon ${item.class}`"
-        @click="() => openNewWindow(item)"
-      ></button>
+      <div style="display: flex">
+        <button
+          v-for="window in windowStore.windows.filter((w: DesktopWindow) => w)"
+          class="window-icon"
+          :style="getButtonStyle(window.id)"
+          :key="window.id"
+          @click="handleWindowClick(window.id)"
+        >
+          <img :src="window.icon" :height="20" rel="preload" style="margin-right: 10px" />
+          {{ window.title }}
+        </button>
+      </div>
     </div>
-
-    <div class="toolbar-separator"></div>
-
     <div class="toolbar-right">
       <div class="time">
         <span class="hour">{{ addZero(currentHours) }}</span>
@@ -160,27 +184,15 @@ strong {
     border: none;
     margin-top: 3px;
     margin: 3px 2px;
-
-    &.oc {
-      background-image: url("../assets/oc_doge_icon.png");
-    }
-
-    &.discord {
-      background-image: url("../assets/discord-pixel2.png");
-    }
-
-    &.sourceforge {
-      background-image: url("../assets/sf-pixel.png");
-    }
-
-    &.twitter {
-      background-image: url("../assets/x-pixel.png");
-    }
-    &.telegram {
-      background-image: url("../assets/telegram-pixel.png");
-    }
   }
-
+  .window-icon {
+    background: no-repeat center / auto 20px;
+    height: 25px;
+    border: none;
+    margin-top: 3px;
+    margin: 3px 2px;
+    float: left;
+  }
   .toolbar-right {
     float: right;
     margin: 2px 3px;
@@ -193,5 +205,9 @@ strong {
       padding: 6px 10px;
     }
   }
+}
+
+.active-button {
+  background-color: #fff !important;
 }
 </style>

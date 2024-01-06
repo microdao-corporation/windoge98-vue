@@ -1,25 +1,13 @@
 <script setup lang="ts">
 import Window from "../components/Window.vue";
 import Toolbar from "../components/Toolbar.vue";
+import { useWindowStore } from "../stores/useWindowStore";
 
-import { useWindowManagement } from "../hooks/useWindowManager";
+const windowStore = useWindowStore();
+const activateWindow = windowStore.activateWindow;
+const getComponentForWindowType = windowStore.getComponentForWindowType;
 
-const {
-  windows,
-  screenWidth,
-  screenHeight,
-  MIN_WIDTH,
-  MIN_HEIGHT,
-  activateWindow,
-  zIndexForWindow,
-  onResize,
-  closeWindow,
-  maximiseWindow,
-  minimiseWindow,
-  getComponentForWindowType,
-  onDragEnd,
-} = useWindowManagement();
-
+// This was setup for anvil to play with a window in console.
 declare global {
   interface Window {
     createWindow: (url: string, title: string, height: number, width: number) => void;
@@ -27,10 +15,11 @@ declare global {
 }
 
 function createWindow(url: string, title: string, height: number, width: number) {
-  const id = windows.length;
-  windows.push({
+  const id = windowStore.windows.length;
+  windowStore.windows.push({
     id,
     title,
+    zIndex: 100,
     url,
     visible: true,
     active: false,
@@ -48,24 +37,29 @@ function createWindow(url: string, title: string, height: number, width: number)
   activateWindow(id);
 }
 window.createWindow = createWindow;
+
+function handleActivateToolbarWindow(windowId: number) {
+  console.log("handleActivateToolbarWindow", windowId);
+  activateWindow(windowId);
+}
 </script>
 
 <template>
-  <div v-for="win in windows" :key="win.id">
+  <div v-for="win in windowStore.windows" :key="win.id">
     <vue-draggable-resizable
       class="responsive-container"
       :active="win.active"
-      @activated="activateWindow(win.id)"
-      @dragstop="(left: number, top: number) => onDragEnd(win.id, left, top)"
+      @activated="windowStore.activateWindow(win.id)"
+      @dragstop="(left: number, top: number) => windowStore.onDragEnd(win.id, left, top)"
       @resizestop="
         (left: number, top: number, width: number, height: number) =>
-          onResize(win.id, left, top, width, height)
+        windowStore.onResize(win.id, left, top, width, height)
       "
-      :style="{ zIndex: zIndexForWindow(win.id) }"
-      :w="win.maximised ? screenWidth : win.dimensions.width"
-      :h="win.maximised ? screenHeight : win.dimensions.height"
-      :minw="MIN_WIDTH"
-      :minh="MIN_HEIGHT"
+      :style="{ zIndex: win.zIndex }"
+      :w="win.maximised ? windowStore.screenWidth : win.dimensions.width"
+      :h="win.maximised ? windowStore.screenHeight : win.dimensions.height"
+      :minw="windowStore.MIN_WIDTH"
+      :minh="windowStore.MIN_HEIGHT"
       :x="win.maximised ? 0 : win.dimensions.x"
       :y="win.maximised ? 0 : win.dimensions.y"
       v-if="win.visible"
@@ -74,9 +68,9 @@ window.createWindow = createWindow;
       <Window
         :title="win.title"
         :icon="win.icon"
-        @onMinimise="minimiseWindow(win)"
-        @onMaximise="maximiseWindow(win)"
-        @onClose="closeWindow(win)"
+        @onMinimise="windowStore.minimiseWindow(win.id)"
+        @onMaximise="windowStore.maximiseWindow(win.id)"
+        @onClose="windowStore.closeWindow(win.id)"
       >
         <component
           :is="getComponentForWindowType(win).component"
@@ -84,7 +78,7 @@ window.createWindow = createWindow;
         />
       </Window>
     </vue-draggable-resizable>
-    <Toolbar />
+    <Toolbar @activateToolbarWindow="handleActivateToolbarWindow" />
   </div>
 </template>
 
@@ -97,4 +91,3 @@ body {
   overflow: hidden;
 }
 </style>
-../hooks/useWindowManager
