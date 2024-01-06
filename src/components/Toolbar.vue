@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from "vue";
-import { useWindowManagement } from "../hooks/useWindowManager";
+import { useWindowStore } from "../stores/useWindowStore";
 import StartMenu from "./StartMenu.vue";
 
-const { windows, activateWindow } = useWindowManagement();
+const emit = defineEmits(["activateToolbarWindow"]);
+const windowStore = useWindowStore();
+
 const currentHours = ref(new Date().getHours());
 const currentMinutes = ref(new Date().getMinutes());
 const amPm = ref(currentHours.value >= 12 ? "PM" : "AM");
@@ -34,6 +36,20 @@ onMounted(() => {
 onBeforeUnmount(() => {
   clearInterval(intervalId);
 });
+
+function handleWindowClick(windowId: number) {
+  windowStore.activateWindow(windowId);
+  emit("activateToolbarWindow", windowId);
+}
+
+function getButtonStyle(windowId: number) {
+  return {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: windowStore.windows[windowId].active ? "#fff" : "#c0c0c0",
+  };
+}
 </script>
 
 <template>
@@ -44,13 +60,13 @@ onBeforeUnmount(() => {
     <div class="toolbar-left">
       <div style="display: flex">
         <button
-          v-for="window in windows"
+          v-for="window in windowStore.windows"
           class="window-icon"
-          style="display: flex; align-items: center; justify-content: center"
+          :style="getButtonStyle(window.id)"
           :key="window.id"
-          @click="activateWindow(window.id)"
+          @click="handleWindowClick(window.id)"
         >
-          <img :src="window.icon" :height="18" rel="preload" style="margin-right: 10px" />
+          <img :src="window.icon" :height="20" rel="preload" style="margin-right: 10px" />
           {{ window.title }}
         </button>
       </div>
@@ -185,5 +201,9 @@ strong {
       padding: 6px 10px;
     }
   }
+}
+
+.active-button {
+  background-color: #fff !important;
 }
 </style>

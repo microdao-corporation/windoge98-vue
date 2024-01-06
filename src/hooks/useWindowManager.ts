@@ -20,6 +20,7 @@ export function useWindowManagement() {
 
   const WELCOME_WINDOW: DesktopWindow = {
     id: 0,
+    zIndex: 100,
     title: "Welcome to Windoge98",
     icon: startIcon,
     visible: true,
@@ -37,6 +38,7 @@ export function useWindowManagement() {
   
   const DEV_WINDOW: DesktopWindow = {
     id: 1,
+    zIndex: 1,
     title: "Developers",
     icon: defaultAppIcon,
     visible: true,
@@ -79,6 +81,7 @@ export function useWindowManagement() {
       const id = windows.length;
       windows.push({
         id,
+        zIndex: 100,
         title: item.name,
         icon: item.icon,
         url: item.url,
@@ -106,16 +109,17 @@ export function useWindowManagement() {
 
   watch(windows, (val) => {
     if (!initialised) return;
-    const filtered = val.filter(w => w.id > 1);
-    filtered.map((w) => { zIndexForWindow(w.id); });
+    let filtered = val.filter(w => w.id > 1);
     localStorage.setItem(STATE_KEY, JSON.stringify(filtered));
-  });
+  }, { deep: true });
 
   function activateWindow(id: number) {
     console.log("activateWindow", id);
     windows.forEach((w) => {
       w.active = w.id === id;
+      w.zIndex = w.id === id ? 100 : 1;
     });
+    console.log("activateWindow", windows);
   };
 
   function findWindow(id: number): DesktopWindow | undefined {

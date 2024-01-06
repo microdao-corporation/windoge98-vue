@@ -13,6 +13,7 @@ type Dimensions = {
 
 type DesktopWindow = {
   id: number;
+  zIndex: number;
   url?: string;
   icon?: string;
   title?: string;
