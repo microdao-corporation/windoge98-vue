@@ -82,6 +82,7 @@ export const useWindowStore = defineStore("windowStore", {
 					w.zIndex = 1;
 				}
 			});
+			this.getWindowById(id).visible = true;
 		},
 
 		closeWindow(id) {
@@ -104,6 +105,8 @@ export const useWindowStore = defineStore("windowStore", {
 			if (win) {
 				win.visible = false;
 			}
+			windows[-1].active = true;
+			windows[-1].zIndex = this.highestZIndex;
 		},
 
 		onResize(id, left, top, width, height) {

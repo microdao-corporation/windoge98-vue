@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from "vue";
+import { ref, onMounted, onBeforeUnmount, watch } from "vue";
 import { useWindowStore } from "../stores/useWindowStore";
 import StartMenu from "./StartMenu.vue";
 
@@ -50,6 +50,10 @@ function getButtonStyle(windowId: number) {
     backgroundColor: windowStore.windows[windowId].active ? "#fff" : "#c0c0c0",
   };
 }
+
+watch(windowStore.windows, () => {
+  console.log("windows changed", windowStore.windows);
+});
 </script>
 
 <template>
@@ -60,7 +64,7 @@ function getButtonStyle(windowId: number) {
     <div class="toolbar-left">
       <div style="display: flex">
         <button
-          v-for="window in windowStore.windows"
+          v-for="window in windowStore.windows.filter((w: DesktopWindow) => w)"
           class="window-icon"
           :style="getButtonStyle(window.id)"
           :key="window.id"

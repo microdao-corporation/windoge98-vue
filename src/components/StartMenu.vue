@@ -82,6 +82,7 @@ const preloadImages = () => {
           v-for="item in startMenuData.main"
           class="start-menu-item"
           @mouseenter="toggleSubMenu(item)"
+          @click.once="toggleSubMenu(item)"
           @mouseleave="visibleSubMenu = null"
         >
           <div class="start-menu-item-icon">
