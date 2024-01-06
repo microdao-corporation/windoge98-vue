@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import Window from "../components/Window.vue";
 import Toolbar from "../components/Toolbar.vue";
-
 import { useWindowManagement } from "../hooks/useWindowManager";
 
 const {
@@ -20,6 +19,7 @@ const {
   onDragEnd,
 } = useWindowManagement();
 
+// This was setup for anvil to play with a window in console.
 declare global {
   interface Window {
     createWindow: (url: string, title: string, height: number, width: number) => void;
@@ -97,4 +97,3 @@ body {
   overflow: hidden;
 }
 </style>
-../hooks/useWindowManager

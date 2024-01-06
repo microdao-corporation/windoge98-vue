@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from "vue";
-import { openNewWindow } from "../utils/windowUtils";
-import { toolbarLeftData } from "../data/menuItems";
+import { useWindowManagement } from "../hooks/useWindowManager";
 import StartMenu from "./StartMenu.vue";
 
+const { windows, activateWindow } = useWindowManagement();
 const currentHours = ref(new Date().getHours());
 const currentMinutes = ref(new Date().getMinutes());
 const amPm = ref(currentHours.value >= 12 ? "PM" : "AM");
@@ -39,18 +39,22 @@ onBeforeUnmount(() => {
 <template>
   <div id="toolbar">
     <StartMenu />
-    <div class="toolbar-separator"></div>
 
+    <div class="toolbar-separator"></div>
     <div class="toolbar-left">
-      <button
-        v-for="item in toolbarLeftData"
-        :class="`toolbar-icon ${item.class}`"
-        @click="() => openNewWindow(item)"
-      ></button>
+      <div style="display: flex">
+        <button
+          v-for="window in windows"
+          class="window-icon"
+          style="display: flex; align-items: center; justify-content: center"
+          :key="window.id"
+          @click="activateWindow(window.id)"
+        >
+          <img :src="window.icon" :height="18" rel="preload" style="margin-right: 10px" />
+          {{ window.title }}
+        </button>
+      </div>
     </div>
-
-    <div class="toolbar-separator"></div>
-
     <div class="toolbar-right">
       <div class="time">
         <span class="hour">{{ addZero(currentHours) }}</span>
@@ -160,27 +164,15 @@ strong {
     border: none;
     margin-top: 3px;
     margin: 3px 2px;
-
-    &.oc {
-      background-image: url("../assets/oc_doge_icon.png");
-    }
-
-    &.discord {
-      background-image: url("../assets/discord-pixel2.png");
-    }
-
-    &.sourceforge {
-      background-image: url("../assets/sf-pixel.png");
-    }
-
-    &.twitter {
-      background-image: url("../assets/x-pixel.png");
-    }
-    &.telegram {
-      background-image: url("../assets/telegram-pixel.png");
-    }
   }
-
+  .window-icon {
+    background: no-repeat center / auto 20px;
+    height: 25px;
+    border: none;
+    margin-top: 3px;
+    margin: 3px 2px;
+    float: left;
+  }
   .toolbar-right {
     float: right;
     margin: 2px 3px;

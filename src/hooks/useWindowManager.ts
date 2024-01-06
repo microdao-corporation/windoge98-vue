@@ -5,6 +5,8 @@ import { initialiseOpenChat } from '../utils/windowUtils';
 import WelcomeWindow from '../components/WelcomeWindow.vue';
 import DevelopersWindow from '../components/DevelopersWindow.vue';
 import IframeWindow from '../components/IframeWindow.vue';
+import defaultAppIcon from '../assets/default_app_icon.png';
+import startIcon from '../assets/start-icon.png';
 
 export function useWindowManagement() {
   const { event } = useGtag();
@@ -19,6 +21,7 @@ export function useWindowManagement() {
   const WELCOME_WINDOW: DesktopWindow = {
     id: 0,
     title: "Welcome to Windoge98",
+    icon: startIcon,
     visible: true,
     active: true,
     maximised: false,
@@ -35,6 +38,7 @@ export function useWindowManagement() {
   const DEV_WINDOW: DesktopWindow = {
     id: 1,
     title: "Developers",
+    icon: defaultAppIcon,
     visible: true,
     active: false,
     maximised: false,
@@ -103,10 +107,12 @@ export function useWindowManagement() {
   watch(windows, (val) => {
     if (!initialised) return;
     const filtered = val.filter(w => w.id > 1);
+    filtered.map((w) => { zIndexForWindow(w.id); });
     localStorage.setItem(STATE_KEY, JSON.stringify(filtered));
   });
 
   function activateWindow(id: number) {
+    console.log("activateWindow", id);
     windows.forEach((w) => {
       w.active = w.id === id;
     });
@@ -117,7 +123,10 @@ export function useWindowManagement() {
   }
 
   function zIndexForWindow(id: number) {
-    return findWindow(id)?.active ? 100 : 1;
+    console.log("zIndexForWindow", id);
+    const index = findWindow(id)?.active ? 100 : 1;
+    console.log("zIndexForWindow", index)
+    return index;
   }
   
 
@@ -186,6 +195,10 @@ export function useWindowManagement() {
     }
   };
 
+  function requestActivateWindow(emit: any, windowId: number) {
+    emit('activate-window', windowId);
+  }
+
   return {
     windows,
     screenWidth,
@@ -201,5 +214,6 @@ export function useWindowManagement() {
     minimiseWindow,
     getComponentForWindowType,
     onDragEnd,
+    requestActivateWindow,
   };
 }
