@@ -14,6 +14,7 @@ type Dimensions = {
 type DesktopWindow = {
   id: number;
   zIndex: number;
+  component?: any;
   url?: string;
   icon?: string;
   title?: string;
@@ -28,11 +29,14 @@ type DesktopWindow = {
 
 type MenuItem = {
   name: string;
-  url: string;
+  url?: string;
+  type?: WindowType;
   virtualWindow: VirtualWindowType;
   subType: VirtualWindowSubtype;
   icon?: string;
   iconHeight?: number;
+  height?: number;
+  width?: number;
   submenu?: StartMenuItem[];
   init?: (frame: HTMLIFrameElement) => void;
 };
@@ -46,6 +50,6 @@ type StartMenuData = {
   bottom: MenuItem[];
 };
 
-type VirtualWindowType = "iframe" | "none";
+type VirtualWindowType = "iframe" | "none" | "welcome" | "blank";
 
 type VirtualWindowSubtype = "openchat" | "unknown";

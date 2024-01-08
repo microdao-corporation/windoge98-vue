@@ -17,6 +17,8 @@ export const useWindowStore = defineStore("windowStore", {
 			},
 			{ deep: true }
 		);
+		watch(windows => {
+		}, { deep: true })
 
 		return store;
 	},
@@ -26,8 +28,9 @@ export const useWindowStore = defineStore("windowStore", {
 				{
 					id: 0,
 					zIndex: 100,
-					title: "Welcome to Windoge98",
+					title: "About Windoge98",
 					icon: startIcon,
+					component: WelcomeWindow,
 					visible: true,
 					active: true,
 					maximised: false,
@@ -45,6 +48,7 @@ export const useWindowStore = defineStore("windowStore", {
 					zIndex: 1,
 					title: "Developers",
 					icon: defaultAppIcon,
+					component: DevelopersWindow,
 					visible: true,
 					active: false,
 					maximised: false,
@@ -87,26 +91,35 @@ export const useWindowStore = defineStore("windowStore", {
 
 		closeWindow(id) {
 			const index = this.windows.findIndex((w) => w.id == id);
-			if (index !== -1) {
+			if (index != -1) {
 				this.windows.splice(index, 1);
 			}
+			this.setActiveToLastWindow();
 		},
 
 		maximiseWindow(id) {
-			const win = this.windows.find((w) => w.id === id);
-			if (win) {
-				win.maximised = !win.maximised;
-			}
+			const window = this.getWindowById(id);
+			window.maximised = !window.maximised;
 		},
 
 		minimiseWindow(id) {
-			// Implementation depends on how you want to handle minimization
-			const win = this.windows.find((w) => w.id === id);
-			if (win) {
-				win.visible = false;
+			this.windows.forEach((w) => {
+				if (w.id == id) {
+					w.visible = false;
+				}
+			});
+			this.setActiveToLastWindow();
+		},
+
+		setActiveToLastWindow() {
+			const visibleWindows = this.windows.filter((w) => w.visible);
+
+			if(visibleWindows.length > 1){
+				const lastWindow = this.windows[this.windows.length - 1];
+				if (lastWindow) {
+					this.activateWindow(lastWindow.id);
+				}
 			}
-			windows[-1].active = true;
-			windows[-1].zIndex = this.highestZIndex;
 		},
 
 		onResize(id, left, top, width, height) {
@@ -144,7 +157,7 @@ export const useWindowStore = defineStore("windowStore", {
 						props: {
 							title: windowData.title,
 							url: windowData.url,
-							// onMount: windowData.init, // If you have specific initialization logic
+							onMount: windowData?.init, // If you have specific initialization logic
 						},
 					};
 			}
@@ -155,7 +168,7 @@ export const useWindowStore = defineStore("windowStore", {
 		strategies: [
 			{
 				key: "my-window-store",
-				storage: localStorage, // You can also use sessionStorage
+				storage: sessionStorage, // You can also use sessionStorage
 			},
 		],
 	},

@@ -1,38 +1,43 @@
 import { useWindowStore } from "../stores/useWindowStore"; // Adjust the path as needed
 
 class EventBus {
-  private _onOpenVirtualWindow: ((winType: MenuItem) => void) | undefined = undefined;
+  private _onOpenVirtualWindow: ((win: MenuItem) => void) | undefined = undefined;
 
-  onOpenVirtualWindow(fn: (winType: MenuItem) => void) {
+  onOpenVirtualWindow(fn: (win: MenuItem) => void) {
     this._onOpenVirtualWindow = fn;
   }
 
-  openVirtualWindow(winType: MenuItem) {
+  openVirtualWindow(win: MenuItem) {
     const windowStore = useWindowStore();
     if (this._onOpenVirtualWindow) {
-      this._onOpenVirtualWindow(winType);
+      this._onOpenVirtualWindow(win);
     } else {
-      // Handle the creation of new window directly
       const newWindowId = windowStore.windows.length;
+
+      // Handle the creation of new window directly
       windowStore.windows.push({
         id: newWindowId,
-        title: winType.name,
-        icon: winType.icon,
-        url: winType.url,
+        title: win.name,
+        icon: win.icon,
+        url: win.url,
         visible: true,
         active: true,
-        type: winType.virtualWindow,
-        subType: winType.subType,
+        type: win.virtualWindow,
+        subType: win.subType,
         maximised: false,
+        init: win.init,
         dimensions: {
-          height: 420, // Example default size
-          width: 600,
-          x: 200,
-          y: 540,
+          height: win.height || 420,
+          width: win.width || 600,
+          x: 100 + (windowStore.windows.length * 20),
+          y: 200 + (windowStore.windows.length * 20),
         },
       });
 
       windowStore.activateWindow(newWindowId);
+      if (win.init) {
+        win.init;
+      }
     }
   }
 }

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, watch } from "vue";
+import { ref, onMounted, onBeforeUnmount } from "vue";
 import { useWindowStore } from "../stores/useWindowStore";
 import StartMenu from "./StartMenu.vue";
 
@@ -41,19 +41,6 @@ function handleWindowClick(windowId: number) {
   windowStore.activateWindow(windowId);
   emit("activateToolbarWindow", windowId);
 }
-
-function getButtonStyle(windowId: number) {
-  return {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: windowStore.windows[windowId].active ? "#fff" : "#c0c0c0",
-  };
-}
-
-watch(windowStore.windows, () => {
-  console.log("windows changed", windowStore.windows);
-});
 </script>
 
 <template>
@@ -61,18 +48,23 @@ watch(windowStore.windows, () => {
     <StartMenu />
 
     <div class="toolbar-separator"></div>
-    <div class="toolbar-left">
+    <div class="toolbar-left" v-if="windowStore.windows">
       <div style="display: flex">
-        <button
+        <div
           v-for="window in windowStore.windows.filter((w: DesktopWindow) => w)"
           class="window-icon"
-          :style="getButtonStyle(window.id)"
+          :class="{ active: window.active }"
           :key="window.id"
           @click="handleWindowClick(window.id)"
         >
-          <img :src="window.icon" :height="20" rel="preload" style="margin-right: 10px" />
+          <img
+            :src="window.icon"
+            :height="16"
+            rel="preload"
+            style="margin-right: 10px; padding-top: 1px; padding-bottom: 1px"
+          />
           {{ window.title }}
-        </button>
+        </div>
       </div>
     </div>
     <div class="toolbar-right">
@@ -86,6 +78,37 @@ watch(windowStore.windows, () => {
 </template>
 
 <style scoped>
+.window-icon {
+  padding-right: 10px;
+  font-family: "MS Sans Serif";
+  font-size: 11px;
+  background: no-repeat center / auto 20px;
+  min-width: 150px;
+  height: 30px;
+  border: none;
+  float: left;
+  display: flex;
+  padding-left: 10px;
+  align-items: center;
+  box-shadow: inset -1px -1px #3d3d3d, inset 1px 1px #e3e3e3, inset -2px -2px grey,
+    inset 2px 2px #e6e6e6;
+  &:hover {
+    background-color: darken(#c0c0c0, 10%);
+  }
+}
+.window-icon.active {
+  display: flex;
+  align-items: center;
+  background: no-repeat center / auto 20px;
+  height: 30px;
+  border: none;
+  float: left;
+  background-color: #f1f1f1; /* Active background color */
+  color: black; /* Text color for active state */
+  box-shadow: inset 1px 1px #2c2c2c, inset -1px -1px #d4d4d4, inset 2px 2px grey,
+    inset -2px -2px #dfdfdf;
+}
+
 .logo {
   display: flex;
   justify-content: center;
@@ -185,14 +208,7 @@ strong {
     margin-top: 3px;
     margin: 3px 2px;
   }
-  .window-icon {
-    background: no-repeat center / auto 20px;
-    height: 25px;
-    border: none;
-    margin-top: 3px;
-    margin: 3px 2px;
-    float: left;
-  }
+
   .toolbar-right {
     float: right;
     margin: 2px 3px;

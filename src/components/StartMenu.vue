@@ -34,14 +34,11 @@ function toggleStartMenu() {
 const visibleSubMenu: Ref<string | null> = ref(null);
 
 function toggleSubMenu(item: MenuItem) {
-  console.log("toggleSubMenu", item);
   visibleSubMenu.value = item.name;
-  console.log("visibleSubMenu", visibleSubMenu.value);
 }
 
 function isSubMenuVisible(item: MenuItem) {
   const isVisible = visibleSubMenu.value == item.name;
-  console.log("isSubMenuVisible", isVisible);
   return isVisible;
 }
 
@@ -82,7 +79,7 @@ const preloadImages = () => {
           v-for="item in startMenuData.main"
           class="start-menu-item"
           @mouseenter="toggleSubMenu(item)"
-          @click.once="toggleSubMenu(item)"
+          @click.once="openNewWindow(item)"
           @mouseleave="visibleSubMenu = null"
         >
           <div class="start-menu-item-icon">

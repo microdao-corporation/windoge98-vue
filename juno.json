@@ -1,6 +1,9 @@
 {
   "satellite": {
     "satelliteId": "4hy5z-qaaaa-aaaal-addrq-cai",
-    "source": "dist"
+    "source": "dist",
+    "storage": {
+      "iframe": "allow-any"
+    }
   }
 }

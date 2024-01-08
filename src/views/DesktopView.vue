@@ -1,29 +1,42 @@
 <script setup lang="ts">
+import { onMounted, onBeforeUpdate } from "vue";
 import Window from "../components/Window.vue";
 import Toolbar from "../components/Toolbar.vue";
 import { useWindowStore } from "../stores/useWindowStore";
+import { initialiseOpenChat } from "../utils/windowUtils";
 
 const windowStore = useWindowStore();
 const activateWindow = windowStore.activateWindow;
-const getComponentForWindowType = windowStore.getComponentForWindowType;
 
 // This was setup for anvil to play with a window in console.
 declare global {
   interface Window {
-    createWindow: (url: string, title: string, height: number, width: number) => void;
+    createWindow: (
+      url: string,
+      type: WindowType,
+      title: string,
+      height: number,
+      width: number
+    ) => void;
   }
 }
 
-function createWindow(url: string, title: string, height: number, width: number) {
+function createWindow(
+  url: string,
+  type: WindowType = "none",
+  title: string,
+  height: number,
+  width: number
+) {
   const id = windowStore.windows.length;
   windowStore.windows.push({
     id,
     title,
+    type,
     zIndex: 100,
     url,
     visible: true,
     active: false,
-    type: "none",
     subType: "unknown",
     maximised: false,
     dimensions: {
@@ -39,13 +52,29 @@ function createWindow(url: string, title: string, height: number, width: number)
 window.createWindow = createWindow;
 
 function handleActivateToolbarWindow(windowId: number) {
-  console.log("handleActivateToolbarWindow", windowId);
   activateWindow(windowId);
 }
+
+onMounted(() => {
+  windowStore.windows.forEach((window: DesktopWindow) => {
+    if (window.subType == "openchat") {
+      initialiseOpenChat;
+      window.init;
+    }
+  });
+});
+onBeforeUpdate(() => {
+  windowStore.windows.forEach((window: DesktopWindow) => {
+    if (window.subType == "openchat") {
+      initialiseOpenChat;
+      window.init;
+    }
+  });
+});
 </script>
 
 <template>
-  <div v-for="win in windowStore.windows" :key="win.id">
+  <div v-if="windowStore.windows" v-for="win in windowStore.windows" :key="win.id">
     <vue-draggable-resizable
       class="responsive-container"
       :active="win.active"
@@ -55,14 +84,13 @@ function handleActivateToolbarWindow(windowId: number) {
         (left: number, top: number, width: number, height: number) =>
         windowStore.onResize(win.id, left, top, width, height)
       "
-      :style="{ zIndex: win.zIndex }"
+      :style="{ zIndex: win.zIndex, display: win.visible ? 'block' : 'none' }"
       :w="win.maximised ? windowStore.screenWidth : win.dimensions.width"
       :h="win.maximised ? windowStore.screenHeight : win.dimensions.height"
       :minw="windowStore.MIN_WIDTH"
       :minh="windowStore.MIN_HEIGHT"
       :x="win.maximised ? 0 : win.dimensions.x"
       :y="win.maximised ? 0 : win.dimensions.y"
-      v-if="win.visible"
       :handles="['tr', 'tl', 'bl', 'br']"
     >
       <Window
@@ -73,13 +101,13 @@ function handleActivateToolbarWindow(windowId: number) {
         @onClose="windowStore.closeWindow(win.id)"
       >
         <component
-          :is="getComponentForWindowType(win).component"
-          v-bind="getComponentForWindowType(win).props"
+          :is="windowStore.getComponentForWindowType(win).component"
+          v-bind="windowStore.getComponentForWindowType(win).props"
         />
       </Window>
     </vue-draggable-resizable>
-    <Toolbar @activateToolbarWindow="handleActivateToolbarWindow" />
   </div>
+  <Toolbar @activateToolbarWindow="handleActivateToolbarWindow" />
 </template>
 
 <style>

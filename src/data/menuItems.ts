@@ -10,6 +10,7 @@ import beaconIcon from "../assets/beacon_icon.png";
 import icdrawIcon from "../assets/icdraw_icon.png";
 import icpSwapIcon from "../assets/icpswap_icon.png";
 import sonicIcon from "../assets/sonic_icon.png";
+import pixelIcon from "../assets/start-icon.png";
 import { initialiseOpenChat } from "../utils/windowUtils";
 
 export const toolbarLeftData: ToolbarItem[] = [
@@ -67,7 +68,9 @@ export const startMenuData: StartMenuData = {
           icon: pinballIcon,
           url: "https://windoge98.com/spacecadetpinball.html",
           iconHeight: 28,
-          virtualWindow: "none",
+          height: 494,
+          width: 632,
+          virtualWindow: "iframe",
           subType: "unknown",
         },
         {
@@ -99,6 +102,7 @@ export const startMenuData: StartMenuData = {
           icon: icpSwapIcon,
           url: "https://app.icpswap.com/swap?input=ryjl3-tyaaa-aaaaa-aaaba-cai&output=rh2pm-ryaaa-aaaan-qeniq-cai",
           iconHeight: 30,
+          height: 600,
           virtualWindow: "iframe",
           subType: "unknown",
         },
@@ -116,7 +120,8 @@ export const startMenuData: StartMenuData = {
           icon: sonicIcon,
           url: "https://app.sonic.ooo/swap?from=rh2pm-ryaaa-aaaan-qeniq-cai&to=ryjl3-tyaaa-aaaaa-aaaba-cai",
           iconHeight: 30,
-          virtualWindow: "none",
+          height: 600,
+          virtualWindow: "iframe",
           subType: "unknown",
         },
         {
@@ -137,14 +142,22 @@ export const startMenuData: StartMenuData = {
         },
       ],
     },
+    
   ],
   bottom: [
+    {
+      name: "About Windoge98",
+      iconHeight: 30,
+      icon: pixelIcon,
+      subType: "unknown",
+      virtualWindow: "welcome",
+    },
     {
       name: "Deployed with Juno",
       icon: junoIcon,
       url: "https://juno.build/",
       iconHeight: 25,
-      virtualWindow: "none",
+      virtualWindow: "blank",
       subType: "unknown",
     },
     {
