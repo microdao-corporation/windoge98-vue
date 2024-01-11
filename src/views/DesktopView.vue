@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import { onMounted, onBeforeUpdate } from "vue";
 import Window from "../components/Window.vue";
 import Toolbar from "../components/Toolbar.vue";
 import { useWindowStore } from "../stores/useWindowStore";
-import { initialiseOpenChat } from "../utils/windowUtils";
 
 const windowStore = useWindowStore();
 const activateWindow = windowStore.activateWindow;
@@ -54,35 +52,24 @@ window.createWindow = createWindow;
 function handleActivateToolbarWindow(windowId: number) {
   activateWindow(windowId);
 }
-
-onMounted(() => {
-  windowStore.windows.forEach((window: DesktopWindow) => {
-    if (window.subType == "openchat") {
-      initialiseOpenChat;
-      window.init;
-    }
-  });
-});
-onBeforeUpdate(() => {
-  windowStore.windows.forEach((window: DesktopWindow) => {
-    if (window.subType == "openchat") {
-      initialiseOpenChat;
-      window.init;
-    }
-  });
-});
 </script>
 
 <template>
-  <div v-if="windowStore.windows" v-for="win in windowStore.windows" :key="win.id">
+  <div
+    v-if="windowStore.windows"
+    v-for="win in windowStore.windows"
+    :key="win.id"
+  >
     <vue-draggable-resizable
       class="responsive-container"
       :active="win.active"
       @activated="windowStore.activateWindow(win.id)"
-      @dragstop="(left: number, top: number) => windowStore.onDragEnd(win.id, left, top)"
+      @dragstop="
+        (left: number, top: number) => windowStore.onDragEnd(win.id, left, top)
+      "
       @resizestop="
         (left: number, top: number, width: number, height: number) =>
-        windowStore.onResize(win.id, left, top, width, height)
+          windowStore.onResize(win.id, left, top, width, height)
       "
       :style="{ zIndex: win.zIndex, display: win.visible ? 'block' : 'none' }"
       :w="win.maximised ? windowStore.screenWidth : win.dimensions.width"
