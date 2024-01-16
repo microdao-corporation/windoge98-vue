@@ -1,4 +1,5 @@
 import { useWindowStore } from "../stores/useWindowStore"; // Adjust the path as needed
+import { v4 as uuidv4 } from 'uuid';
 
 class EventBus {
   private _onOpenVirtualWindow: ((win: MenuItem) => void) | undefined = undefined;
@@ -16,7 +17,7 @@ class EventBus {
 
       // Handle the creation of new window directly
       windowStore.windows.push({
-        id: newWindowId,
+        id: uuidv4(),
         title: win.name,
         icon: win.icon,
         url: win.url,
@@ -25,7 +26,6 @@ class EventBus {
         type: win.virtualWindow,
         subType: win.subType,
         maximised: false,
-        init: win.init,
         dimensions: {
           height: win.height || 420,
           width: win.width || 600,
@@ -33,11 +33,7 @@ class EventBus {
           y: 200 + (windowStore.windows.length * 20),
         },
       });
-
       windowStore.activateWindow(newWindowId);
-      if (win.init) {
-        win.init;
-      }
     }
   }
 }

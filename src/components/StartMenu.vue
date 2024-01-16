@@ -4,13 +4,19 @@ import { startMenuData } from "../data/menuItems";
 import { openNewWindow } from "../utils/windowUtils";
 
 const isStartMenuVisible = ref(false);
-
+const filteredMenu: Ref<StartMenuData | undefined> = ref(undefined);
 onBeforeMount(() => {
   preloadImages();
 });
 
 onMounted(() => {
   document.addEventListener("click", handleOutsideClick);
+
+  filteredMenu.value = JSON.parse(JSON.stringify(startMenuData)); // Clone to avoid direct mutation
+  if (filteredMenu.value) {
+    filterInPlace(filteredMenu.value.main, (item: any) => item.visible === true);
+    filterInPlace(filteredMenu.value.bottom, (item: any) => item.visible === true);
+  }
 });
 
 onUnmounted(() => {
@@ -63,6 +69,20 @@ const preloadImages = () => {
     }
   });
 };
+
+function filterInPlace(a: any, condition: any) {
+  let i = 0,
+    j = 0;
+
+  while (i < a.length) {
+    const val = a[i];
+    if (condition(val, i, a)) a[j++] = val;
+    i++;
+  }
+
+  a.length = j;
+  return a;
+}
 </script>
 
 <template>
@@ -76,7 +96,8 @@ const preloadImages = () => {
 
       <div class="start-menu">
         <div
-          v-for="item in startMenuData.main"
+          v-if="filteredMenu"
+          v-for="item in filteredMenu.main"
           class="start-menu-item"
           @mouseenter="toggleSubMenu(item)"
           @click.once="openNewWindow(item)"
@@ -130,7 +151,8 @@ const preloadImages = () => {
         </div>
         <hr />
         <div
-          v-for="item in startMenuData.bottom"
+          v-if="filteredMenu"
+          v-for="item in filteredMenu.bottom"
           @click="openNewWindow(item)"
           class="start-menu-item"
         >
