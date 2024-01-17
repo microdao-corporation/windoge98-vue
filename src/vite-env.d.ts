@@ -1,8 +1,9 @@
 /// <reference types="vite/client" />
 declare module "vue-draggable-resizable-vue3";
 declare module "./hooks/icrc1-idl";
+declare module "./hooks/clippy-idl";
 
-type WindowType = "welcome" | "developers" | VirtualWindowType;
+type WindowType = "welcome" | "developers" | "newbie_guide" | VirtualWindowType;
 
 type Dimensions = {
   height: number | string;
@@ -12,7 +13,7 @@ type Dimensions = {
 };
 
 type DesktopWindow = {
-  id: number;
+  id: string;
   zIndex: number;
   component?: any;
   url?: string;
@@ -24,11 +25,11 @@ type DesktopWindow = {
   active: boolean;
   maximised: boolean;
   dimensions: Dimensions;
-  init?: (frame: HTMLIFrameElement) => void;
 };
 
 type MenuItem = {
   name: string;
+  visible: boolean;
   url?: string;
   type?: WindowType;
   virtualWindow: VirtualWindowType;
@@ -38,7 +39,6 @@ type MenuItem = {
   height?: number;
   width?: number;
   submenu?: StartMenuItem[];
-  init?: (frame: HTMLIFrameElement) => void;
 };
 
 type ToolbarItem = MenuItem & {
@@ -50,6 +50,6 @@ type StartMenuData = {
   bottom: MenuItem[];
 };
 
-type VirtualWindowType = "iframe" | "none" | "welcome" | "blank";
+type VirtualWindowType = "iframe" | "none" | "welcome" | "newbie_guide" | "blank";
 
 type VirtualWindowSubtype = "openchat" | "unknown";

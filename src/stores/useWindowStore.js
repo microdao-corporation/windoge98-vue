@@ -6,6 +6,8 @@ import DevelopersWindow from "../components/DevelopersWindow.vue";
 import IframeWindow from "../components/IframeWindow.vue";
 import defaultAppIcon from "../assets/default_app_icon.png";
 import startIcon from "../assets/start-icon.png";
+import NewbieGuide from "../components/NewbieGuide.vue";
+import { v4 as uuidv4 } from 'uuid';
 
 export const useWindowStore = defineStore("windowStore", {
 	setup() {
@@ -26,7 +28,7 @@ export const useWindowStore = defineStore("windowStore", {
 		const defaultState = {
 			windows: [
 				{
-					id: 0,
+					id: uuidv4(),
 					zIndex: 100,
 					title: "About Windoge98",
 					icon: startIcon,
@@ -44,7 +46,7 @@ export const useWindowStore = defineStore("windowStore", {
 					},
 				},
 				{
-					id: 1,
+					id: uuidv4(),
 					zIndex: 1,
 					title: "Developers",
 					icon: defaultAppIcon,
@@ -69,8 +71,12 @@ export const useWindowStore = defineStore("windowStore", {
 		};
 
 		// Load state from local storage if available
-		const savedState = localStorage.getItem("my-window-store");
-		return savedState ? JSON.parse(savedState) : defaultState;
+		let savedState = localStorage.getItem("my-window-store");
+		if (savedState) {
+			return JSON.parse(savedState);
+		} else{
+			return defaultState;
+		}
 	},
 	actions: {
     persistToLocalStorage() {
@@ -151,13 +157,16 @@ export const useWindowStore = defineStore("windowStore", {
 					return { component: WelcomeWindow, props: {} };
 				case "developers":
 					return { component: DevelopersWindow, props: {} };
+				case "newbie_guide":
+					console.log("newbie_guide")
+					return { component: NewbieGuide, props: {} };
 				default:
 					return {
 						component: IframeWindow,
 						props: {
 							title: windowData.title,
 							url: windowData.url,
-							onMount: windowData?.init, // If you have specific initialization logic
+							subType: windowData?.subType,
 						},
 					};
 			}

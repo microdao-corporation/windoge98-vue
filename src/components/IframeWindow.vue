@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted, ref, defineProps } from "vue";
 import { useGtag } from "vue-gtag-next";
+import { initialiseOpenChat } from "../utils/windowUtils";
 
 const { event } = useGtag();
-const iframe = ref<HTMLIFrameElement>();
+const iframeRef = ref<HTMLIFrameElement>();
 
 const props = defineProps({
   url: {
@@ -18,8 +19,8 @@ const props = defineProps({
     type: Number,
     default: 0,
   },
-  onMount: {
-    type: Function,
+  subType: {
+    type: String,
     required: false,
   },
 });
@@ -29,14 +30,14 @@ onMounted(() => {
     url: props.url,
     title: props.title,
   });
-  if (props.onMount) {
-    props.onMount(iframe.value);
+  if (props.subType == "openchat" && iframeRef.value) {
+    initialiseOpenChat(iframeRef.value); // Pass the iframe element
   }
 });
 </script>
 
 <template>
-  <iframe ref="iframe" :title="title" :frameborder="frameBorder" :src="url" />
+  <iframe ref="iframeRef" :title="title" :frameborder="frameBorder" :src="url" />
 </template>
 
 <style lang="css">

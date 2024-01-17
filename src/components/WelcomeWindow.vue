@@ -95,14 +95,17 @@ onMounted(() => {
     >
     |
     <a href="https://www.coingecko.com/en/coins/windoge98" target="_blank">CoinGecko</a>
+    |
+    <a href="https://coinmarketcap.com/currencies/windoge98/" target="_blank"
+      >CoinMarketCap</a
+    >
   </p>
 
   <p style="text-align: center; float: bottom">
     <strong>Exchanges: </strong>
+    <a href="https://data.sonic.ooo/tokens/rh2pm-ryaaa-aaaan-qeniq-cai">Sonic</a> |
     <a href="https://info.icpswap.com/swap/token/details/rh2pm-ryaaa-aaaan-qeniq-cai"
       >ICPSwap</a
     >
-    |
-    <a href="https://data.sonic.ooo/tokens/rh2pm-ryaaa-aaaan-qeniq-cai">Sonic</a>
   </p>
 </template>

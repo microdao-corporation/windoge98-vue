@@ -1,6 +1,12 @@
 <script setup lang="ts">
+// Define props and emits
+const props = defineProps({
+  title: String,
+  icon: String,
+  url: String,
+  init: Function,
+});
 const emit = defineEmits(["onClose", "onMaximise", "onMinimise"]);
-const props = defineProps(["title", "icon"]);
 </script>
 
 <template>

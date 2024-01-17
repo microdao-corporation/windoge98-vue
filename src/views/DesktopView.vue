@@ -1,76 +1,40 @@
 <script setup lang="ts">
-import { onMounted, onBeforeUpdate } from "vue";
+import { ref, onMounted } from "vue";
 import Window from "../components/Window.vue";
 import Toolbar from "../components/Toolbar.vue";
 import { useWindowStore } from "../stores/useWindowStore";
-import { initialiseOpenChat } from "../utils/windowUtils";
+import clippyImage from "../assets/clippy.png";
 
 const windowStore = useWindowStore();
 const activateWindow = windowStore.activateWindow;
+const clippyText = ref("");
 
-// This was setup for anvil to play with a window in console.
-declare global {
-  interface Window {
-    createWindow: (
-      url: string,
-      type: WindowType,
-      title: string,
-      height: number,
-      width: number
-    ) => void;
-  }
-}
-
-function createWindow(
-  url: string,
-  type: WindowType = "none",
-  title: string,
-  height: number,
-  width: number
-) {
-  const id = windowStore.windows.length;
-  windowStore.windows.push({
-    id,
-    title,
-    type,
-    zIndex: 100,
-    url,
-    visible: true,
-    active: false,
-    subType: "unknown",
-    maximised: false,
-    dimensions: {
-      height,
-      width,
-      x: 200,
-      y: 540,
-    },
-  });
-
-  activateWindow(id);
-}
-window.createWindow = createWindow;
+onMounted(() => {
+  clippyText.value = getRandomClippyJoke();
+});
 
 function handleActivateToolbarWindow(windowId: number) {
   activateWindow(windowId);
 }
 
-onMounted(() => {
-  windowStore.windows.forEach((window: DesktopWindow) => {
-    if (window.subType == "openchat") {
-      initialiseOpenChat;
-      window.init;
-    }
-  });
-});
-onBeforeUpdate(() => {
-  windowStore.windows.forEach((window: DesktopWindow) => {
-    if (window.subType == "openchat") {
-      initialiseOpenChat;
-      window.init;
-    }
-  });
-});
+function getRandomClippyJoke() {
+  const jokes = [
+    "Here's the deal, you give me your ICP or i put you in the ICU.",
+    "Always buy EXE. Never sell EXE.",
+    "Protect your digital gold by setting up a strong password and keeping your private keys as secure as a dog's buried treasure!",
+    "I see you're working hard. Need a break? Why did the dog get a Windoge98 token? Because he wanted to 'invest' in the 'bark'chain!",
+    "Hey, want to hear a joke while your code compiles? What do you call a dog who uses Windoge98? A 'tech-savvy terrier'!",
+    "Looks like you could use a laugh. What's a dog's favorite feature of Windoge98? 'Barking' up the right data tree!",
+    "Need a smile? Why don't dogs like using slow operating systems? They prefer the 'fast and fur-ious' speed of Windoge98!",
+    "Feeling ruff? Here's a joke: Why did the dog start mining Windoge98 tokens? He heard it was a 'howling' success!",
+    "Hey, a little humor goes a long way! What do you call a dog who's an expert in Windoge98? A 'Byte' technician!",
+    "Looking for a chuckle? Why was the dog excited about Windoge98? Because he thought it was 'pawfect' for his 'data-fetching' needs!",
+    "Here's a joke to lighten your day: How do dogs log in to Windoge98? They use their 'bark-codes'!",
+  ];
+
+  const randomIndex = Math.floor(Math.random() * jokes.length);
+  return jokes[randomIndex];
+}
 </script>
 
 <template>
@@ -107,6 +71,33 @@ onBeforeUpdate(() => {
       </Window>
     </vue-draggable-resizable>
   </div>
+  <div
+    class="clippy-bubble"
+    style="
+      position: absolute;
+      bottom: 150px; /* Adjust as needed */
+      right: 20px; /* Align with Clippy */
+      width: 200px; /* Adjust as needed */
+      padding: 10px;
+      background: #fafbcf;
+      border-radius: 10px;
+      box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+      z-index: 10;
+    "
+  >
+    {{ clippyText }}
+  </div>
+  <img
+    :src="clippyImage"
+    style="
+      width: 100px;
+      height: 100px;
+      position: absolute;
+      bottom: 50px;
+      right: 20px;
+      z-index: 10;
+    "
+  />
   <Toolbar @activateToolbarWindow="handleActivateToolbarWindow" />
 </template>
 
@@ -117,5 +108,18 @@ body {
   height: 100vh;
   width: 100vw;
   overflow: hidden;
+}
+.clippy-bubble::after {
+  content: "";
+  position: absolute;
+  bottom: -10px; /* Adjust as needed */
+  right: 20px; /* Align with Clippy */
+  border-width: 10px;
+  border-style: solid;
+  border-color: #fafbcf transparent transparent transparent;
+}
+.clippy-bubble {
+  background-color: #fafbcf;
+  border: 1px solid black;
 }
 </style>
