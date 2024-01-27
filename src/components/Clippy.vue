@@ -25,7 +25,7 @@ function getRandomClippyJoke() {
     style="
       position: absolute;
       bottom: 150px; /* Adjust as needed */
-      right: 20px; /* Align with Clippy */
+      right: 200px; /* Align with Clippy */
       width: 200px; /* Adjust as needed */
       padding: 10px;
       background: #fafbcf;

@@ -4,6 +4,7 @@ import Window from "../components/Window.vue";
 import Toolbar from "../components/Toolbar.vue";
 import { useWindowStore } from "../stores/useWindowStore";
 import clippyImage from "../assets/clippy.png";
+import DesktopApps from "../components/DesktopApps.vue";
 
 const windowStore = useWindowStore();
 const activateWindow = windowStore.activateWindow;
@@ -98,6 +99,7 @@ function getRandomClippyJoke() {
       z-index: 10;
     "
   />
+  <DesktopApps />
   <Toolbar @activateToolbarWindow="handleActivateToolbarWindow" />
 </template>
 
