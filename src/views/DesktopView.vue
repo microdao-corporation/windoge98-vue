@@ -107,14 +107,12 @@ function getRandomClippyJoke() {
 body {
   background-color: teal;
   background-size: initial;
-  height: 100%;
-  width: 100vw;
   overflow: hidden;
 }
 .clippy-bubble::after {
   content: "";
   position: absolute;
-  bottom: -10px; /* Adjust as needed */
+  bottom: -20px; /* Adjust as needed */
   right: 20px; /* Align with Clippy */
   border-width: 10px;
   border-style: solid;

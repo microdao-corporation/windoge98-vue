@@ -20,8 +20,8 @@ interface MenuItem {
   position?: { x: number; y: number };
 }
 
-const ICON_MARGIN = 10;
-const ICON_TOTAL_WIDTH = 80;
+const ICON_MARGIN = 2;
+const ICON_TOTAL_WIDTH = 100;
 const ICON_TOTAL_HEIGHT = 100;
 
 function arrangeIcons(apps: MenuItem[]): MenuItem[] {
@@ -45,12 +45,14 @@ let desktopApps = computed((): MenuItem[] => {
   const apps: MenuItem[] = [];
 
   startMenuData.main.forEach((item) => {
+    if (!item.visible) return;
     if (item.submenu) {
       apps.push(...item.submenu);
     }
   });
 
   startMenuData.bottom.forEach((item) => {
+    if (!item.visible) return;
     if (item.submenu) {
       apps.push(...item.submenu);
     }
@@ -92,8 +94,10 @@ function toggleSelection({ app, event }: { app: MenuItem; event: MouseEvent }): 
 }
 
 function handleDragEnd({ app, x, y }: { app: MenuItem; x: number; y: number }) {
-  const newX = Math.round((x - ICON_MARGIN) / ICON_TOTAL_WIDTH) * ICON_TOTAL_WIDTH + ICON_MARGIN;
-  const newY = Math.round((y - ICON_MARGIN) / ICON_TOTAL_HEIGHT) * ICON_TOTAL_HEIGHT + ICON_MARGIN;
+  const newX =
+    Math.round((x - ICON_MARGIN) / ICON_TOTAL_WIDTH) * ICON_TOTAL_WIDTH + ICON_MARGIN;
+  const newY =
+    Math.round((y - ICON_MARGIN) / ICON_TOTAL_HEIGHT) * ICON_TOTAL_HEIGHT + ICON_MARGIN;
 
   // Find if there's an app at the new position
   const overlappingApp = findAppByPosition(newX, newY, app.name);
@@ -104,19 +108,27 @@ function handleDragEnd({ app, x, y }: { app: MenuItem; x: number; y: number }) {
     // If no overlap, just move the app to the new position
     app.position = { x: newX, y: newY };
   }
-};
+}
 
-function findAppByPosition(x: number, y: number, excludeAppName: string): MenuItem | null {
-  return desktopApps.value.find((app) => {
-    return app.name !== excludeAppName && app.position?.x === x && app.position?.y === y;
-  }) || null;
-};
+function findAppByPosition(
+  x: number,
+  y: number,
+  excludeAppName: string
+): MenuItem | null {
+  return (
+    desktopApps.value.find((app) => {
+      return (
+        app.name !== excludeAppName && app.position?.x === x && app.position?.y === y
+      );
+    }) || null
+  );
+}
 
 function swapPositions(app1: MenuItem, app2: MenuItem) {
   const tempPosition = app1.position;
   app1.position = app2.position;
   app2.position = tempPosition;
-};
+}
 
 function handleDoubleClick(app: MenuItem) {
   if (app.url) {
@@ -141,7 +153,7 @@ onMounted(() => {
 </script>
 
 <template>
-   <DesktopApp
+  <DesktopApp
     v-for="app in desktopApps"
     :key="app.name"
     :app="app"
