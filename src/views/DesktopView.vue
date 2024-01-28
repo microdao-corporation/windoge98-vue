@@ -107,7 +107,7 @@ function getRandomClippyJoke() {
 body {
   background-color: teal;
   background-size: initial;
-  height: 100vh;
+  height: 100%;
   width: 100vw;
   overflow: hidden;
 }

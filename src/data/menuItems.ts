@@ -23,6 +23,7 @@ import fileIcon from "../assets/file.png"
 import walletIcon from "../assets/wallet.png"
 import coinGeckoIcon from "../assets/coingecko_logo.png"
 import cmcIcon from "../assets/cmc_logo.png"
+import mergeIcon from "../assets/merge_icon.png"
 
 const startMenuDataStructure : StartMenuData = {
   main: [
@@ -126,6 +127,17 @@ const startMenuDataStructure : StartMenuData = {
           iconHeight: 28,
           height: 494,
           width: 632,
+          virtualWindow: "iframe",
+          subType: "unknown",
+          visible: true,
+        },
+        {
+          name: "MoonMerge98",
+          icon: mergeIcon,
+          url: "https://windoge98.com/moon_merge/index.html",
+          iconHeight: 30,
+          height: 840,
+          width: 1078,
           virtualWindow: "iframe",
           subType: "unknown",
           visible: true,
