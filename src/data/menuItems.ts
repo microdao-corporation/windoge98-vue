@@ -1,3 +1,5 @@
+import { reactive } from 'vue';
+
 import icpcoinsLogo from "../assets/icpcoins_logo.png";
 import ocDogeIcon from "../assets/oc_doge_icon.png";
 import pinballIcon from "../assets/pinball-icon.png";
@@ -22,7 +24,7 @@ import walletIcon from "../assets/wallet.png"
 import coinGeckoIcon from "../assets/coingecko_logo.png"
 import cmcIcon from "../assets/cmc_logo.png"
 
-export const startMenuData: StartMenuData = {
+const startMenuDataStructure : StartMenuData = {
   main: [
     {
       name: "DApps",
@@ -247,3 +249,5 @@ export const startMenuData: StartMenuData = {
     },
   ],
 };
+export const startMenuData = reactive(startMenuDataStructure);
+
