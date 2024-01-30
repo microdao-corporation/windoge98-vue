@@ -4,13 +4,13 @@ import ShutdownView from "./views/ShutdownView.vue";
 import VerificationView from './views/VerificationView.vue';
 
 const routes = [
-  { 
-    path: "/", 
-    component: DesktopView 
-},
-  { 
-    path: "/shutdown", 
-    component: ShutdownView 
+  {
+    path: "/",
+    component: DesktopView
+  },
+  {
+    path: "/shutdown",
+    component: ShutdownView
   },
   {
     path: '/verification',
