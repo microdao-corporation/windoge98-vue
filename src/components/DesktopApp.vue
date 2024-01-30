@@ -60,7 +60,7 @@ const handleDrop = (event: DragEvent) => {
   align-items: center;
   width: 75px;
   padding: 4px;
-  cursor: pointer;
+  cursor: url("../assets/cursors/pointer.cur"), pointer;
 }
 
 .desktop-icon img {

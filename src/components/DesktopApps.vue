@@ -61,6 +61,8 @@ let desktopApps = computed((): MenuItem[] => {
   return apps;
 });
 
+const desktopAppsRef = ref<MenuItem[]>([]);
+
 const selectedApps = ref<string[]>([]);
 
 function isSelected(appName: string): boolean {
@@ -139,7 +141,8 @@ function handleDoubleClick(app: MenuItem) {
 }
 
 onMounted(() => {
-  arrangeIcons(desktopApps.value);
+  desktopAppsRef.value = desktopApps.value
+  arrangeIcons(desktopAppsRef.value);
   document.addEventListener("mousedown", (event) => {
     if (!(event.target instanceof Element) || !event.target.closest(".desktop-icon")) {
       selectedApps.value = [];

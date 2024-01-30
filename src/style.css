@@ -21,7 +21,12 @@
   font-style: normal;
 }
 
-body {
+html,body {
+  cursor: url("./assets/cursors/arrow.cur"), auto;
+}
+
+
+* {
   font-family: "VT323", monospace;
   font-size: 1rem;
   font-weight: 400;
