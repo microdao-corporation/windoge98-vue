@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import Window from "../components/Window.vue";
 import Toolbar from "../components/Toolbar.vue";
 import { useWindowStore } from "../stores/useWindowStore";
@@ -9,9 +9,16 @@ import DesktopApps from "../components/DesktopApps.vue";
 const windowStore = useWindowStore();
 const activateWindow = windowStore.activateWindow;
 const clippyText = ref("");
+const contextMenuPosition = ref({ x: "0px", y: "0px" });
+const contextMenuVisible = ref(false);
 
 onMounted(() => {
   clippyText.value = getRandomClippyJoke();
+  document.addEventListener("contextmenu", showContextMenuWindow);
+});
+
+onUnmounted(() => {
+  document.removeEventListener("contextmenu", showContextMenuWindow);
 });
 
 function handleActivateToolbarWindow(windowId: number) {
@@ -36,75 +43,111 @@ function getRandomClippyJoke() {
   const randomIndex = Math.floor(Math.random() * jokes.length);
   return jokes[randomIndex];
 }
-
-const contextMenuVisible = ref(false);
-const contextMenuPosition = ref({ x: '0px', y: '0px' });
-
-const menuItems = ref([
-  { label: 'Option 1', action: () => console.log('Option 1 selected') },
-  { label: 'Option 2', action: () => console.log('Option 2 selected') },
-  { label: 'Option 3', action: () => console.log('Option 3 selected') },
-]);
-
-function showContextMenuBackground(e: MouseEvent) {
-  e.preventDefault();
-  contextMenuPosition.value = { x: `${e.x}px`, y: `${e.y}px` };
-  contextMenuVisible.value = true;
-}
 function showContextMenuWindow(e: MouseEvent) {
   e.preventDefault();
-  contextMenuPosition.value = { x: `${e.x}px`, y: `${e.y}px` };
+  contextMenuPosition.value = { x: `${e.pageX}px`, y: `${e.pageY}px` };
   contextMenuVisible.value = true;
 }
+
+function closeContextMenu() {
+  if (!contextMenuVisible.value) return;
+  contextMenuVisible.value = false;
+}
+
+const arrangeIconsTrigger = ref(false);
+
+function triggerArrangeIcons() {
+  arrangeIconsTrigger.value = !arrangeIconsTrigger.value; // toggle
+  closeContextMenu();
+}
+
 
 </script>
 
 <template>
-  <div class="context-menu" v-show="contextMenuVisible" :style="{ top: contextMenuPosition.y, left: contextMenuPosition.x }">
-    <div class="context-menu-item" v-for="(item, index) in menuItems" :key="index" @click="item.action">
-      {{ item.label }}
-    </div>
+  <div
+    class="context-menu"
+    v-if="contextMenuVisible"
+    :style="{
+      position: 'absolute',
+      top: contextMenuPosition.y,
+      left: contextMenuPosition.x,
+    }"
+    @mouseleave="closeContextMenu"
+  >
+    <div @click="triggerArrangeIcons">Arrange icons</div>
+    <div @click="closeContextMenu">New folder</div>
+    <div @click="closeContextMenu">Shutdown</div>
   </div>
-  <div @contextmenu="showContextMenuWindow" v-if="windowStore.windows" v-for="win in windowStore.windows" :key="win.id">
-    <vue-draggable-resizable class="responsive-container" :active="win.active"
+  <div
+    @contextmenu="showContextMenuWindow"
+    v-if="windowStore.windows"
+    v-for="win in windowStore.windows"
+    :key="win.id"
+  >
+    <vue-draggable-resizable
+      class="responsive-container"
+      :active="win.active"
       @activated="windowStore.activateWindow(win.id)"
-      @dragstop="(left: number, top: number) => windowStore.onDragEnd(win.id, left, top)" @resizestop="(left: number, top: number, width: number, height: number) =>
-        windowStore.onResize(win.id, left, top, width, height)
-        " :style="{ zIndex: win.zIndex, display: win.visible ? 'block' : 'none' }"
+      @dragstop="
+        (left: number, top: number) => windowStore.onDragEnd(win.id, left, top)
+      "
+      @resizestop="
+        (left: number, top: number, width: number, height: number) =>
+          windowStore.onResize(win.id, left, top, width, height)
+      "
+      :style="{ zIndex: win.zIndex, display: win.visible ? 'block' : 'none' }"
       :w="win.maximised ? windowStore.screenWidth : win.dimensions.width"
-      :h="win.maximised ? windowStore.screenHeight : win.dimensions.height" :minw="windowStore.MIN_WIDTH"
-      :minh="windowStore.MIN_HEIGHT" :x="win.maximised ? 0 : win.dimensions.x" :y="win.maximised ? 0 : win.dimensions.y"
-      :handles="['tr', 'tl', 'bl', 'br']">
-      <Window :title="win.title" :icon="win.icon" @onMinimise="windowStore.minimiseWindow(win.id)"
-        @onMaximise="windowStore.maximiseWindow(win.id)" @onClose="windowStore.closeWindow(win.id)">
-        <component :is="windowStore.getComponentForWindowType(win).component"
-          v-bind="windowStore.getComponentForWindowType(win).props" />
+      :h="win.maximised ? windowStore.screenHeight : win.dimensions.height"
+      :minw="windowStore.MIN_WIDTH"
+      :minh="windowStore.MIN_HEIGHT"
+      :x="win.maximised ? 0 : win.dimensions.x"
+      :y="win.maximised ? 0 : win.dimensions.y"
+      :handles="['tr', 'tl', 'bl', 'br']"
+    >
+      <Window
+        :title="win.title"
+        :icon="win.icon"
+        @onMinimise="windowStore.minimiseWindow(win.id)"
+        @onMaximise="windowStore.maximiseWindow(win.id)"
+        @onClose="windowStore.closeWindow(win.id)"
+      >
+        <component
+          :is="windowStore.getComponentForWindowType(win).component"
+          v-bind="windowStore.getComponentForWindowType(win).props"
+        />
       </Window>
     </vue-draggable-resizable>
   </div>
-  <div class="clippy-bubble" style="
-        position: absolute;
-        bottom: 150px; /* Adjust as needed */
-        right: 20px; /* Align with Clippy */
-        width: 200px; /* Adjust as needed */
-        padding: 10px;
-        background: #fafbcf;
-        border-radius: 10px;
-        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
-        z-index: 10;
-      ">
+  <div
+    class="clippy-bubble"
+    style="
+      position: absolute;
+      bottom: 150px; /* Adjust as needed */
+      right: 20px; /* Align with Clippy */
+      width: 200px; /* Adjust as needed */
+      padding: 10px;
+      background: #fafbcf;
+      border-radius: 10px;
+      box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+      z-index: 10;
+    "
+  >
     {{ clippyText }}
   </div>
-  <img :src="clippyImage" style="
-        width: 100px;
-        height: 100px;
-        position: absolute;
-        bottom: 50px;
-        right: 20px;
-        z-index: 10;
-      " />
-  <DesktopApps />
-  <Toolbar @activateToolbarWindow="handleActivateToolbarWindow"  />
+  <img
+    :src="clippyImage"
+    style="
+      width: 100px;
+      height: 100px;
+      position: absolute;
+      bottom: 50px;
+      right: 20px;
+      z-index: 10;
+    "
+  />
+  <DesktopApps :arrange-icons-trigger="arrangeIconsTrigger" />
+  <Toolbar @activateToolbarWindow="handleActivateToolbarWindow" />
 </template>
 
 <style>
@@ -137,21 +180,42 @@ body {
 }
 
 .context-menu {
-  width: 24px;
-  height: 48px;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-  position: absolute;
-  z-index: 1000;
+  background-color: #c0c0c0;
+  font-size: 11px;
+  color: black;
+  border: 2px solid #7c7c7c;
+  border-top-color: #fff;
+  border-left-color: #fff;
+  width: fit-content;
+  max-height: fit-content;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  display: flex;
+  flex-direction: column;
+  animation: grow-effect 0.3s ease-out forwards;
+  overflow: hidden;
 }
 
-.context-menu-item {
-  padding: 2px 5px;
-  cursor: pointer;
+.context-menu div:hover {
+  background-color: #000080;
+  fill: white;
+  color: white;
+  cursor: url("./assets/cursors/pointer.cur");
+}
+.context-menu div {
+  display: flex;
+  padding-left: 3px;
+  overflow: hidden;
 }
 
-.context-menu-item:hover {
-  background-color: #f0f0f0;
+@keyframes grow-effect {
+  from {
+    width: 0px;
+    height: 0px;
+  }
+  to {
+    width: 110px;
+    height: 60px;
+  }
 }
 </style>

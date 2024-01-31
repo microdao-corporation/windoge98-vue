@@ -1,10 +1,22 @@
 // src/components/DesktopApps.vue
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, defineProps, watch } from "vue";
 import DesktopApp from "./DesktopApp.vue";
 import { startMenuData } from "../data/menuItems";
 import { openNewWindow } from "../utils/windowUtils";
+
+const props = defineProps({
+  arrangeIconsTrigger: Boolean,
+});
+
+watch(
+  () => props.arrangeIconsTrigger,
+  () => {
+    console.log("arrangeIconsTrigger changed");
+    arrangeIcons();
+  }
+);
 
 interface MenuItem {
   name: string;
@@ -24,11 +36,11 @@ const ICON_MARGIN = 2;
 const ICON_TOTAL_WIDTH = 100;
 const ICON_TOTAL_HEIGHT = 100;
 
-function arrangeIcons(apps: MenuItem[]): MenuItem[] {
+function arrangeIcons(): void {
   const containerHeight = window.innerHeight;
   const iconsPerCol = Math.floor(containerHeight / ICON_TOTAL_HEIGHT);
 
-  apps.forEach((app, index) => {
+  desktopApps.value.forEach((app, index) => {
     const col = Math.floor(index / iconsPerCol); // current column based on index
     const row = index % iconsPerCol; // current row in the current column
 
@@ -37,8 +49,6 @@ function arrangeIcons(apps: MenuItem[]): MenuItem[] {
 
     app.position = { x, y };
   });
-
-  return apps;
 }
 
 let desktopApps = computed((): MenuItem[] => {
@@ -61,15 +71,19 @@ let desktopApps = computed((): MenuItem[] => {
   return apps;
 });
 
-const desktopAppsRef = ref<MenuItem[]>([]);
-
 const selectedApps = ref<string[]>([]);
 
 function isSelected(appName: string): boolean {
   return selectedApps.value.includes(appName);
 }
 
-function toggleSelection({ app, event }: { app: MenuItem; event: MouseEvent }): void {
+function toggleSelection({
+  app,
+  event,
+}: {
+  app: MenuItem;
+  event: MouseEvent;
+}): void {
   const index = selectedApps.value.indexOf(app.name);
   if (event.ctrlKey) {
     // Ctrl+click:
@@ -97,9 +111,11 @@ function toggleSelection({ app, event }: { app: MenuItem; event: MouseEvent }): 
 
 function handleDragEnd({ app, x, y }: { app: MenuItem; x: number; y: number }) {
   const newX =
-    Math.round((x - ICON_MARGIN) / ICON_TOTAL_WIDTH) * ICON_TOTAL_WIDTH + ICON_MARGIN;
+    Math.round((x - ICON_MARGIN) / ICON_TOTAL_WIDTH) * ICON_TOTAL_WIDTH +
+    ICON_MARGIN;
   const newY =
-    Math.round((y - ICON_MARGIN) / ICON_TOTAL_HEIGHT) * ICON_TOTAL_HEIGHT + ICON_MARGIN;
+    Math.round((y - ICON_MARGIN) / ICON_TOTAL_HEIGHT) * ICON_TOTAL_HEIGHT +
+    ICON_MARGIN;
 
   // Find if there's an app at the new position
   const overlappingApp = findAppByPosition(newX, newY, app.name);
@@ -120,7 +136,9 @@ function findAppByPosition(
   return (
     desktopApps.value.find((app) => {
       return (
-        app.name !== excludeAppName && app.position?.x === x && app.position?.y === y
+        app.name !== excludeAppName &&
+        app.position?.x === x &&
+        app.position?.y === y
       );
     }) || null
   );
@@ -141,15 +159,17 @@ function handleDoubleClick(app: MenuItem) {
 }
 
 onMounted(() => {
-  desktopAppsRef.value = desktopApps.value
-  arrangeIcons(desktopAppsRef.value);
+  arrangeIcons();
   document.addEventListener("mousedown", (event) => {
-    if (!(event.target instanceof Element) || !event.target.closest(".desktop-icon")) {
+    if (
+      !(event.target instanceof Element) ||
+      !event.target.closest(".desktop-icon")
+    ) {
       selectedApps.value = [];
     }
   });
   const handleResize = () => {
-    arrangeIcons(desktopApps.value);
+    arrangeIcons();
   };
   window.addEventListener("resize", handleResize);
 });
@@ -161,7 +181,10 @@ onMounted(() => {
     :key="app.name"
     :app="app"
     :isSelected="isSelected(app.name)"
-    :positionStyle="{ left: app.position?.x + 'px', top: app.position?.y + 'px' }"
+    :positionStyle="{
+      left: app.position?.x + 'px',
+      top: app.position?.y + 'px',
+    }"
     @select="toggleSelection"
     @dragend="handleDragEnd"
     @dblclick="() => handleDoubleClick(app)"
