@@ -1,0 +1,24 @@
+{
+    "canisters": {
+      "dogvertiser": {
+        "main": "src/dogvertiser/main.mo",
+        "type": "motoko"
+      },
+      "internet_identity": {
+        "type": "custom",
+        "candid": "src/dogvertiser/internet_identity/internet_identity.did",
+        "wasm": "src/dogvertiser/internet_identity/internet_identity_dev.wasm",
+        "remote": {
+          "id": {
+            "ic": "rdmx6-jaaaa-aaaaa-aaadq-cai"
+          }
+        }
+      }
+    },
+    "defaults": {
+      "build": {
+        "args": ""      }
+    },
+    "output_env_file": ".env",
+    "version": 1
+  }
