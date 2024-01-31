@@ -1,4 +1,4 @@
-import { reactive } from 'vue';
+import { reactive } from "vue";
 
 import icpcoinsLogo from "../assets/icpcoins_logo.png";
 import ocDogeIcon from "../assets/oc_doge_icon.png";

@@ -13,7 +13,6 @@ const props = defineProps({
 watch(
   () => props.arrangeIconsTrigger,
   () => {
-    console.log("arrangeIconsTrigger changed");
     arrangeIcons();
   }
 );

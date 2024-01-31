@@ -61,7 +61,6 @@ function triggerArrangeIcons() {
   closeContextMenu();
 }
 
-
 </script>
 
 <template>
