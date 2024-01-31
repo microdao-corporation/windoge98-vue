@@ -9,9 +9,8 @@ export { idlFactory } from "./dogvertiser.did.js";
  * import.meta.env.CANISTER_ID_<CANISTER_NAME_UPPERCASE>
  * beginning in dfx 0.15.0
  */
-console.log("process")
 export const canisterId =
-  import.meta.env.DOGVERTISER_CANISTER_ID ||
+  import.meta.env.CANISTER_ID_DOGVERTISER ||
   import.meta.env.DOGVERTISER_CANISTER_ID;
 
 export const createActor = (canisterId, options = {}) => {
