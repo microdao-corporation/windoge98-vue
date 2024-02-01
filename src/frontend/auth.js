@@ -1,7 +1,7 @@
 // auth.js
 import { ref, provide, inject, onMounted } from 'vue';
 import { AuthClient } from "@dfinity/auth-client";
-import { createActor } from "./declarations/dogvertiser";
+import { createActor } from "../declarations/dogvertiser";
 
 const authSymbol = Symbol();
 
