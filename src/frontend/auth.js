@@ -1,11 +1,36 @@
 // auth.js
 import { ref, provide, inject, onMounted } from 'vue';
 import { AuthClient } from "@dfinity/auth-client";
-import { createActor } from "../declarations/dogvertiser";
+import { createActor,canisterId } from "../declarations/dogvertiser";
 
-const authSymbol = Symbol();
+let IICanister = process.env.CANISTER_ID_internet_identity;
 
-export function useAuthClient(options = {}) {
+
+const defaultOptions = {
+  /**
+   *  @type {import("@dfinity/auth-client").AuthClientCreateOptions}
+   */
+  createOptions: {
+    idleOptions: {
+      // Set to true if you do not want idle functionality
+    },
+  },
+  /**
+   * @type {import("@dfinity/auth-client").AuthClientLoginOptions}
+   */
+  loginOptions: {
+    identityProvider:
+      import.meta.env.DFX_NETWORK === "ic"
+        ?
+        "https://identity.ic0.app/#authorize":
+        `http://127.0.0.1:8000?canisterId=${IICanister}#authorize`
+       ,
+  },
+};
+
+
+
+export function useAuthClient(options = defaultOptions) {
   const isAuthenticated = ref(false);
   const authClient = ref(null);
   const identity = ref(null);
@@ -19,10 +44,12 @@ export function useAuthClient(options = {}) {
   });
 
   const login = () => {
+    console.log("in login")
     authClient.value.login({
       ...options.loginOptions,
       onSuccess: () => {
-        updateClient(authClient.value);
+        console.log("suppp")
+       //updateClient(authClient.value);
       },
     });
   };
@@ -52,15 +79,7 @@ export function useAuthClient(options = {}) {
     await updateClient(authClient.value);
   }
 
-  provide(authSymbol, {
-    isAuthenticated,
-    login,
-    logout,
-    authClient,
-    identity,
-    principal,
-    backendActor
-  });
+
 
   return {
     isAuthenticated,
@@ -73,10 +92,4 @@ export function useAuthClient(options = {}) {
   };
 }
 
-export function useAuth() {
-  const auth = inject(authSymbol);
-  if (!auth) {
-    throw new Error('useAuth must be used within a Vue component wrapped in the AuthProvider.');
-  }
-  return auth;
-}
+

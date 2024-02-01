@@ -6,12 +6,12 @@ export { idlFactory } from "./dogvertiser.did.js";
 
 /* CANISTER_ID is replaced by webpack based on node environment
  * Note: canister environment variable will be standardized as
- * import.meta.env.CANISTER_ID_<CANISTER_NAME_UPPERCASE>
+ * process.env.CANISTER_ID_<CANISTER_NAME_UPPERCASE>
  * beginning in dfx 0.15.0
  */
 export const canisterId =
-  import.meta.env.CANISTER_ID_DOGVERTISER ||
-  import.meta.env.DOGVERTISER_CANISTER_ID;
+  process.env.CANISTER_ID_DOGVERTISER ||
+  process.env.DOGVERTISER_CANISTER_ID;
 
 export const createActor = (canisterId, options = {}) => {
   const agent = options.agent || new HttpAgent({ ...options.agentOptions });
@@ -23,7 +23,7 @@ export const createActor = (canisterId, options = {}) => {
   }
 
   // Fetch root key for certificate validation during development
-  if (import.meta.env.DFX_NETWORK !== "ic") {
+  if (process.env.DFX_NETWORK !== "ic") {
     agent.fetchRootKey().catch((err) => {
       console.warn(
         "Unable to fetch root key. Check to ensure that your local replica is running"

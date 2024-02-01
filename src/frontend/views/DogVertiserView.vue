@@ -1,9 +1,9 @@
 <template>
-  <div class="container">
+  <div v-if="isAuthenticated" class="container">
     <!-- Header -->
     <div class="header">
       <h1 class="title">Dogvertiser</h1>
-      <button class="sign-out">Sign Out</button>
+      <button class="sign-out" @click="handleLogout">Sign Out</button>
     </div>
 
     <!-- Tab Menu -->
@@ -39,15 +39,20 @@
       <!-- Add more ad cards here -->
     </div>
   </div>
+
+  <div v-else>
+    <h1>Please sign in to access Dogvertiser</h1>
+    <button @click="handleLogin">Sign In</button>
+  </div>
 </template>
 
 <script>
-import { useAuth } from '../auth';
+import { useAuthClient } from '../auth';
 
 export default {
   name: 'DogvertiserComponent',
-    setup() {
-    //const { isAuthenticated, login, logout } = useAuth();
+  setup() {
+    const { isAuthenticated, login, logout } = useAuthClient();
 
     const handleLogin = () => {
       login();
@@ -58,13 +63,13 @@ export default {
     };
 
     return {
-  
+      isAuthenticated,
+      handleLogin,
+      handleLogout
     };
   },
-  
 };
 </script>
-
 <style>
 .container {
   margin: 20px;
