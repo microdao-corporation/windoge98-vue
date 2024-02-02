@@ -1,57 +1,87 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from "vue-router";
 import DesktopView from "./views/DesktopView.vue";
 import ShutdownView from "./views/ShutdownView.vue";
-import VerificationView from './views/VerificationView.vue';
-<<<<<<< HEAD:src/frontend/router.ts
-import DogVertiserView from './views/DogVertiserView.vue';
-import NewDogvertisment from './views/NewDogvertisment.vue';
+import VerificationView from "./views/VerificationView.vue";
+import DogVertiserView from "./views/DogVertiserView.vue";
+import NewDogvertisment from "./views/NewDogvertisment.vue";
+import LoadingView from "./views/LoadingView.vue";
+import BootView from "./views/BootView.vue";
+import BsodView from "./views/BsodView.vue";
+import startSound from "./assets/sounds/start_up_sound.mp3";
+import shutdownSound from "./assets/sounds/shutting_down_sound.mp3";
 
-const routes = [
-  { 
-    path: "/", 
-    component: DesktopView 
-},
-  { 
-    path: "/shutdown", 
-    component: ShutdownView 
-=======
-import LoadingView from './views/LoadingView.vue';
-import BootView from './views/BootView.vue';
 
 const routes = [
   {
-    path: "/",
-    component: BootView
+    path: '/',
+    name: 'Desktop',
+    component: DesktopView,
   },
   {
-    path: "/desktop",
-    component: DesktopView
+    path: '/boot',
+    name: 'Boot',
+    component: BootView,
   },
   {
-    path: "/shutdown",
-    component: ShutdownView
+    path: '/shutdown',
+    name: 'Shutdown',
+    component: ShutdownView,
   },
   {
-    path: "/loading",
-    component: LoadingView
->>>>>>> booting-and-shutting-down:src/router.ts
+    path: '/bsod',
+    name: 'Bsod',
+    component: BsodView,
+  },
+  {
+    path: '/loading',
+    name: 'Loading',
+    component: LoadingView,
   },
   {
     path: '/verification',
-    component: VerificationView
+    name: 'Verification',
+    component: VerificationView,
   },
   {
     path: '/dogvertiser',
-    component: DogVertiserView
+    name: 'DogVertiser',
+    component: DogVertiserView,
   },
   {
     path: '/newdogvertisment',
-    component: NewDogvertisment
-  }
+    name: 'NewDogvertisment',
+    component: NewDogvertisment,
+  },
 ];
 
 const router = createRouter({
   history: createWebHashHistory(),
-  routes
-})
-export default router
+  routes,
+});
+
+function playSound(soundFile: string): void {
+  const audio = new Audio(soundFile);
+  audio.volume = 0.1;
+  audio.play().catch(e => {
+    console.log(audio)
+    console.error("Failed to play sound", e);
+  });
+}
+
+router.beforeEach((to, from) => {
+  // redirect to boot screen if user has not visited before
+  const visitedBefore = localStorage.getItem('visitedBefore');
+  if (!visitedBefore && to.path !== '/boot') {
+    localStorage.setItem('visitedBefore', 'true');
+    return '/boot';
+  }
+
+  // Play sound based on route navigation
+  if (from.path === '/' && to.path === '/loading') {
+    playSound(shutdownSound);
+  } else if (from.path === '/loading' && to.path === '/') {
+    playSound(startSound);
+  }
+});
+
+export default router;

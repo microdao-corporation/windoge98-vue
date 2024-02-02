@@ -1,12 +1,27 @@
 <script setup lang="ts">
-import { onMounted } from "vue";
+import { onMounted, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
 import logo from "../assets/windoge98-pixel-banner.png";
+
 const router = useRouter();
+
 onMounted(() => {
+  // Prevent default right-click menu
+  const preventDefaultAction = (event: Event) => {
+    event.preventDefault();
+  };
+
+  document.addEventListener('contextmenu', preventDefaultAction);
+  document.addEventListener('click', preventDefaultAction);
+
+  onUnmounted(() => {
+    document.removeEventListener('contextmenu', preventDefaultAction);
+    document.removeEventListener('click', preventDefaultAction);
+  });
+
   setTimeout(() => {
-    router.push("/desktop");
-  }, 3000);
+    router.push("/");
+  }, 3000); // this allows the main path (/#/) to load 100% as well
 });
 </script>
 
@@ -19,42 +34,50 @@ onMounted(() => {
 </template>
 
 <style scoped>
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
 * {
   cursor: url("../assets/cursors/loading.cur"), wait;
 }
+
 .container {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
+  width: 100vw;
+  overflow: hidden;
 }
 
 .background {
-  position: relative;
-  width: 100%;
-  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background-image: url("../assets/windoge98clouds.webp");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  z-index: -1;
 }
 
 .logo {
-  position: absolute;
-  width: 1000px;
+  max-width: 1000px;
+  max-height: auto;
+  width: 80vw;
   height: auto;
-  background-image: url("../assets/windoge98-pixel-banner.png");
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
+  position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  z-index: 1;
 }
 
-@media (max-width: 768px) {
-  .container {
-    flex-direction: column;
-  }
-}
 </style>
