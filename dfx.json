@@ -13,6 +13,17 @@
             "ic": "rdmx6-jaaaa-aaaaa-aaadq-cai"
           }
         }
+      },
+      "windoge": {
+        "type": "custom",
+        "wasm": "src/dogvertiser/icrc/icrc1.wasm",
+        "candid": "src/dogvertiser/icrc/icrc1.did",
+        "remote" : {
+          "candid": "src/dogvertiser/icrc/icrc1.did",
+          "id": {
+            "ic" : "rh2pm-ryaaa-aaaan-qeniq-cai"
+          }
+        }
       }
     },
     "defaults": {
