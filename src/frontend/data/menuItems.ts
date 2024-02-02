@@ -253,9 +253,8 @@ const startMenuDataStructure : StartMenuData = {
     {
       name: "Shut Down",
       icon: computerIcon,
-      url: "https://windoge98.com/#/shutdown",
       iconHeight: 30,
-      virtualWindow: "none",
+      virtualWindow: "shutdown",
       subType: "unknown",
       visible: true,
     },
