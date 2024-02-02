@@ -18,7 +18,10 @@ onMounted(() => {
   </div>
 </template>
 
-<style>
+<style scoped>
+* {
+  cursor: url("../assets/cursors/loading.cur"), wait;
+}
 .container {
   display: flex;
   justify-content: center;

@@ -2,7 +2,7 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import DesktopView from "./views/DesktopView.vue";
 import ShutdownView from "./views/ShutdownView.vue";
 import VerificationView from './views/VerificationView.vue';
-import StartingView from './views/StartingView.vue';
+import LoadingView from './views/LoadingView.vue';
 import BootView from './views/BootView.vue';
 
 const routes = [
@@ -19,8 +19,8 @@ const routes = [
     component: ShutdownView
   },
   {
-    path: "/starting",
-    component: StartingView
+    path: "/loading",
+    component: LoadingView
   },
   {
     path: '/verification',
