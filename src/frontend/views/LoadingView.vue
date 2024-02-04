@@ -6,17 +6,16 @@ import logo from "../assets/windoge98-pixel-banner.png";
 const router = useRouter();
 
 onMounted(() => {
-  // Prevent default right-click menu
   const preventDefaultAction = (event: Event) => {
     event.preventDefault();
   };
 
-  document.addEventListener('contextmenu', preventDefaultAction);
-  document.addEventListener('click', preventDefaultAction);
+  document.addEventListener("contextmenu", preventDefaultAction);
+  document.addEventListener("click", preventDefaultAction);
 
   onUnmounted(() => {
-    document.removeEventListener('contextmenu', preventDefaultAction);
-    document.removeEventListener('click', preventDefaultAction);
+    document.removeEventListener("contextmenu", preventDefaultAction);
+    document.removeEventListener("click", preventDefaultAction);
   });
 
   setTimeout(() => {
@@ -79,5 +78,6 @@ html, body {
   transform: translate(-50%, -50%);
   z-index: 1;
 }
+
 
 </style>

@@ -193,6 +193,7 @@ body {
   flex-direction: column;
   animation: grow-effect 0.3s ease-out forwards;
   overflow: hidden;
+  line-height: 1.5; /* gets rid of extra space under it */
 }
 
 .context-menu div:hover {

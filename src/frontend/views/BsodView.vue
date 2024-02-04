@@ -42,7 +42,7 @@
 
 .bsod-body {
   text-align: left;
-  line-height: 1.5;
+  /* line-height: 1.5; */
   max-width: 600px;
 }
 

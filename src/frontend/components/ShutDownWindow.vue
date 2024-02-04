@@ -1,25 +1,115 @@
-  <script lang="ts">
-  import { defineComponent } from "vue";
-  
-  export default defineComponent({
-    name: 'Shutdown',
-    setup() {
-        const shutdown = () => {
-            window.close();
-        }
-    },
-  });
-  </script>
-
+<script setup lang="ts">
+import computerImage from "../assets/shut_down.png";
+</script>
 
 <template>
-  <div>
-    TODO
+  <div class="shutdown-dialog">
+    <div class="dialog-body">
+      <div class="icon-section">
+        <img :src="computerImage" alt="Shutdown Icon" />
+      </div>
+      <div class="options-section">
+        <div class="title">What do you want the computer to do?</div>
+        <form class="options">
+          <label class="option">
+            <input type="radio" name="option" value="shutdown" />
+            <span class="checkmark"></span>
+            Shut down
+          </label>
+          <label class="option">
+            <input type="radio" name="option" value="restart" />
+            <span class="checkmark"></span>
+            Restart
+          </label>
+          <label class="option">
+            <input type="radio" name="option" value="msdos" />
+            <span class="checkmark"></span>
+            Restart in MS-DOS mode
+          </label>
+        </form>
+        <div class="buttons">
+          <button type="button">OK</button>
+          <button type="button">Cancel</button>
+          <button type="button">Help</button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <style scoped>
+.dialog-body {
+  display: flex;
+  padding: 8px;
+}
+
+.icon-section img {
+  width: 32px;
+  height: 32px;
+}
+
+.options-section {
+  margin-left: 12px;
+}
+
+.title {
+  font-size: medium;
+  margin-bottom: 10px;
+}
+
+.options .option {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.options .option input[type="radio"] {
+  opacity: 0;
+  position: absolute;
+  cursor: pointer;
+}
+
+.checkmark {
+  height: 12px;
+  width: 12px;
+  background-color: #fff;
+  border-radius: 50%;
+  border: 1px solid #000;
+  margin-right: 5px;
+  cursor: pointer;
+  position: relative;
+}
+
+.options .option input[type="radio"]:checked ~ .checkmark {
+  background-color: #ffffff;
+}
+
+.checkmark::after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.options .option input[type="radio"]:checked ~ .checkmark:after {
+  display: block;
+  top: 3px;
+  left: 3px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #000000;
+}
+
+.buttons {
+  margin-top: 10px;
+}
+
+.buttons button {
+  color: #000000;
+  border: 1px solid #000;
+  padding: 2px 8px;
+  margin-right: 5px;
+  cursor: pointer;
+}
 
 </style>
-
-  
