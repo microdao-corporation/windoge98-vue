@@ -4,13 +4,18 @@
         "main": "src/dogvertiser/main.mo",
         "type": "motoko"
       },
-      "internet_identity": {
+      "internet_identity" : {
+        "type": "pull",
+        "id": "rdmx6-jaaaa-aaaaa-aaadq-cai"
+      },
+      "windoge": {
         "type": "custom",
-        "candid": "src/dogvertiser/internet_identity/internet_identity.did",
-        "wasm": "src/dogvertiser/internet_identity/internet_identity_dev.wasm",
-        "remote": {
+        "wasm": "src/dogvertiser/icrc/icrc1.wasm",
+        "candid": "src/dogvertiser/icrc/icrc1.did",
+        "remote" : {
+          "candid": "src/dogvertiser/icrc/icrc1.did",
           "id": {
-            "ic": "rdmx6-jaaaa-aaaaa-aaadq-cai"
+            "ic" : "rh2pm-ryaaa-aaaan-qeniq-cai"
           }
         }
       }
