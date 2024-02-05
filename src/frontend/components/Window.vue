@@ -8,7 +8,7 @@ const props = defineProps({
 });
 const emit = defineEmits(["onClose", "onMaximise", "onMinimise"]);
 
-</script>
+</script><Window v-for="window in windows" :key="window.id" :window="window" />
 
 
 <template>

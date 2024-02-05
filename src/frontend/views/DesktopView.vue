@@ -114,6 +114,7 @@ function triggerArrangeIcons() {
         <component
           :is="windowStore.getComponentForWindowType(win).component"
           v-bind="windowStore.getComponentForWindowType(win).props"
+          @onClose="windowStore.closeWindow(win.id)"
         />
       </Window>
     </vue-draggable-resizable>

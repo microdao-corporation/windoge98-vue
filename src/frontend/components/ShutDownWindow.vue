@@ -1,5 +1,13 @@
 <script setup lang="ts">
 import computerImage from "../assets/shut_down.png";
+
+const emit = defineEmits(["onClose"]);
+
+const handleClose = () => {
+  console.log("close emitted from window template component");
+  emit("onClose");
+};
+
 </script>
 
 <template>
@@ -9,7 +17,7 @@ import computerImage from "../assets/shut_down.png";
         <img :src="computerImage" alt="Shutdown Icon" />
       </div>
       <div class="options-section">
-        <div class="title">What do you want the computer to do?</div>
+        <div class="title"><span>What do you want the computer to do?</span></div>
         <form class="options">
           <label class="option">
             <input type="radio" name="option" value="shutdown" />
@@ -29,7 +37,7 @@ import computerImage from "../assets/shut_down.png";
         </form>
         <div class="buttons">
           <button type="button">OK</button>
-          <button type="button">Cancel</button>
+          <button @click="handleClose" type="button">Cancel</button>
           <button type="button">Help</button>
         </div>
       </div>
@@ -40,7 +48,8 @@ import computerImage from "../assets/shut_down.png";
 <style scoped>
 .dialog-body {
   display: flex;
-  padding: 8px;
+  padding-top: 8px;
+  padding-left: 4px;
 }
 
 .icon-section img {
@@ -53,7 +62,6 @@ import computerImage from "../assets/shut_down.png";
 }
 
 .title {
-  font-size: medium;
   margin-bottom: 10px;
 }
 
@@ -70,8 +78,8 @@ import computerImage from "../assets/shut_down.png";
 }
 
 .checkmark {
-  height: 12px;
-  width: 12px;
+  height: 10px;
+  width: 10px;
   background-color: #fff;
   border-radius: 50%;
   border: 1px solid #000;
@@ -94,8 +102,8 @@ import computerImage from "../assets/shut_down.png";
   display: block;
   top: 3px;
   left: 3px;
-  width: 6px;
-  height: 6px;
+  width: 4px;
+  height: 4px;
   border-radius: 50%;
   background: #000000;
 }
@@ -109,7 +117,7 @@ import computerImage from "../assets/shut_down.png";
   border: 1px solid #000;
   padding: 2px 8px;
   margin-right: 5px;
-  cursor: pointer;
+  cursor: url("../assets/cursors/pointer.cur"), pointer;
 }
 
 </style>

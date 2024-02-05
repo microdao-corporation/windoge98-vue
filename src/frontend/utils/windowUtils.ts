@@ -24,10 +24,10 @@ export const openNewWindow = async (item: MenuItem) => {
       type: item.virtualWindow,
       subType: item.subType,
       dimensions: {
-        height: item.height || (item.virtualWindow === "shutdown" ? 200 : 420),
-        width: item.width || (item.virtualWindow === "shutdown" ? 340 : 600),
-        x: 100,
-        y: 5,
+        height: item.height || (item.virtualWindow === "shutdown" ? 165 : 420),
+        width: item.width || (item.virtualWindow === "shutdown" ? 310 : 600),
+        x: (window.innerWidth - (item.width || (item.virtualWindow === "shutdown" ? 310 : 600))) / 2,
+        y: (window.innerHeight - (item.height || (item.virtualWindow === "shutdown" ? 165 : 420))) / 2,
       },
     },);
   }
