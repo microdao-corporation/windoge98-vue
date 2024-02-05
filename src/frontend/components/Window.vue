@@ -36,6 +36,7 @@ const emit = defineEmits(["onClose", "onMaximise", "onMinimise"]);
 * {
   cursor: url("../assets/cursors/arrow.cur"), auto;
 }
+
 .window {
   overflow: auto;
   min-width: 100%;

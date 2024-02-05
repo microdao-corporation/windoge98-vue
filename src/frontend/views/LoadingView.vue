@@ -4,8 +4,12 @@ import { useRouter } from "vue-router";
 import logo from "../assets/windoge98-pixel-banner.png";
 
 const router = useRouter();
+const useLoading = () => {
+  console.log("Loading...");
+}
 
 onMounted(() => {
+  useLoading();
   const preventDefaultAction = (event: Event) => {
     event.preventDefault();
   };
@@ -20,7 +24,7 @@ onMounted(() => {
 
   setTimeout(() => {
     router.push("/");
-  }, 3000); // this allows the main path (/#/) to load 100% as well
+  }, 3000);
 });
 </script>
 

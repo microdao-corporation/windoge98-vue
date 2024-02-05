@@ -1,11 +1,15 @@
 <script setup lang="ts">
 import computerImage from "../assets/shut_down.png";
-
+import { useRouter } from "vue-router";
+const router = useRouter();
 const emit = defineEmits(["onClose"]);
 
-const handleClose = () => {
-  console.log("close emitted from window template component");
-  emit("onClose");
+const handleHelp = () => {
+  router.push("/bsod");
+};
+
+const handleShutdown = () => {
+  router.push("/loading");
 };
 
 </script>
@@ -17,10 +21,12 @@ const handleClose = () => {
         <img :src="computerImage" alt="Shutdown Icon" />
       </div>
       <div class="options-section">
-        <div class="title"><span>What do you want the computer to do?</span></div>
+        <div class="title">
+          <span>What do you want the computer to do?</span>
+        </div>
         <form class="options">
           <label class="option">
-            <input type="radio" name="option" value="shutdown" />
+            <input type="radio" name="option" value="shutdown" checked />
             <span class="checkmark"></span>
             Shut down
           </label>
@@ -36,9 +42,9 @@ const handleClose = () => {
           </label>
         </form>
         <div class="buttons">
-          <button type="button">OK</button>
-          <button @click="handleClose" type="button">Cancel</button>
-          <button type="button">Help</button>
+          <button @click="handleShutdown" type="button">Ok</button>
+          <button @click="emit('onClose')" type="button">Cancel</button>
+          <button @click="handleHelp" type="button">Help</button>
         </div>
       </div>
     </div>
@@ -119,5 +125,4 @@ const handleClose = () => {
   margin-right: 5px;
   cursor: url("../assets/cursors/pointer.cur"), pointer;
 }
-
 </style>

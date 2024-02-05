@@ -10,46 +10,45 @@ import BsodView from "./views/BsodView.vue";
 import startSound from "./assets/sounds/start_up_sound.mp3";
 import shutdownSound from "./assets/sounds/shutting_down_sound.mp3";
 
-
 const routes = [
   {
-    path: '/',
-    name: 'Desktop',
+    path: "/",
+    name: "Desktop",
     component: DesktopView,
   },
   {
-    path: '/boot',
-    name: 'Boot',
+    path: "/boot",
+    name: "Boot",
     component: BootView,
   },
   {
-    path: '/shutdown',
-    name: 'Shutdown',
+    path: "/shutdown",
+    name: "Shutdown",
     component: ShutdownView,
   },
   {
-    path: '/bsod',
-    name: 'Bsod',
+    path: "/bsod",
+    name: "Bsod",
     component: BsodView,
   },
   {
-    path: '/loading',
-    name: 'Loading',
+    path: "/loading",
+    name: "Loading",
     component: LoadingView,
   },
   {
-    path: '/verification',
-    name: 'Verification',
+    path: "/verification",
+    name: "Verification",
     component: VerificationView,
   },
   {
-    path: '/dogvertiser',
-    name: 'DogVertiser',
+    path: "/dogvertiser",
+    name: "DogVertiser",
     component: DogVertiserView,
   },
   {
-    path: '/newdogvertisment',
-    name: 'NewDogvertisment',
+    path: "/newdogvertisment",
+    name: "NewDogvertisment",
     component: NewDogvertisment,
   },
 ];
@@ -62,24 +61,23 @@ const router = createRouter({
 function playSound(soundFile: string): void {
   const audio = new Audio(soundFile);
   audio.volume = 0.1;
-  audio.play().catch(e => {
-    console.log(audio)
+  audio.play().catch((e) => {
+    console.log(audio);
     console.error("Failed to play sound", e);
   });
 }
 
 router.beforeEach((to, from) => {
-  // redirect to boot screen if user has not visited before
-  const visitedBefore = localStorage.getItem('visitedBefore');
-  if (!visitedBefore && to.path !== '/boot') {
-    localStorage.setItem('visitedBefore', 'true');
-    return '/boot';
+  const visitedBefore = localStorage.getItem("visitedBefore");
+  if (!visitedBefore && to.path !== "/boot" && to.path !== "/bsod") {
+    localStorage.setItem("visitedBefore", "true");
+    return "/boot";
   }
 
   // Play sound based on route navigation
-  if (from.path === '/' && to.path === '/loading') {
+  if (from.path === "/" && to.path === "/loading") {
     playSound(shutdownSound);
-  } else if (from.path === '/loading' && to.path === '/') {
+  } else if (from.path === "/loading" && to.path === "/") {
     playSound(startSound);
   }
 });

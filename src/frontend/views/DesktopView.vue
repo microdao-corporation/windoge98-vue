@@ -3,9 +3,13 @@ import { ref, onMounted, onUnmounted } from "vue";
 import Window from "../components/Window.vue";
 import Toolbar from "../components/Toolbar.vue";
 import { useWindowStore } from "../stores/useWindowStore";
+import { openNewWindow } from "../utils/windowUtils";
 import clippyImage from "../assets/clippy.png";
 import DesktopApps from "../components/DesktopApps.vue";
+import { useRouter } from "vue-router";
+import { startMenuData } from "../data/menuItems";
 
+const router = useRouter();
 const windowStore = useWindowStore();
 const activateWindow = windowStore.activateWindow;
 const clippyText = ref("");
@@ -61,6 +65,28 @@ function triggerArrangeIcons() {
   closeContextMenu();
 }
 
+const closeShutdownWindow = () => {
+  windowStore.windows.forEach((win : DesktopWindow) => {
+    if (win.title === "Shut Down") {
+      windowStore.closeWindow(win.id);
+    }
+  });
+};
+
+function openBsodWindow() {
+  closeContextMenu();
+  closeShutdownWindow();
+  router.push("/bsod");
+}
+
+function openShutdownWindow() {
+  closeContextMenu();
+  const shutdownItem = startMenuData.bottom.find(item => item.name === "Shut Down");
+  if (shutdownItem) {
+    openNewWindow(shutdownItem);
+  }
+}
+
 </script>
 
 <template>
@@ -75,8 +101,8 @@ function triggerArrangeIcons() {
     @mouseleave="closeContextMenu"
   >
     <div @click="triggerArrangeIcons">Arrange icons</div>
-    <div @click="closeContextMenu">New folder</div>
-    <div @click="closeContextMenu">Shutdown</div>
+    <div @click="openBsodWindow">New folder</div>
+    <div @click="openShutdownWindow">Shutdown</div>
   </div>
   <div
     @contextmenu="showContextMenuWindow"
@@ -114,7 +140,7 @@ function triggerArrangeIcons() {
         <component
           :is="windowStore.getComponentForWindowType(win).component"
           v-bind="windowStore.getComponentForWindowType(win).props"
-          @onClose="windowStore.closeWindow(win.id)"
+          @onClose="windowStore.closeWindow(win.id)" 
         />
       </Window>
     </vue-draggable-resizable>

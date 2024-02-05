@@ -1,3 +1,20 @@
+<script setup lang="ts">
+import { onMounted } from "vue";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+
+const navigate = () => {
+  router.push("/boot");
+};
+
+onMounted(() => {
+  setTimeout(() => {
+    navigate();
+  }, 5000);
+});
+</script>
+
 <template>
   <div class="bsod-container">
     <div class="bsod-header">Windows</div>
@@ -9,15 +26,11 @@
       <p>Error: 0E : 016F : BFF9B3D4</p>
     </div>
     <div class="bsod-footer">
-        <span>Press any key to continue</span>
-        <span class="blinker">_</span>
+      <span>Press any key to continue</span>
+      <span class="blinker">_</span>
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-// TypeScript setup script here (if needed)
-</script>
 
 <style scoped>
 .bsod-container {
@@ -42,7 +55,6 @@
 
 .bsod-body {
   text-align: left;
-  /* line-height: 1.5; */
   max-width: 600px;
 }
 
@@ -57,11 +69,11 @@
 }
 
 @keyframes blink {
-    100% {
-        opacity: 0;
-    }
-    0% {
-        opacity: 1;
-    }
+  100% {
+    opacity: 0;
+  }
+  0% {
+    opacity: 1;
+  }
 }
 </style>
