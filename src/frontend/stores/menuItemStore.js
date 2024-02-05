@@ -93,6 +93,14 @@ export const useMenuItemStore = defineStore("startMenu", () => {
 						visible: true,
 					},
 					{
+						name: "Dogvertiser",
+						iconHeight: 30,
+						icon: pixelIcon,
+						subType: "unknown",
+						visible: true,
+						virtualWindow: "dogvertiser",
+					},
+					{
 						name: "ICPCoins",
 						icon: icpcoinsLogo,
 						url: "https://icpcoins.com/#/token/EXE",

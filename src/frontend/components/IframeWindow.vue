@@ -35,9 +35,10 @@ onMounted(() => {
     url: props.url,
     title: props.title,
   });
+
   const items = startMenuData.main[0];
   const item = items.submenu.find((item: any) => item.name == props.title);
-  console.log("item", item);
+
   if (item && item.init) {
     item.init(iframeRef.value);
   }

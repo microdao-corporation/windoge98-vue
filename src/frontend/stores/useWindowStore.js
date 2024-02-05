@@ -7,6 +7,7 @@ import IframeWindow from "../components/IframeWindow.vue";
 import defaultAppIcon from "../assets/default_app_icon.png";
 import startIcon from "../assets/start-icon.png";
 import NewbieGuide from "../components/NewbieGuide.vue";
+import DogVertiser from "../components/DogVertiser.vue";
 import { v4 as uuidv4 } from 'uuid';
 
 export const useWindowStore = defineStore("windowStore", {
@@ -159,6 +160,8 @@ export const useWindowStore = defineStore("windowStore", {
 				case "newbie_guide":
 					console.log("newbie_guide")
 					return { component: NewbieGuide, props: {} };
+				case "dogvertiser":
+					return { component: DogVertiser, props: {} };
 				default:
 					return {
 						component: IframeWindow,

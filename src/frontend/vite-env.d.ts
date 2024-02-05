@@ -53,6 +53,6 @@ type StartMenuData = {
   bottom: MenuItem[];
 };
 
-type VirtualWindowType = "iframe" | "none" | "welcome" | "newbie_guide" | "blank";
+type VirtualWindowType = "iframe" | "none" | "welcome" | "newbie_guide" | "blank" | "dogvertiser";
 
 type VirtualWindowSubtype = "openchat" | "unknown";
