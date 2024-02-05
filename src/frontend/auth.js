@@ -2,7 +2,7 @@
 import { defineStore } from "pinia";
 import { AuthClient } from "@dfinity/auth-client";
 import { Actor, HttpAgent } from "@dfinity/agent";
-import { createActor, dogvertiser } from "../declarations/dogvertiser";
+import { createActor, canisterId } from "../declarations/dogvertiser";
 import { toRaw } from "vue";
 
 let IICanister = process.env.CANISTER_ID_internet_identity;
@@ -28,7 +28,7 @@ const defaultOptions = {
 };
 
 function actorFromIdentity(identity) {
-  return createActor(dogvertiser, {
+  return createActor(canisterId, {
     agentOptions: {
       identity,
     },

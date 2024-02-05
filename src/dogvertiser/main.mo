@@ -67,18 +67,9 @@ actor Dogvertiser {
     stableAds := [];
   };
 
-
-
-
-
-
-  public shared (msg) func whoami():async Text{
-      return Principal.toText(msg.caller);
-  };
-
-  
-
-
+public query ({ caller }) func whoami() : async Text{
+    return Principal.toText(caller);
+};
 
 public shared({caller}) func boost_ad(index: Nat, amount: Nat): async Result.Result<Nat,Types.TransferError> {
         switch (advertisements.get(Nat.toText(index))) {

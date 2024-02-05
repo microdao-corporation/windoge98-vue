@@ -1,15 +1,32 @@
 <script setup>
+import { ref, onMounted, watch } from 'vue';
 import { useAuthStore } from '../auth';
+import { storeToRefs } from "pinia";
 
-const { isAuthenticated, login, logout } = useAuthStore();
+const authStore = useAuthStore();
+const whoami = ref('');
+
+const { isReady, isAuthenticated } = storeToRefs(authStore);
+
+onMounted(() => {
+  if (isReady.value) {
+    authStore.init();
+  }
+});
+
+watch(isAuthenticated, async (value) => {
+  if (value) {
+    whoami.value = await authStore.dogvertiserActor.whoami();
+  }
+});
 </script>
 
 <template>
-  <div v-if="isAuthenticated" class="container">
+  <div v-if="authStore.isAuthenticated" class="container">
     <!-- Header -->
     <div class="header">
       <h1 class="title">Dogvertiser</h1>
-      <button class="sign-out" @click="logout">Sign Out</button>
+      <button class="sign-out" @click="authStore.logout">Sign Out</button>
     </div>
 
     <!-- Tab Menu -->
@@ -24,7 +41,7 @@ const { isAuthenticated, login, logout } = useAuthStore();
       <!-- Column 1: My Principal -->
       <div class="column">
         <h1 class="column-title">My Principal</h1>
-        <p>12834123912384239</p>
+        <p>{{ whoami }}</p>
       </div>
 
       <!-- Column 2: My Wallet -->
@@ -48,7 +65,7 @@ const { isAuthenticated, login, logout } = useAuthStore();
 
   <div v-else>
     <h1>Please sign in to access Dogvertiser</h1>
-    <button @click="login">Sign In</button>
+    <button @click="authStore.login">Sign In</button>
   </div>
 </template>
 
