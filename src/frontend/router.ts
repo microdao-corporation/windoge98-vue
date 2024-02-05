@@ -74,7 +74,6 @@ router.beforeEach((to, from) => {
     return "/boot";
   }
 
-  // Play sound based on route navigation
   if (from.path === "/" && to.path === "/loading") {
     playSound(shutdownSound);
   } else if (from.path === "/loading" && to.path === "/") {

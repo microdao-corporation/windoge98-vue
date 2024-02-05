@@ -1,23 +1,29 @@
 <script setup lang="ts">
-import computerImage from "../assets/shut_down.png";
 import { useRouter } from "vue-router";
-const router = useRouter();
-const emit = defineEmits(["onClose"]);
+import { shuttingDownState } from "../states/sharedStates.vue";
+import computerImage from "../assets/shut_down.png";
 
-const handleHelp = () => {
-  router.push("/bsod");
-};
+const router = useRouter();
 
 const handleShutdown = () => {
+  shuttingDownState.value = true;
+  emit('onClose'); // close window of shutdown dialog
   router.push("/loading");
 };
 
+const handleHelp = () => {
+  emit('onClose'); // close window of shutdown dialog
+  router.push("/bsod");
+};
+
+const emit = defineEmits(["onClose"]);
 </script>
 
 <template>
   <div class="shutdown-dialog">
     <div class="dialog-body">
       <div class="icon-section">
+        <!-- Dynamic binding for computer image source -->
         <img :src="computerImage" alt="Shutdown Icon" />
       </div>
       <div class="options-section">

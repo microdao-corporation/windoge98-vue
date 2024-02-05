@@ -1,15 +1,12 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted } from "vue";
+import { onMounted, onUnmounted, watch } from "vue";
 import { useRouter } from "vue-router";
 import logo from "../assets/windoge98-pixel-banner.png";
+import { shuttingDownState } from "../states/sharedStates.vue";
 
 const router = useRouter();
-const useLoading = () => {
-  console.log("Loading...");
-}
 
 onMounted(() => {
-  useLoading();
   const preventDefaultAction = (event: Event) => {
     event.preventDefault();
   };
@@ -17,14 +14,23 @@ onMounted(() => {
   document.addEventListener("contextmenu", preventDefaultAction);
   document.addEventListener("click", preventDefaultAction);
 
+  if (shuttingDownState.value === true) {
+    console.log("Shutting down..., value is true");
+    shuttingDownState.value = false;
+    setTimeout(() => {
+      router.push("/boot");
+    }, 3000);
+  } else {
+    console.log("starting shuttingDownState..., value is false");
+    setTimeout(() => {
+      router.push("/");
+    }, 3000);
+  }
+
   onUnmounted(() => {
     document.removeEventListener("contextmenu", preventDefaultAction);
     document.removeEventListener("click", preventDefaultAction);
   });
-
-  setTimeout(() => {
-    router.push("/");
-  }, 3000);
 });
 </script>
 
@@ -37,7 +43,8 @@ onMounted(() => {
 </template>
 
 <style scoped>
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   height: 100%;
@@ -82,6 +89,4 @@ html, body {
   transform: translate(-50%, -50%);
   z-index: 1;
 }
-
-
 </style>

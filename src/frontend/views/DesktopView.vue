@@ -47,6 +47,7 @@ function getRandomClippyJoke() {
   const randomIndex = Math.floor(Math.random() * jokes.length);
   return jokes[randomIndex];
 }
+
 function showContextMenuWindow(e: MouseEvent) {
   e.preventDefault();
   contextMenuPosition.value = { x: `${e.pageX}px`, y: `${e.pageY}px` };
@@ -66,7 +67,9 @@ function triggerArrangeIcons() {
 }
 
 const closeShutdownWindow = () => {
-  windowStore.windows.forEach((win : DesktopWindow) => {
+  console.log("closeShutdownWindow");
+  console.log(windowStore.windows);
+  windowStore.windows.forEach((win: DesktopWindow) => {
     if (win.title === "Shut Down") {
       windowStore.closeWindow(win.id);
     }
@@ -81,12 +84,13 @@ function openBsodWindow() {
 
 function openShutdownWindow() {
   closeContextMenu();
-  const shutdownItem = startMenuData.bottom.find(item => item.name === "Shut Down");
+  const shutdownItem = startMenuData.bottom.find(
+    (item) => item.name === "Shut Down"
+  );
   if (shutdownItem) {
     openNewWindow(shutdownItem);
   }
 }
-
 </script>
 
 <template>
@@ -140,7 +144,7 @@ function openShutdownWindow() {
         <component
           :is="windowStore.getComponentForWindowType(win).component"
           v-bind="windowStore.getComponentForWindowType(win).props"
-          @onClose="windowStore.closeWindow(win.id)" 
+          @onClose="windowStore.closeWindow(win.id)"
         />
       </Window>
     </vue-draggable-resizable>
