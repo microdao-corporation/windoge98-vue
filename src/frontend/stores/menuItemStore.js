@@ -27,6 +27,7 @@ import coinGeckoIcon from "../assets/coingecko_logo.png";
 import cmcIcon from "../assets/cmc_logo.png";
 import mergeIcon from "../assets/merge_icon.png";
 import keysIcon from "../assets/keys-4.png";
+import { initialise } from "@open-ic/openchat-xframe"
 
 export const useMenuItemStore = defineStore("startMenu", () => {
 	const authStore = useAuthStore();
@@ -35,6 +36,19 @@ export const useMenuItemStore = defineStore("startMenu", () => {
 	function handleSignIn() {
 		authStore.login();
 	}
+
+	function initialiseOpenChat(frame) {
+		initialise(frame, {
+			targetOrigin: "https://oc.app",
+			initialPath:
+				"/community/ow6el-gyaaa-aaaar-av5na-cai/?ref=y3rqn-fyaaa-aaaaf-a7z6a-cai",
+			theme: {
+				base: "light",
+				name: "windoge98",
+				overrides: {},
+			},
+		});
+	};
 
   watch(() => authStore.isAuthenticated, async (isAuthenticated) => {
     if (isAuthenticated) {
@@ -104,6 +118,7 @@ export const useMenuItemStore = defineStore("startMenu", () => {
 						iconHeight: 30,
 						virtualWindow: "iframe",
 						subType: "openchat",
+						init: initialiseOpenChat,
 					},
 					{
 						name: "Sonic DEX",

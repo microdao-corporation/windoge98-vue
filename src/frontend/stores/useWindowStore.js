@@ -92,7 +92,6 @@ export const useWindowStore = defineStore("windowStore", {
 					w.zIndex = 1;
 				}
 			});
-			this.getWindowById(id).visible = true;
 		},
 
 		closeWindow(id) {
@@ -148,7 +147,7 @@ export const useWindowStore = defineStore("windowStore", {
 
 	getters: {
 		getWindowById: (state) => (id) => {
-			return state.windows.find((w) => w.id === id);
+			return state.windows.find((w) => w.id == id);
 		},
 
 		getComponentForWindowType: (state) => (windowData) => {
@@ -167,6 +166,7 @@ export const useWindowStore = defineStore("windowStore", {
 							title: windowData.title,
 							url: windowData.url,
 							subType: windowData?.subType,
+							init: windowData?.init,
 						},
 					};
 			}

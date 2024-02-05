@@ -40,6 +40,7 @@ type MenuItem = {
   width?: number;
   submenu?: StartMenuItem[];
   action?: () => void;
+  init?: () => void;
   position?: { x: number; y: number };
 };
 
