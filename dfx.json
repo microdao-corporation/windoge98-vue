@@ -4,15 +4,9 @@
         "main": "src/dogvertiser/main.mo",
         "type": "motoko"
       },
-      "internet_identity": {
-        "type": "custom",
-        "candid": "src/dogvertiser/internet_identity/internet_identity.did",
-        "wasm": "src/dogvertiser/internet_identity/internet_identity_dev.wasm",
-        "remote": {
-          "id": {
-            "ic": "rdmx6-jaaaa-aaaaa-aaadq-cai"
-          }
-        }
+      "internet_identity" : {
+        "type": "pull",
+        "id": "rdmx6-jaaaa-aaaaa-aaadq-cai"
       },
       "windoge": {
         "type": "custom",

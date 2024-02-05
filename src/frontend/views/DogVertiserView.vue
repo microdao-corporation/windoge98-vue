@@ -1,9 +1,15 @@
+<script setup>
+import { useAuthStore } from '../auth';
+
+const { isAuthenticated, login, logout } = useAuthStore();
+</script>
+
 <template>
   <div v-if="isAuthenticated" class="container">
     <!-- Header -->
     <div class="header">
       <h1 class="title">Dogvertiser</h1>
-      <button class="sign-out" @click="handleLogout">Sign Out</button>
+      <button class="sign-out" @click="logout">Sign Out</button>
     </div>
 
     <!-- Tab Menu -->
@@ -42,34 +48,10 @@
 
   <div v-else>
     <h1>Please sign in to access Dogvertiser</h1>
-    <button @click="handleLogin">Sign In</button>
+    <button @click="login">Sign In</button>
   </div>
 </template>
 
-<script>
-import { useAuthClient } from '../auth';
-
-export default {
-  name: 'DogvertiserComponent',
-  setup() {
-    const { isAuthenticated, login, logout } = useAuthClient();
-
-    const handleLogin = () => {
-      login();
-    };
-
-    const handleLogout = () => {
-      logout();
-    };
-
-    return {
-      isAuthenticated,
-      handleLogin,
-      handleLogout
-    };
-  },
-};
-</script>
 <style>
 .container {
   margin: 20px;

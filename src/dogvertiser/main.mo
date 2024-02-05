@@ -97,7 +97,7 @@ public shared({caller}) func boost_ad(index: Nat, amount: Nat): async Result.Res
                 switch(response) {
                   case(#Ok(msg)) {
                     // Update the total_burned in the buffer
-                   let updatedMessage = ?{
+                   let updatedMessage = {
                       index=advertisement.index;
                       title=advertisement.title;
                       image=advertisement.image;
