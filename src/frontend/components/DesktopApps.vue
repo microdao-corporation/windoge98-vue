@@ -3,23 +3,10 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
 import DesktopApp from "./DesktopApp.vue";
-import { startMenuData } from "../data/menuItems";
+import { useMenuItemStore } from "../stores/menuItemStore";
 import { openNewWindow } from "../utils/windowUtils";
 
-interface MenuItem {
-  name: string;
-  icon: string;
-  url: string;
-  iconHeight?: number;
-  height?: number;
-  width?: number;
-  virtualWindow: "none" | "iframe" | "newbie_guide" | "blank" | "welcome";
-  subType: "unknown" | "openchat";
-  visible: boolean;
-  submenu?: MenuItem[];
-  position?: { x: number; y: number };
-}
-
+const { startMenuData } = useMenuItemStore();
 const ICON_MARGIN = 2;
 const ICON_TOTAL_WIDTH = 100;
 const ICON_TOTAL_HEIGHT = 100;

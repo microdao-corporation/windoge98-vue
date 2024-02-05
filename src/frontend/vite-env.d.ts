@@ -39,6 +39,8 @@ type MenuItem = {
   height?: number;
   width?: number;
   submenu?: StartMenuItem[];
+  action?: () => void;
+  position?: { x: number; y: number };
 };
 
 type ToolbarItem = MenuItem & {

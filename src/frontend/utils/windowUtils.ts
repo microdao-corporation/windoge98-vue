@@ -6,7 +6,13 @@ import { v4 as uuidv4 } from 'uuid';
 export const openNewWindow = async (item: MenuItem) => {
   if(item.submenu && item.submenu.length > 0) { return }
 
+  if (item.action) {
+    item.action();
+    return;
+  }
+
   const windowStore = useWindowStore();
+
   if (item.virtualWindow == "iframe") {
     console.log("We'll open this in a virtual window");
     eventBus.openVirtualWindow(item);

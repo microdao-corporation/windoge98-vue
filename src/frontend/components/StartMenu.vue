@@ -1,18 +1,17 @@
 <script setup lang="ts">
-import { ref, Ref, onMounted, onUnmounted, onBeforeMount } from "vue";
-import { startMenuData } from "../data/menuItems";
+import { ref, Ref, onMounted, onUnmounted } from "vue";
 import { openNewWindow } from "../utils/windowUtils";
+import { useMenuItemStore } from "../stores/menuItemStore";
 
 const isStartMenuVisible = ref(false);
-const filteredMenu: Ref<StartMenuData | undefined> = ref(undefined);
-onBeforeMount(() => {
-  preloadImages();
-});
+const { startMenuData } = useMenuItemStore();
+const filteredMenu = ref(startMenuData);
 
 onMounted(() => {
   document.addEventListener("click", handleOutsideClick);
 
-  filteredMenu.value = JSON.parse(JSON.stringify(startMenuData)); // Clone to avoid direct mutation
+  console.log("Start menu data", startMenuData);
+  filteredMenu.value = startMenuData; // Clone to avoid direct mutation
   if (filteredMenu.value) {
     filterInPlace(filteredMenu.value.main, (item: any) => item.visible === true);
     filterInPlace(filteredMenu.value.bottom, (item: any) => item.visible === true);
