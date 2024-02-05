@@ -1,18 +1,14 @@
-<script setup>
-import { ref, onMounted, watch } from 'vue';
-import { useAuthStore } from '../auth';
+<script setup lang="ts">
+import { ref, watch } from "vue";
+import { useAuthStore } from "../auth";
 import { storeToRefs } from "pinia";
+import NewDogvertisement from "./NewDogvertisement.vue";
+import { useDogvertiserNavStore } from "../stores/dogvertiserNavStore";
 
 const authStore = useAuthStore();
-const whoami = ref('');
-
-const { isReady, isAuthenticated } = storeToRefs(authStore);
-
-onMounted(() => {
-  if (isReady.value) {
-    authStore.init();
-  }
-});
+const whoami = ref("");
+const { isAuthenticated } = storeToRefs(authStore);
+const { currentScreen, back, toScreen } = useDogvertiserNavStore();
 
 watch(isAuthenticated, async (value) => {
   if (value) {
@@ -22,50 +18,56 @@ watch(isAuthenticated, async (value) => {
 </script>
 
 <template>
-  <div v-if="authStore.isAuthenticated" class="container">
-    <!-- Header -->
-    <div class="header">
-      <h1 class="title">Dogvertiser</h1>
-      <button class="sign-out" @click="authStore.logout">Sign Out</button>
-    </div>
-
-    <!-- Tab Menu -->
-    <div class="tab-menu">
-      <div class="tab">Current Ads</div>
-      <div class="tab">My Ads</div>
-      <div class="tab">New Ad</div>
-    </div>
-
-    <!-- Row Grid -->
-    <div class="row-grid">
-      <!-- Column 1: My Principal -->
-      <div class="column">
-        <h1 class="column-title">My Principal</h1>
-        <p>{{ whoami }}</p>
+  <div v-if="currentScreen.screen == 'main'">
+    <div v-if="authStore.isAuthenticated" class="container">
+      <!-- Header -->
+      <div class="header">
+        <h1 class="title">Dogvertiser</h1>
+        <button class="sign-out" @click="back">Back</button>
+        <button class="sign-out" @click="authStore.logout">Sign Out</button>
       </div>
 
-      <!-- Column 2: My Wallet -->
-      <div class="column">
-        <h1 class="column-title">My Wallet</h1>
-        <p>0.00000000 EXE</p>
+      <!-- Tab Menu -->
+      <div class="tab-menu">
+        <div class="tab">Current Ads</div>
+        <div class="tab">My Ads</div>
+        <button class="tab" @click="toScreen('new-ad')">New Ad</button>
+      </div>
+
+      <!-- Row Grid -->
+      <div class="row-grid">
+        <!-- Column 1: My Principal -->
+        <div class="column">
+          <h1 class="column-title">My Principal</h1>
+          <p>{{ whoami }}</p>
+        </div>
+
+        <!-- Column 2: My Wallet -->
+        <div class="column">
+          <h1 class="column-title">My Wallet</h1>
+          <p>0.00000000 EXE</p>
+        </div>
+      </div>
+
+      <!-- List of Ads -->
+      <div class="ad-list">
+        <!-- Example Ad Card -->
+        <div class="ad-card">
+          <h2 class="ad-title">Ad Title</h2>
+          <p class="ad-description">Description text goes here.</p>
+          <button class="boost-button">Boost</button>
+        </div>
+        <!-- Add more ad cards here -->
       </div>
     </div>
 
-    <!-- List of Ads -->
-    <div class="ad-list">
-      <!-- Example Ad Card -->
-      <div class="ad-card">
-        <h2 class="ad-title">Ad Title</h2>
-        <p class="ad-description">Description text goes here.</p>
-        <button class="boost-button">Boost</button>
-      </div>
-      <!-- Add more ad cards here -->
+    <div v-else>
+      <h1>Please sign in to access Dogvertiser</h1>
+      <button @click="authStore.login">Sign In</button>
     </div>
   </div>
-
-  <div v-else>
-    <h1>Please sign in to access Dogvertiser</h1>
-    <button @click="authStore.login">Sign In</button>
+  <div v-if="currentScreen.screen == 'new-ad'">
+    <NewDogvertisement />
   </div>
 </template>
 
@@ -146,7 +148,7 @@ watch(isAuthenticated, async (value) => {
 }
 
 .boost-button {
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
   padding: 8px 16px;
   border: none;
