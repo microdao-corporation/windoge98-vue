@@ -47,27 +47,27 @@ function isSubMenuVisible(item: MenuItem) {
   return isVisible;
 }
 
-const preloadImages = () => {
-  startMenuData.main.forEach((item) => {
-    if (item.icon) {
-      const img = new Image();
-      img.src = item.icon;
-    }
-    item.submenu?.forEach((subItem) => {
-      if (subItem.icon) {
-        const img = new Image();
-        img.src = subItem.icon;
-      }
-    });
-  });
+// const preloadImages = () => {
+//   startMenuData.main.forEach((item) => {
+//     if (item.icon) {
+//       const img = new Image();
+//       img.src = item.icon;
+//     }
+//     item.submenu?.forEach((subItem) => {
+//       if (subItem.icon) {
+//         const img = new Image();
+//         img.src = subItem.icon;
+//       }
+//     });
+//   });
 
-  startMenuData.bottom.forEach((item) => {
-    if (item.icon) {
-      const img = new Image();
-      img.src = item.icon;
-    }
-  });
-};
+//   startMenuData.bottom.forEach((item) => {
+//     if (item.icon) {
+//       const img = new Image();
+//       img.src = item.icon;
+//     }
+//   });
+// };
 
 function filterInPlace(a: any, condition: any) {
   let i = 0,

@@ -37,10 +37,12 @@ onMounted(() => {
   });
 
   const items = startMenuData.main[0];
-  const item = items.submenu.find((item: any) => item.name == props.title);
+  if (items && items.submenu) {
+    const item = items.submenu.find((item: any) => item.name == props.title);
 
-  if (item && item.init) {
-    item.init(iframeRef.value);
+    if (item && item.init) {
+      item.init(iframeRef.value);
+    }
   }
 });
 </script>

@@ -12,7 +12,9 @@ const { currentScreen, back, toScreen } = useDogvertiserNavStore();
 
 watch(isAuthenticated, async (value) => {
   if (value) {
-    whoami.value = await authStore.dogvertiserActor.whoami();
+    if (authStore.dogvertiserActor) {
+      whoami.value = await authStore.dogvertiserActor!.whoami();
+    }
   }
 });
 </script>

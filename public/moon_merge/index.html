@@ -1,79 +1,44 @@
 <!DOCTYPE html>
-
 <html lang="en">
 
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
 <style type="text/css">
-html {height: 100%;}
-body {
-	background-repeat: no-repeat;
-	background-attachment: fixed;
-	height: 100%;
-	min-height: 100%;
-	margin: 0;
-	
-	background: rgb(192,192,192); /* Old browsers */
-	/* IE9 SVG, needs conditional override of 'filter' to 'none' */
-	background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2VlZWVlZSIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNjY2NjY2MiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
-	background: -moz-linear-gradient(top,  rgba(192,192,192,1) 0%, rgba(204,204,204,1) 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(192,192,192,1)), color-stop(100%,rgba(204,204,204,1))); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top,  rgba(192,192,192,1) 0%,rgba(204,204,204,1) 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top,  rgba(192,192,192,1) 0%,rgba(204,204,204,1) 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top,  rgba(192,192,192,1) 0%,rgba(204,204,204,1) 100%); /* IE10+ */
-	background: linear-gradient(to bottom,  rgba(192,192,192,1) 0%,rgba(204,204,204,1) 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', endColorstr='#cccccc',GradientType=0 ); /* IE6-8 */
-}
-h1 {
-	font-family: Arial, Helvetica, sans-serif;
-	color: #962300;
-	font-size: 25px;
-}
-p {
-	font-family: Arial, Helvetica, sans-serif;
-	color: #777;
-	font-size: 12px;
-}
-#bloctxt {
-	border-left-width: 5px;
-	border-left-style: solid;
-	border-left-color: #962300;
-	padding-left: 10px;
-	position: absolute;
-	top:5%;
-	left: 50%;
-	width: 600px;
-	margin-left: -260px
-}
-#wrapper {
-	padding: 10px;
-	margin: 0 auto;
-}
-#border {
-	background-color: #99C;
-	border: 1px solid #B90000;
-	-webkit-border-radius: 7px;
-	-moz-border-radius: 7px;
-	border-radius: 7px;
-	margin: 0 auto;
-	padding: 5px;
-	width:1024px;
-	height:768px;
-}
-
-#canvas {
-	width:1024px; 
-	height:768px;
-}
-
-#MMFCanvas {
-	-webkit-box-shadow:  0px 0px 4px 4px rgba(0, 0, 0, 0.25); 
-    box-shadow:  0px 0px 4px 4px rgba(0, 0, 0, 0.25);
-}
+  h1 {
+	  font-family: Arial, Helvetica, sans-serif;
+	  color: #F00;
+	  font-size: x-large;
+  }
+  p {
+	  font-family: Arial, Helvetica, sans-serif;
+	  color: #000;
+	  font-size: small;
+  }
+  body {
+	  background-color: #FFF;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+  }
+  #bloctxt {
+	  border-left-width: 5px;
+	  border-left-style: solid;
+	  border-left-color: #F00;
+	  padding-left: 10px;
+	  position: absolute;
+	  left: 50%%;
+	  width: 600px;
+	  margin-left: -260px
+  }
 </style>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
-  <title>Windoge98 - Moon Merge</title>
+  <!-- Enables full-screen on iOS devices -->
+  <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <meta name="HandheldFriendly" content="true" />
+
+  <title>Clickteam Fusion Developer 2.5 HTML5 Runtime</title>
 
 	<script>
 	   	// Detection of old browsers that do not support the canvas element
@@ -83,14 +48,15 @@ p {
 			window.open("http://www.clickteam.com/html5-fallback", "_self");
 		}
 	</script>
-	
+
+
   	<!-- EXTRASOURCES -->
-	<!-- Loads the Javascript code...-->
-  	<script src="src/Runtime.js"></script>
-  	
+    <!-- Loads the Javascript code...-->
+    <script src="src/Runtime.js"></script>
+
   <script>
 
-	// Detects if the html file is ran locally.
+	// Detection of when the html file is ran locally.
 	// You can remove this code for the final version
 	if (window.location.protocol == "file:")
 	{
@@ -98,7 +64,7 @@ p {
 		document.write('<h1>The application cannot be run...</h1>');
 		document.write('<p>HTML browsers do not allow you to launch data files directly from the file system.<br>');
 		document.write('A drag & drop of the html file on a web-browser window will not work, on any machine.<br>');
-		document.write('Please use the Build & Run option (it opens a local web server) to run your application,<br>') 
+		document.write('Please use the Build & Run option (it opens a local web server) to run your application,<br>')
 		document.write('or upload your application folder to a remote web-server, and start it from there...</p>');
 		document.write('</div>');
 		throw new error("Cannot run application");
@@ -106,30 +72,27 @@ p {
   </script>
 </head>
 
-<!-- This is where we create the Canvas element that will contain the application...-->
 <body>
-    <div id="wrapper">
-	    <div id="border">
-		    <div id="canvas">
-			    <canvas id="MMFCanvas" width="1024" height="768">
-				    <p>Your browser does not support Canvas.</p>
-			    </canvas>   
-		    </div>
-	    </div>
-    </div>  
-    <script>
-        // RUNTIMESTART
-        // This is where the HTML5 runtime is actually started
-	    window.addEventListener("load", windowLoaded, false);
-	    function windowLoaded()
-	    {
-		    // Calls the runtime
-		    // First parameter : name of the canvas element
-		    // Second parameter : path to the cch file. Images and sounds must lay beside this file
-		    new Runtime("MMFCanvas", "resources/MoonMerge98.cch");
-	    }
-        // RUNTIMESTARTEND
-    </script>
+
+<div style="display: inline-block; -webkit-user-select: none; text-align: left;">
+    <canvas id="MMFCanvas" width="1024" height="768">
+    	Your browser does not support Canvas.
+    </canvas>
+</div>
+
+<script>
+    // RUNTIMESTART
+    // This is where the HTML5 runtime is actually started
+    window.addEventListener("load", windowLoaded, false);
+    function windowLoaded()
+    {
+        // Calls the runtime
+        // First parameter : name of the canvas element
+        // Second parameter : path to the cch file. Images and sounds must lay beside this file
+        new Runtime("MMFCanvas", "resources/MoonMerge98.cch");
+    }
+    // RUNTIMESTARTEND
+</script>
 
 </body>
 </html>

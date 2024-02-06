@@ -55,4 +55,4 @@ type StartMenuData = {
 
 type VirtualWindowType = "iframe" | "none" | "welcome" | "newbie_guide" | "blank" | "dogvertiser";
 
-type VirtualWindowSubtype = "openchat" | "unknown";
+type VirtualWindowSubtype = "openchat" | "unknown" | "none" | "dogvertiser";
