@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { onMounted, ref, defineProps } from "vue";
 import { useGtag } from "vue-gtag-next";
-import { initialiseOpenChat } from "../utils/windowUtils";
+import { useMenuItemStore } from "../stores/menuItemStore";
 
 const { event } = useGtag();
 const iframeRef = ref<HTMLIFrameElement>();
+const { startMenuData } = useMenuItemStore();
 
 const props = defineProps({
   url: {
@@ -23,6 +24,10 @@ const props = defineProps({
     type: String,
     required: false,
   },
+  init: {
+    type: Function,
+    required: false,
+  },
 });
 
 onMounted(() => {
@@ -30,8 +35,14 @@ onMounted(() => {
     url: props.url,
     title: props.title,
   });
-  if (props.subType == "openchat" && iframeRef.value) {
-    initialiseOpenChat(iframeRef.value); // Pass the iframe element
+
+  const items = startMenuData.main[0];
+  if (items && items.submenu) {
+    const item = items.submenu.find((item: any) => item.name == props.title);
+
+    if (item && item.init) {
+      item.init(iframeRef.value);
+    }
   }
 });
 </script>

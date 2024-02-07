@@ -3,11 +3,7 @@ import { defineProps, defineEmits } from "vue";
 
 const props = defineProps({
   app: {
-    type: Object as () => {
-      name: string;
-      icon: string;
-      position?: { x: number; y: number };
-    },
+    type: Object as () => MenuItem,
     required: true,
   },
   isSelected: Boolean,
@@ -31,7 +27,7 @@ const handleDragEnd = (event: DragEvent) => {
 const handleDrop = (event: DragEvent) => {
   // Prevent default behavior (Prevent from being opened as a link)
   event.preventDefault();
-  
+
   // Emit drop event with the necessary data
   emits("drop", { app: props.app, event });
 };
@@ -47,7 +43,7 @@ const handleDrop = (event: DragEvent) => {
     @dragend="handleDragEnd"
     @drop="handleDrop"
   >
-    <img :src="app.icon" :alt="app.name" />
+    <img :src="app.icon" :alt="app.name" v-if="app.icon" />
     <div class="desktop-icon-name">{{ app.name }}</div>
   </div>
 </template>

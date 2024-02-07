@@ -1,5 +1,4 @@
 import { eventBus } from "../utils/bus";
-import { initialise } from "@open-ic/openchat-xframe";
 import { useWindowStore } from "../stores/useWindowStore";
 import { v4 as uuidv4 } from 'uuid';
 
@@ -39,15 +38,3 @@ export const openNewWindow = async (item: MenuItem) => {
   }
 };
 
-export function initialiseOpenChat(frame: HTMLIFrameElement) {
-  initialise(frame, {
-    targetOrigin: "https://oc.app",
-    initialPath:
-      "/community/ow6el-gyaaa-aaaar-av5na-cai/?ref=y3rqn-fyaaa-aaaaf-a7z6a-cai",
-    theme: {
-      base: "light",
-      name: "windoge98",
-      overrides: {},
-    },
-  });
-}

@@ -26,6 +26,8 @@ class EventBus {
         type: win.virtualWindow,
         subType: win.subType,
         maximised: false,
+        init: win.init,
+        action: win.action,
         dimensions: {
           height: win.height || 420,
           width: win.width || 600,
@@ -33,6 +35,7 @@ class EventBus {
           y: 200 + (windowStore.windows.length * 20),
         },
       });
+
       windowStore.activateWindow(newWindowId);
     }
   }

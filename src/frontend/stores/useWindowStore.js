@@ -8,6 +8,7 @@ import IframeWindow from "../components/IframeWindow.vue";
 import defaultAppIcon from "../assets/default_app_icon.png";
 import startIcon from "../assets/start-icon.png";
 import NewbieGuide from "../components/NewbieGuide.vue";
+import DogVertiser from "../components/DogVertiser.vue";
 import { v4 as uuidv4 } from 'uuid';
 
 export const useWindowStore = defineStore("windowStore", {
@@ -93,7 +94,6 @@ export const useWindowStore = defineStore("windowStore", {
 					w.zIndex = 1;
 				}
 			});
-			this.getWindowById(id).visible = true;
 		},
 
 		closeWindow(id) {
@@ -149,7 +149,7 @@ export const useWindowStore = defineStore("windowStore", {
 
 	getters: {
 		getWindowById: (state) => (id) => {
-			return state.windows.find((w) => w.id === id);
+			return state.windows.find((w) => w.id == id);
 		},
 
 		getComponentForWindowType: (state) => (windowData) => {
@@ -161,8 +161,13 @@ export const useWindowStore = defineStore("windowStore", {
 				case "newbie_guide":
 					console.log("newbie_guide")
 					return { component: NewbieGuide, props: {} };
+<<<<<<< HEAD
 				case "shutdown":
 					return { component: ShutDownWindow, props: {} };
+=======
+				case "dogvertiser":
+					return { component: DogVertiser, props: {} };
+>>>>>>> 697f1f8e981a6d60627625331c422e518484bbef
 				default:
 					return {
 						component: IframeWindow,
@@ -170,6 +175,7 @@ export const useWindowStore = defineStore("windowStore", {
 							title: windowData.title,
 							url: windowData.url,
 							subType: windowData?.subType,
+							init: windowData?.init,
 						},
 					};
 			}

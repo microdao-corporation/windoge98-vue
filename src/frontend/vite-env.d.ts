@@ -40,6 +40,7 @@ type MenuItem = {
   width?: number;
   submenu?: StartMenuItem[];
   action?: () => void;
+  init?: () => void;
   position?: { x: number; y: number };
 };
 
@@ -52,6 +53,10 @@ type StartMenuData = {
   bottom: MenuItem[];
 };
 
+<<<<<<< HEAD
 type VirtualWindowType = "iframe" | "none" | "welcome" | "newbie_guide" | "blank" | "shutdown"
+=======
+type VirtualWindowType = "iframe" | "none" | "welcome" | "newbie_guide" | "blank" | "dogvertiser";
+>>>>>>> 697f1f8e981a6d60627625331c422e518484bbef
 
-type VirtualWindowSubtype = "openchat" | "unknown";
+type VirtualWindowSubtype = "openchat" | "unknown" | "none" | "dogvertiser";

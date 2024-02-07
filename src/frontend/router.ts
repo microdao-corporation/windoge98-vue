@@ -2,9 +2,12 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import DesktopView from "./views/DesktopView.vue";
 import ShutdownView from "./views/ShutdownView.vue";
 import VerificationView from './views/VerificationView.vue';
+<<<<<<< HEAD
 <<<<<<< HEAD:src/frontend/router.ts
 import DogVertiserView from './views/DogVertiserView.vue';
 import NewDogvertisment from './views/NewDogvertisment.vue';
+=======
+>>>>>>> 697f1f8e981a6d60627625331c422e518484bbef
 
 const routes = [
   { 
@@ -40,14 +43,6 @@ const routes = [
     path: '/verification',
     component: VerificationView
   },
-  {
-    path: '/dogvertiser',
-    component: DogVertiserView
-  },
-  {
-    path: '/newdogvertisment',
-    component: NewDogvertisment
-  }
 ];
 
 const router = createRouter({
