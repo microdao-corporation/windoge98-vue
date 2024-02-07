@@ -1,9 +1,32 @@
+<script setup>
+import { ref, onMounted, watch } from 'vue';
+import { useAuthStore } from '../auth';
+import { storeToRefs } from "pinia";
+
+const authStore = useAuthStore();
+const whoami = ref('');
+
+const { isReady, isAuthenticated } = storeToRefs(authStore);
+
+onMounted(() => {
+  if (isReady.value) {
+    authStore.init();
+  }
+});
+
+watch(isAuthenticated, async (value) => {
+  if (value) {
+    whoami.value = await authStore.dogvertiserActor.whoami();
+  }
+});
+</script>
+
 <template>
-  <div class="container">
+  <div v-if="authStore.isAuthenticated" class="container">
     <!-- Header -->
     <div class="header">
       <h1 class="title">Dogvertiser</h1>
-      <button class="sign-out">Sign Out</button>
+      <button class="sign-out" @click="authStore.logout">Sign Out</button>
     </div>
 
     <!-- Tab Menu -->
@@ -18,7 +41,7 @@
       <!-- Column 1: My Principal -->
       <div class="column">
         <h1 class="column-title">My Principal</h1>
-        <p>12834123912384239</p>
+        <p>{{ whoami }}</p>
       </div>
 
       <!-- Column 2: My Wallet -->
@@ -39,31 +62,12 @@
       <!-- Add more ad cards here -->
     </div>
   </div>
+
+  <div v-else>
+    <h1>Please sign in to access Dogvertiser</h1>
+    <button @click="authStore.login">Sign In</button>
+  </div>
 </template>
-
-<script>
-import { useAuth } from '../auth';
-
-export default {
-  name: 'DogvertiserComponent',
-    setup() {
-    //const { isAuthenticated, login, logout } = useAuth();
-
-    const handleLogin = () => {
-      login();
-    };
-
-    const handleLogout = () => {
-      logout();
-    };
-
-    return {
-  
-    };
-  },
-  
-};
-</script>
 
 <style>
 .container {

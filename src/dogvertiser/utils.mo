@@ -39,12 +39,12 @@ module {
         };
       },
     );
-    Blob.fromArray(a);
+    return a
   };
 
-  public func toAccount({ caller : Principal; canister : Principal }) : Types.Account {
+  public func toAccount(caller : Principal) : Types.Account {
     {
-      owner = canister;
+      owner = caller;
       subaccount = ?toSubaccount(caller);
     };
   };

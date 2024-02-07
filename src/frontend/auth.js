@@ -1,82 +1,88 @@
 // auth.js
-import { ref, provide, inject, onMounted } from 'vue';
+import { defineStore } from "pinia";
 import { AuthClient } from "@dfinity/auth-client";
-import { createActor } from "../declarations/dogvertiser";
+import { Actor, HttpAgent } from "@dfinity/agent";
+import { createActor, canisterId } from "../declarations/dogvertiser";
+import { toRaw } from "vue";
 
-const authSymbol = Symbol();
+let IICanister = process.env.CANISTER_ID_internet_identity;
 
-export function useAuthClient(options = {}) {
-  const isAuthenticated = ref(false);
-  const authClient = ref(null);
-  const identity = ref(null);
-  const principal = ref(null);
-  const backendActor = ref(null);
+const defaultOptions = {
+  /**
+   *  @type {import("@dfinity/auth-client").AuthClientCreateOptions}
+   */
+  createOptions: {
+    idleOptions: {
+      // Set to true if you do not want idle functionality
+    },
+  },
+  /**
+   * @type {import("@dfinity/auth-client").AuthClientLoginOptions}
+   */
+  loginOptions: {
+    identityProvider:
+      import.meta.env.DFX_NETWORK === 'ic'
+        ? 'https://identity.ic0.app/#authorize'
+        : `http://${IICanister}.localhost:8000`,
+  },
+};
 
-  onMounted(() => {
-    AuthClient.create(options.createOptions).then(async (client) => {
-      updateClient(client);
-    });
+function actorFromIdentity(identity) {
+  return createActor(canisterId, {
+    agentOptions: {
+      identity,
+    },
   });
-
-  const login = () => {
-    authClient.value.login({
-      ...options.loginOptions,
-      onSuccess: () => {
-        updateClient(authClient.value);
-      },
-    });
-  };
-
-  async function updateClient(client) {
-    const isAuthenticatedValue = await client.isAuthenticated();
-    isAuthenticated.value = isAuthenticatedValue;
-
-    const clientIdentity = client.getIdentity();
-    identity.value = clientIdentity;
-
-    const clientPrincipal = clientIdentity.getPrincipal();
-    principal.value = clientPrincipal;
-
-    authClient.value = client;
-
-    const actor = createActor(canisterId, {
-      agentOptions: {
-        identity: clientIdentity,
-      },
-    });
-    backendActor.value = actor;
-  }
-
-  async function logout() {
-    await authClient.value?.logout();
-    await updateClient(authClient.value);
-  }
-
-  provide(authSymbol, {
-    isAuthenticated,
-    login,
-    logout,
-    authClient,
-    identity,
-    principal,
-    backendActor
-  });
-
-  return {
-    isAuthenticated,
-    login,
-    logout,
-    authClient,
-    identity,
-    principal,
-    backendActor
-  };
 }
 
-export function useAuth() {
-  const auth = inject(authSymbol);
-  if (!auth) {
-    throw new Error('useAuth must be used within a Vue component wrapped in the AuthProvider.');
-  }
-  return auth;
-}
+export const useAuthStore = defineStore("auth", {
+  id: "auth",
+  state: () => {
+    return {
+      isReady: false,
+      isAuthenticated: null,
+      authClient: null,
+      identity: null,
+      dogvertiserActor: null,
+    };
+  },
+  actions: {
+    async init() {
+      let authClient = await AuthClient.create();
+      this.authClient = authClient;
+      const isAuthenticated = await authClient.isAuthenticated();
+      const identity = isAuthenticated ? authClient.getIdentity() : null;
+      const dogvertiserActor = identity ? actorFromIdentity(identity) : null;
+
+      this.isAuthenticated = isAuthenticated;
+      this.identity = identity;
+      this.dogvertiserActor = dogvertiserActor;
+      this.isReady = true;
+    },
+    async login() {
+      console.log("login")
+      console.log(defaultOptions.loginOptions);
+      let client = await AuthClient.create();
+      const authClient = toRaw(client);
+      authClient.login({
+        ...defaultOptions.loginOptions,
+        onSuccess: async () => {
+          this.isAuthenticated = await authClient.isAuthenticated();
+          this.identity = this.isAuthenticated
+            ? authClient.getIdentity()
+            : null;
+          this.dogvertiserActor = this.identity
+            ? actorFromIdentity(this.identity)
+            : null;
+        },
+      });
+    },
+    async logout() {
+      const authClient = toRaw(this.authClient);
+      await authClient?.logout();
+      this.isAuthenticated = false;
+      this.identity = null;
+      this.dogvertiserActor = null;
+    },
+  },
+});

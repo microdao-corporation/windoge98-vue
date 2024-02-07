@@ -3,9 +3,10 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, defineProps, watch } from "vue";
 import DesktopApp from "./DesktopApp.vue";
-import { startMenuData } from "../data/menuItems";
+import { useMenuItemStore } from "../stores/menuItemStore";
 import { openNewWindow } from "../utils/windowUtils";
 
+<<<<<<< HEAD
 const props = defineProps({
   arrangeIconsTrigger: Boolean,
 });
@@ -31,6 +32,9 @@ interface MenuItem {
   position?: { x: number; y: number };
 }
 
+=======
+const { startMenuData } = useMenuItemStore();
+>>>>>>> 502fbe5aa94655281c4f544ca58e27d0984f5c75
 const ICON_MARGIN = 2;
 const ICON_TOTAL_WIDTH = 100;
 const ICON_TOTAL_HEIGHT = 100;
