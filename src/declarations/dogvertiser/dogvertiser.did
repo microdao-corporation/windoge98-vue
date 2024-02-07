@@ -1,3 +1,43 @@
+type TransferError = 
+ variant {
+   BadBurn: record {min_burn_amount: nat;};
+   BadFee: record {expected_fee: nat;};
+   CreatedInFuture: record {ledger_time: nat64;};
+   Duplicate: record {duplicate_of: nat;};
+   GenericError: record {
+                   error_code: nat;
+                   message: text;
+                 };
+   InsufficientFunds: record {balance: nat;};
+   TemporarilyUnavailable;
+   TooOld;
+ };
+type Time = int;
+type Result = 
+ variant {
+   err: TransferError;
+   ok: nat;
+ };
+type NewAdRequest = 
+ record {
+   image: blob;
+   timestamp: Time;
+   title: text;
+ };
+type Advertisement = 
+ record {
+   caller: principal;
+   image: blob;
+   index: nat;
+   timestamp: Time;
+   title: text;
+   total_burned: nat;
+ };
 service : {
-  whoami: () -> (text);
+  boost_ad: (nat, nat) -> (Result);
+  getAllads: () -> (vec Advertisement) query;
+  getBalance: () -> (nat);
+  newAdRequest: (NewAdRequest) -> (Result);
+  setCreationFee: (nat) -> () oneway;
+  whoami: () -> (text) query;
 }

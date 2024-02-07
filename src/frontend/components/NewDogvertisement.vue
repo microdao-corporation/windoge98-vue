@@ -1,9 +1,13 @@
 <script setup>
 import { ref } from "vue";
 import { useDogvertiserNavStore } from "../stores/dogvertiserNavStore";
+import { useAuthStore } from "../auth";
+
+
 // import { useAuth } from '../../auth';
 
 // Define reactive states
+const authStore = useAuthStore();
 const isLoading = ref(false);
 const modal = ref(false);
 const modalMsg = ref("");
@@ -13,7 +17,6 @@ const title = ref("");
 const image = ref(null); // Blob
 const caller = ref(""); // Principal
 const totalBurned = ref(0); // Nat
-const timestamp = ref(""); // Time.Time
 
 // const { backendActor, isAuthenticated } = useAuth();
 
@@ -22,64 +25,63 @@ const onFileChange = (e) => {
 };
 
 const onSubmit = async () => {
+  console.log("before upload")
   if (image.value) {
+      console.log("uploading")
     await uploadAdvertisement();
+      console.log("after upload")
+
   }
 };
 
 const uploadAdvertisement = async () => {
-  const maxSizeInBytes = 10 * 1024 * 1024; // 10 MB in bytes
-  let contest = 1;
-
-  // Retrieve active contest from backend
-  /*
-  let response = await backendActor.getActiveContest();
-  if (response.ok) {
-    contest = response.ok.id;
-  } else {
-    isLoading.value = false;
-    modal.value = true;
-    modalMsg.value = "No ongoing contest ATM";
-    return;
-  }
-
-  if (image.value.size > maxSizeInBytes) {
-    modalMsg.value = "The file needs to be smaller than 10 MBs";
-    modal.value = true;
-    return;
-  }
-  */
+  const timestamp = new Date().getTime(); // This will return the current timestamp in milliseconds
 
   isLoading.value = true;
 
   // Prepare advertisement data
   const advertisementData = {
     title: title.value,
-    image: image.value, // Send the whole blob
     caller: caller.value,
     total_burned: totalBurned.value,
-    timestamp: timestamp.value,
-    contest: contest,
+    timestamp: timestamp,
   };
 
-  // Send advertisement data to backend
-  try {
-    // await backendActor.addNewAdvertisement(advertisementData);
-    // Reset form fields if needed
-    title.value = "";
-    image.value = null;
-    caller.value = "";
-    totalBurned.value = 0;
-    timestamp.value = "";
-  } catch (error) {
-    // Handle errors
-    console.error("Error uploading advertisement:", error);
-    modalMsg.value = "Error uploading advertisement";
-    modal.value = true;
-  }
+  // Read and convert image file
+  const file = image.value;
+  const reader = new FileReader();
 
-  isLoading.value = false;
+  reader.onload = async (event) => {
+    try {
+      const arrayBuffer = event.target.result;
+      const uint8Array = new Uint8Array(arrayBuffer);
+      const vec8 = Array.from(uint8Array);
+
+      // Add image data to advertisement data
+      advertisementData.image = vec8;
+
+      // Send advertisement data to backend
+      let response = await authStore.dogvertiserActor.newAdRequest(advertisementData);
+       console.log("",response)
+      // Reset form fields if needed
+      title.value = "";
+      image.value = null;
+      caller.value = "";
+      totalBurned.value = 0;
+
+    } catch (error) {
+      // Handle errors
+      console.error("Error uploading advertisement:", error);
+      modalMsg.value = "Error uploading advertisement";
+      modal.value = true;
+    }
+
+    isLoading.value = false;
+  };
+
+  reader.readAsArrayBuffer(file);
 };
+
 </script>
 
 <template>

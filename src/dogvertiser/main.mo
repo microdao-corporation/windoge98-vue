@@ -10,6 +10,8 @@ import Nat "mo:base/Nat";
 import Prelude "mo:base/Prelude";
 import Nat32 "mo:base/Nat32";
 import Nat64 "mo:base/Nat64";
+import Buffer "mo:base/Buffer";
+
 
 
 import Windoge "canister:windoge";
@@ -33,7 +35,9 @@ actor Dogvertiser {
 
  
 
+  var adCreationFee:Nat = 1;
 
+  let controllers = [""];
 
   type IC = actor {
     ecdsa_public_key : ({
@@ -71,16 +75,23 @@ public query ({ caller }) func whoami() : async Text{
     return Principal.toText(caller);
 };
 
+
+public shared ({ caller }) func getBalance(): async Nat{
+     return await Windoge.icrc1_balance_of({owner=caller;subaccount=null});
+};
+
 public shared({caller}) func boost_ad(index: Nat, amount: Nat): async Result.Result<Nat,Types.TransferError> {
+  let nullTimestamp: ?Types.TimeStamp = null;
+  
         switch (advertisements.get(Nat.toText(index))) {
             case (?advertisement) {
-                let request = {
+                let request:Types.TransferArg = {
                     amount = amount;
-                    fee = ?1;
+                    fee = ?10;
                     memo = null;
                     from_subaccount = null;
                     to = toAccount(Principal.fromText("aaaaa-aa"));
-                    created_at_time = null;
+                    created_at_time = nullTimestamp;
                 };
                 let response:Types.TransferResult = await Windoge.icrc1_transfer(request);
                 let newBurnt = advertisement.total_burned+amount;
@@ -113,7 +124,18 @@ public shared({caller}) func boost_ad(index: Nat, amount: Nat): async Result.Res
     };
 
 
-public shared (msg) func newAddRequest(ad : Types.NewAdRequest) : async Result.Result<Nat, Text> {
+public shared (msg) func newAdRequest(ad : Types.NewAdRequest) : async Result.Result<Nat, Types.TransferError> {
+    let nullTimestamp: ?Types.TimeStamp = null;
+ 
+     let request:Types.TransferArg = {
+                    amount = adCreationFee;
+                    fee = ?10;
+                    memo = null;
+                    from_subaccount = null;
+                    to = toAccount(Principal.fromText("aaaaa-aa"));
+                    created_at_time = nullTimestamp;
+                };
+    let response:Types.TransferResult = await Windoge.icrc1_transfer(request);
   
     let newid = advertisements.size();
     let newAd : Types.Advertisement = {
@@ -124,14 +146,40 @@ public shared (msg) func newAddRequest(ad : Types.NewAdRequest) : async Result.R
       timestamp= ad.timestamp;
       title=ad.title;
     };
-    switch (advertisements.put(Nat.toText(newid), newAd)) {
-      case (added) {
-        return #ok(newid)
-      }
-    };
-    return #err("Couldn't add the advertisement")
+    switch(response){
+      case(#Ok(msg)){
+           switch (advertisements.put(Nat.toText(newid), newAd)) {
+            case (added) {
+              return #ok(msg)
+            };
+          };
+      };
+      case(#Err(msg)){
+          return #err(msg)
+      };
+    }
+ 
   };
 
+
+
+
+
+
+  public shared query func getAllads() : async [Types.Advertisement] {
+    let AdvertismentBuffer : Buffer.Buffer<Types.Advertisement> = Buffer.Buffer<Types.Advertisement>(0);
+    for (value in advertisements.vals()) {
+      let advertisementResponse : Types.Advertisement = value;
+      AdvertismentBuffer.add(advertisementResponse)
+    };
+    return Buffer.toArray(AdvertismentBuffer)
+  };
+
+
+
+  public shared(msg) func setCreationFee(fee:Nat) {
+    adCreationFee := fee;
+  };
 
 //PAYMENTS LOGIC
   //ckBTC icrc services

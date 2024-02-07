@@ -7,14 +7,17 @@ import { useDogvertiserNavStore } from "../stores/dogvertiserNavStore";
 
 const authStore = useAuthStore();
 const whoami = ref("");
+const balance = ref("");
 const { isAuthenticated } = storeToRefs(authStore);
 const { currentScreen, back, toScreen } = useDogvertiserNavStore();
 
 watch(isAuthenticated, async (value) => {
   if (value) {
-    if (authStore.dogvertiserActor) {
-      whoami.value = await authStore.dogvertiserActor!.whoami();
-    }
+    whoami.value = await authStore.dogvertiserActor.whoami();
+    let newBalance = await authStore.dogvertiserActor.getBalance();
+    balance.value = Number(newBalance).toString()
+    console.log("balance",Number(balance.value))
+    console.log("vale",whoami)
   }
 });
 </script>
@@ -47,7 +50,7 @@ watch(isAuthenticated, async (value) => {
         <!-- Column 2: My Wallet -->
         <div class="column">
           <h1 class="column-title">My Wallet</h1>
-          <p>0.00000000 EXE</p>
+          <p>{{balance}}</p>
         </div>
       </div>
 
