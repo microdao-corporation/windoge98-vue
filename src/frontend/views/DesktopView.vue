@@ -3,9 +3,13 @@ import { ref, onMounted, onUnmounted } from "vue";
 import Window from "../components/Window.vue";
 import Toolbar from "../components/Toolbar.vue";
 import { useWindowStore } from "../stores/useWindowStore";
+import { openNewWindow } from "../utils/windowUtils";
 import clippyImage from "../assets/clippy.png";
 import DesktopApps from "../components/DesktopApps.vue";
+import { useRouter } from "vue-router";
+import { startMenuData } from "../data/menuItems";
 
+const router = useRouter();
 const windowStore = useWindowStore();
 const activateWindow = windowStore.activateWindow;
 const clippyText = ref("");
@@ -43,6 +47,7 @@ function getRandomClippyJoke() {
   const randomIndex = Math.floor(Math.random() * jokes.length);
   return jokes[randomIndex];
 }
+
 function showContextMenuWindow(e: MouseEvent) {
   e.preventDefault();
   contextMenuPosition.value = { x: `${e.pageX}px`, y: `${e.pageY}px` };
@@ -61,6 +66,31 @@ function triggerArrangeIcons() {
   closeContextMenu();
 }
 
+const closeShutdownWindow = () => {
+  console.log("closeShutdownWindow");
+  console.log(windowStore.windows);
+  windowStore.windows.forEach((win: DesktopWindow) => {
+    if (win.title === "Shut Down") {
+      windowStore.closeWindow(win.id);
+    }
+  });
+};
+
+function openBsodWindow() {
+  closeContextMenu();
+  closeShutdownWindow();
+  router.push("/bsod");
+}
+
+function openShutdownWindow() {
+  closeContextMenu();
+  const shutdownItem = startMenuData.bottom.find(
+    (item) => item.name === "Shut Down"
+  );
+  if (shutdownItem) {
+    openNewWindow(shutdownItem);
+  }
+}
 </script>
 
 <template>
@@ -75,8 +105,8 @@ function triggerArrangeIcons() {
     @mouseleave="closeContextMenu"
   >
     <div @click="triggerArrangeIcons">Arrange icons</div>
-    <div @click="closeContextMenu">New folder</div>
-    <div @click="closeContextMenu">Shutdown</div>
+    <div @click="openBsodWindow">New folder</div>
+    <div @click="openShutdownWindow">Shutdown</div>
   </div>
   <div
     @contextmenu="showContextMenuWindow"
@@ -114,6 +144,7 @@ function triggerArrangeIcons() {
         <component
           :is="windowStore.getComponentForWindowType(win).component"
           v-bind="windowStore.getComponentForWindowType(win).props"
+          @onClose="windowStore.closeWindow(win.id)"
         />
       </Window>
     </vue-draggable-resizable>
@@ -193,6 +224,7 @@ body {
   flex-direction: column;
   animation: grow-effect 0.3s ease-out forwards;
   overflow: hidden;
+  line-height: 1.5; /* gets rid of extra space under it */
 }
 
 .context-menu div:hover {

@@ -8,7 +8,7 @@ const props = defineProps({
 });
 const emit = defineEmits(["onClose", "onMaximise", "onMinimise"]);
 
-</script>
+</script><Window v-for="window in windows" :key="window.id" :window="window" />
 
 
 <template>
@@ -36,6 +36,7 @@ const emit = defineEmits(["onClose", "onMaximise", "onMinimise"]);
 * {
   cursor: url("../assets/cursors/arrow.cur"), auto;
 }
+
 .window {
   overflow: auto;
   min-width: 100%;
