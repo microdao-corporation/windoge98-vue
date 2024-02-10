@@ -21,8 +21,6 @@ const ICON_TOTAL_WIDTH = 100;
 const ICON_TOTAL_HEIGHT = 100;
 const TASKBAR_HEIGHT = 50;
 
-const initialDragPosition = ref({ x: 0, y: 0 });
-
 const selectionStart = ref({ x: 0, y: 0 });
 const selectionEnd = ref({ x: 0, y: 0 });
 const isSelecting = ref(false);
@@ -261,6 +259,14 @@ function onMouseUp(): void {
     }
     selectionVisible.value = false;
   });
+}
+
+function handleDoubleClick(app: MenuItem): void {
+  if (app.url) {
+    console.log(`Opening ${app.url}`);
+    openNewWindow(app);
+  }
+  selectedApps.value = [];
 }
 
 onMounted(() => {
