@@ -21,7 +21,7 @@ const handleDragStart = (event: DragEvent) => {
 };
 
 const handleDragEnd = (event: DragEvent) => {
-  emits("dragend", { app: props.app, event, x: event.clientX, y: event.clientY });
+  emits("dragend", { app: props.app, x: event.clientX, y: event.clientY });
 };
 
 const handleDrop = (event: DragEvent) => {

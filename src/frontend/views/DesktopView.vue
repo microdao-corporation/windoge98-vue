@@ -17,6 +17,7 @@ const contextMenuPosition = ref({ x: "0px", y: "0px" });
 const contextMenuVisible = ref(false);
 let closeTimer: number | null = null;
 
+
 onMounted(() => {
   clippyText.value = getRandomClippyJoke();
   document.addEventListener("contextmenu", showContextMenuWindow);
@@ -63,7 +64,7 @@ function closeContextMenu(): void {
   closeTimer = window.setTimeout(() => {
     contextMenuVisible.value = false;
     closeTimer = null;
-  }, 150); // sweet spot imo
+  }, 360); // actually the sweet spot
 }
 
 function cancelCloseContextMenu(): void {
@@ -241,6 +242,7 @@ body {
   flex-direction: column;
   animation: grow-effect 0.3s ease-out forwards;
   overflow: hidden;
+  z-index: 1000;
 }
 
 .context-menu div:hover {
