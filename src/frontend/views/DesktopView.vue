@@ -15,6 +15,7 @@ const activateWindow = windowStore.activateWindow;
 const clippyText = ref("");
 const contextMenuPosition = ref({ x: "0px", y: "0px" });
 const contextMenuVisible = ref(false);
+let closeTimer: number | null = null;
 
 onMounted(() => {
   clippyText.value = getRandomClippyJoke();
@@ -54,16 +55,33 @@ function showContextMenuWindow(e: MouseEvent) {
   contextMenuVisible.value = true;
 }
 
-function closeContextMenu() {
+function closeContextMenu(): void {
   if (!contextMenuVisible.value) return;
+  if (closeTimer !== null) {
+    clearTimeout(closeTimer);
+  }
+  closeTimer = window.setTimeout(() => {
+    contextMenuVisible.value = false;
+    closeTimer = null;
+  }, 150); // sweet spot imo
+}
+
+function cancelCloseContextMenu(): void {
+  if (closeTimer !== null) {
+    clearTimeout(closeTimer);
+    closeTimer = null;
+  }
+}
+
+function forceCloseContextMenu(): void {
   contextMenuVisible.value = false;
 }
 
 const arrangeIconsTrigger = ref(false);
 
 function triggerArrangeIcons() {
+  forceCloseContextMenu();
   arrangeIconsTrigger.value = !arrangeIconsTrigger.value; // toggle
-  closeContextMenu();
 }
 
 const closeShutdownWindow = () => {
@@ -75,13 +93,13 @@ const closeShutdownWindow = () => {
 };
 
 function openBsodWindow() {
-  closeContextMenu();
+  forceCloseContextMenu();
   closeShutdownWindow();
   router.push("/bsod");
 }
 
 function openShutdownWindow() {
-  closeContextMenu();
+  forceCloseContextMenu();
   const shutdownItem = startMenuData.bottom.find(
     (item) => item.name === "Shut Down"
   );
@@ -101,6 +119,7 @@ function openShutdownWindow() {
       left: contextMenuPosition.x,
     }"
     @mouseleave="closeContextMenu"
+    @mouseenter="cancelCloseContextMenu"
   >
     <div @click="triggerArrangeIcons">Arrange icons</div>
     <div @click="openBsodWindow">New folder</div>
@@ -222,7 +241,6 @@ body {
   flex-direction: column;
   animation: grow-effect 0.3s ease-out forwards;
   overflow: hidden;
-  line-height: 1.5; /* gets rid of extra space under it */
 }
 
 .context-menu div:hover {
