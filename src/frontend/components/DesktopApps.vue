@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, defineProps, watch } from "vue";
+import { ref, computed, onMounted } from "vue";
 import DesktopApp from "./DesktopApp.vue";
 import { useMenuItemStore } from "../stores/menuItemStore";
 import { openNewWindow } from "../utils/windowUtils";
@@ -8,14 +8,15 @@ const { startMenuData } = useMenuItemStore();
 const ICON_MARGIN = 2;
 const ICON_TOTAL_WIDTH = 100;
 const ICON_TOTAL_HEIGHT = 100;
+const TASKBAR_HEIGHT = 50;
 
 function arrangeIcons(): void {
-  const containerHeight = window.innerHeight;
+  const containerHeight = window.innerHeight - TASKBAR_HEIGHT; // Adjusted for taskbar
   const iconsPerCol = Math.floor(containerHeight / ICON_TOTAL_HEIGHT);
 
   desktopApps.value.forEach((app, index) => {
-    const col = Math.floor(index / iconsPerCol); // current column based on index
-    const row = index % iconsPerCol; // current row in the current column
+    const col = Math.floor(index / iconsPerCol);
+    const row = index % iconsPerCol;
 
     const x = col * ICON_TOTAL_WIDTH + ICON_MARGIN;
     const y = row * ICON_TOTAL_HEIGHT + ICON_MARGIN;
@@ -83,12 +84,20 @@ function toggleSelection({
 }
 
 function handleDragEnd({ app, x, y }: { app: MenuItem; x: number; y: number }) {
-  const newX =
+  let newX =
     Math.round((x - ICON_MARGIN) / ICON_TOTAL_WIDTH) * ICON_TOTAL_WIDTH +
     ICON_MARGIN;
-  const newY =
+  let newY =
     Math.round((y - ICON_MARGIN) / ICON_TOTAL_HEIGHT) * ICON_TOTAL_HEIGHT +
     ICON_MARGIN;
+
+  // Calculate the maximum Y position allowed for icons (container height minus taskbar height and icon height)
+  const maxAllowedY = window.innerHeight - TASKBAR_HEIGHT - ICON_TOTAL_HEIGHT;
+
+  // Ensure newY does not place the icon in the taskbar's area or below it
+  if (newY > maxAllowedY) {
+    newY = maxAllowedY;
+  }
 
   // Find if there's an app at the new position
   const overlappingApp = findAppByPosition(newX, newY, app.name);

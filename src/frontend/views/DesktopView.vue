@@ -67,8 +67,6 @@ function triggerArrangeIcons() {
 }
 
 const closeShutdownWindow = () => {
-  console.log("closeShutdownWindow");
-  console.log(windowStore.windows);
   windowStore.windows.forEach((win: DesktopWindow) => {
     if (win.title === "Shut Down") {
       windowStore.closeWindow(win.id);
