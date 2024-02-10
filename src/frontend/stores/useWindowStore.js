@@ -161,13 +161,10 @@ export const useWindowStore = defineStore("windowStore", {
 				case "newbie_guide":
 					console.log("newbie_guide")
 					return { component: NewbieGuide, props: {} };
-<<<<<<< HEAD
 				case "shutdown":
 					return { component: ShutDownWindow, props: {} };
-=======
 				case "dogvertiser":
 					return { component: DogVertiser, props: {} };
->>>>>>> 697f1f8e981a6d60627625331c422e518484bbef
 				default:
 					return {
 						component: IframeWindow,

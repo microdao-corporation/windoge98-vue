@@ -1,40 +1,10 @@
-// src/components/DesktopApps.vue
-
 <script setup lang="ts">
 import { ref, computed, onMounted, defineProps, watch } from "vue";
 import DesktopApp from "./DesktopApp.vue";
 import { useMenuItemStore } from "../stores/menuItemStore";
 import { openNewWindow } from "../utils/windowUtils";
 
-<<<<<<< HEAD
-const props = defineProps({
-  arrangeIconsTrigger: Boolean,
-});
-
-watch(
-  () => props.arrangeIconsTrigger,
-  () => {
-    arrangeIcons();
-  }
-);
-
-interface MenuItem {
-  name: string;
-  icon: string;
-  url: string;
-  iconHeight?: number;
-  height?: number;
-  width?: number;
-  virtualWindow: "none" | "iframe" | "newbie_guide" | "blank" | "welcome";
-  subType: "unknown" | "openchat";
-  visible: boolean;
-  submenu?: MenuItem[];
-  position?: { x: number; y: number };
-}
-
-=======
 const { startMenuData } = useMenuItemStore();
->>>>>>> 502fbe5aa94655281c4f544ca58e27d0984f5c75
 const ICON_MARGIN = 2;
 const ICON_TOTAL_WIDTH = 100;
 const ICON_TOTAL_HEIGHT = 100;
