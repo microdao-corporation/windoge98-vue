@@ -7,10 +7,10 @@ import type {
 import type { Principal } from "@dfinity/principal";
 import type { IDL } from "@dfinity/candid";
 
-import { _SERVICE } from './windoge.did';
+import { _SERVICE } from './windoge_staging.did';
 
 export declare const idlFactory: IDL.InterfaceFactory;
-export declare const windgoeCanistrterId: string;
+export declare const canisterId: string;
 
 export declare interface CreateActorOptions {
   /**
@@ -38,7 +38,7 @@ export declare interface CreateActorOptions {
  * @param {CreateActorOptions["actorOptions"]} options.actorOptions - options for the Actor
  * @see {@link ActorConfig}
  */
-export declare const createWindogeActor: (
+export declare const createActor: (
   canisterId: string | Principal,
   options?: CreateActorOptions
 ) => ActorSubclass<_SERVICE>;
@@ -47,4 +47,4 @@ export declare const createWindogeActor: (
  * Intialized Actor using default settings, ready to talk to a canister using its candid interface
  * @constructs {@link ActorSubClass}
  */
-export declare const windoge: ActorSubclass<_SERVICE>;
+export declare const windoge_staging: ActorSubclass<_SERVICE>;

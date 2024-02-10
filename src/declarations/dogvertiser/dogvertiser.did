@@ -13,6 +13,7 @@ type TransferError =
    TooOld;
  };
 type Time = int;
+type Subaccount = blob;
 type Result = 
  variant {
    err: TransferError;
@@ -35,9 +36,12 @@ type Advertisement =
  };
 service : {
   boost_ad: (nat, nat) -> (Result);
+  dogvertiserCanister: () -> (text) query;
   getAllads: () -> (vec Advertisement) query;
   getBalance: () -> (nat);
   newAdRequest: (NewAdRequest) -> (Result);
   setCreationFee: (nat) -> () oneway;
   whoami: () -> (text) query;
+  whoamisub: () -> (Subaccount) query;
+  withdraw: () -> (Result);
 }

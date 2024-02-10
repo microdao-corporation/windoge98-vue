@@ -15,9 +15,24 @@
         "remote" : {
           "candid": "src/dogvertiser/icrc/icrc1.did",
           "id": {
-            "ic" : "rh2pm-ryaaa-aaaan-qeniq-cai"
+            "ic" : "mvlgq-eiaaa-aaaan-qepnq-cai"
           }
         }
+      },
+      "windoge_staging": {
+        "dependencies": [
+          "dogvertiser",
+          "internet_identity",
+          "windoge"
+          ],
+        "frontend": {
+          "entrypoint": "dist/index.html"
+        },
+        "source": [
+          "dist/assets",
+          "dist"
+        ],
+        "type": "assets"
       }
     },
     "defaults": {

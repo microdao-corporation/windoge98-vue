@@ -27,13 +27,17 @@ export const idlFactory = ({ IDL }) => {
     'timestamp' : Time,
     'image' : IDL.Vec(IDL.Nat8),
   });
+  const Subaccount = IDL.Vec(IDL.Nat8);
   return IDL.Service({
     'boost_ad' : IDL.Func([IDL.Nat, IDL.Nat], [Result], []),
+    'dogvertiserCanister' : IDL.Func([], [IDL.Text], ['query']),
     'getAllads' : IDL.Func([], [IDL.Vec(Advertisement)], ['query']),
     'getBalance' : IDL.Func([], [IDL.Nat], []),
     'newAdRequest' : IDL.Func([NewAdRequest], [Result], []),
     'setCreationFee' : IDL.Func([IDL.Nat], [], ['oneway']),
     'whoami' : IDL.Func([], [IDL.Text], ['query']),
+    'whoamisub' : IDL.Func([], [Subaccount], ['query']),
+    'withdraw' : IDL.Func([], [Result], []),
   });
 };
 export const init = ({ IDL }) => { return []; };

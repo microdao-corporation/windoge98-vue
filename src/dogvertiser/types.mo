@@ -10,7 +10,7 @@ module {
   public type BlockIndex = Nat;
   public type Tokens = Nat;
   public type TxIndex = Nat;
-  public type Subaccount = [Nat8];
+  public type Subaccount = Blob;
     public type TimeStamp = Nat64;
     public type Time = Time.Time;
 
@@ -34,7 +34,7 @@ module {
  public type TransferArg = {
     to : Account;
     fee : ?Tokens;
-    memo : ?[Nat8];
+    memo : ?Blob;
     from_subaccount : ?Subaccount;
     created_at_time : ?TimeStamp;
     amount : Tokens;

@@ -39,7 +39,7 @@ module {
         };
       },
     );
-    return a
+    return Blob.fromArray(a);
   };
 
   public func toAccount(caller : Principal) : Types.Account {

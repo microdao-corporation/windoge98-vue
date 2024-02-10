@@ -16,6 +16,7 @@ export interface NewAdRequest {
 }
 export type Result = { 'ok' : bigint } |
   { 'err' : TransferError };
+export type Subaccount = Uint8Array | number[];
 export type Time = bigint;
 export type TransferError = {
     'GenericError' : { 'message' : string, 'error_code' : bigint }
@@ -29,9 +30,12 @@ export type TransferError = {
   { 'InsufficientFunds' : { 'balance' : bigint } };
 export interface _SERVICE {
   'boost_ad' : ActorMethod<[bigint, bigint], Result>,
+  'dogvertiserCanister' : ActorMethod<[], string>,
   'getAllads' : ActorMethod<[], Array<Advertisement>>,
   'getBalance' : ActorMethod<[], bigint>,
   'newAdRequest' : ActorMethod<[NewAdRequest], Result>,
   'setCreationFee' : ActorMethod<[bigint], undefined>,
   'whoami' : ActorMethod<[], string>,
+  'whoamisub' : ActorMethod<[], Subaccount>,
+  'withdraw' : ActorMethod<[], Result>,
 }

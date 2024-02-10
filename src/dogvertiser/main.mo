@@ -35,7 +35,7 @@ actor Dogvertiser {
 
  
 
-  var adCreationFee:Nat = 1;
+  var adCreationFee:Nat = 1000000;
 
   let controllers = [""];
 
@@ -71,13 +71,46 @@ actor Dogvertiser {
     stableAds := [];
   };
 
+public query func dogvertiserCanister():async Text {
+  return Principal.toText(Principal.fromActor(Dogvertiser));
+};
+
+
+public query ({caller}) func whoamisub() : async Types.Subaccount {
+    return toSubaccount(caller);
+};
+
 public query ({ caller }) func whoami() : async Text{
     return Principal.toText(caller);
 };
 
 
 public shared ({ caller }) func getBalance(): async Nat{
-     return await Windoge.icrc1_balance_of({owner=caller;subaccount=null});
+     return await Windoge.icrc1_balance_of({owner=Principal.fromActor(Dogvertiser);subaccount=?toSubaccount(caller)});
+};
+
+
+public shared({caller}) func withdraw(): async Result.Result<Nat,Types.TransferError>{
+  let amount = await Windoge.icrc1_balance_of({owner=Principal.fromActor(Dogvertiser);subaccount=?toSubaccount(caller)});
+  let realAmout = amount-100000;
+   let request:Types.TransferArg = {
+                    amount = realAmout;
+                    fee = null;
+                    memo = null;
+                    from_subaccount = ?toSubaccount(caller);
+                    to = {owner=caller;subaccount=null};
+                    created_at_time = null;
+                };
+                let response:Types.TransferResult = await Windoge.icrc1_transfer(request);
+                switch(response) {
+                  case(#Ok(msg)) {
+    
+                    return #ok(msg);
+                  };
+                  case(#Err(msg)) {
+                    return #err(msg);
+                  };
+                };  
 };
 
 public shared({caller}) func boost_ad(index: Nat, amount: Nat): async Result.Result<Nat,Types.TransferError> {
@@ -87,10 +120,10 @@ public shared({caller}) func boost_ad(index: Nat, amount: Nat): async Result.Res
             case (?advertisement) {
                 let request:Types.TransferArg = {
                     amount = amount;
-                    fee = ?10;
+                    fee = null;
                     memo = null;
-                    from_subaccount = null;
-                    to = toAccount(Principal.fromText("aaaaa-aa"));
+                    from_subaccount = ?toSubaccount(caller);
+                    to = {owner=Principal.fromText("aaaaa-aa");subaccount=null;};
                     created_at_time = nullTimestamp;
                 };
                 let response:Types.TransferResult = await Windoge.icrc1_transfer(request);
@@ -124,15 +157,14 @@ public shared({caller}) func boost_ad(index: Nat, amount: Nat): async Result.Res
     };
 
 
-public shared (msg) func newAdRequest(ad : Types.NewAdRequest) : async Result.Result<Nat, Types.TransferError> {
+public shared ({caller}) func newAdRequest(ad : Types.NewAdRequest) : async Result.Result<Nat, Types.TransferError> {
     let nullTimestamp: ?Types.TimeStamp = null;
- 
-     let request:Types.TransferArg = {
+      let request:Types.TransferArg = {
                     amount = adCreationFee;
-                    fee = ?10;
+                    fee = null;
                     memo = null;
-                    from_subaccount = null;
-                    to = toAccount(Principal.fromText("aaaaa-aa"));
+                    from_subaccount = ?toSubaccount(caller);
+                    to = {owner=Principal.fromText("aaaaa-aa");subaccount=null;};
                     created_at_time = nullTimestamp;
                 };
     let response:Types.TransferResult = await Windoge.icrc1_transfer(request);
@@ -141,8 +173,8 @@ public shared (msg) func newAdRequest(ad : Types.NewAdRequest) : async Result.Re
     let newAd : Types.Advertisement = {
       index = newid;
       image = ad.image;
-      caller = msg.caller;
-      total_burned = 0;
+      caller = caller;
+      total_burned = adCreationFee;
       timestamp= ad.timestamp;
       title=ad.title;
     };

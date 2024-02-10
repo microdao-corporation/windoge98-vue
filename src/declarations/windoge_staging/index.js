@@ -1,19 +1,19 @@
 import { Actor, HttpAgent } from "@dfinity/agent";
 
 // Imports and re-exports candid interface
-import { idlFactory } from "./windoge.did.js";
-export { idlFactory } from "./windoge.did.js";
+import { idlFactory } from "./windoge_staging.did.js";
+export { idlFactory } from "./windoge_staging.did.js";
 
 /* CANISTER_ID is replaced by webpack based on node environment
  * Note: canister environment variable will be standardized as
  * process.env.CANISTER_ID_<CANISTER_NAME_UPPERCASE>
  * beginning in dfx 0.15.0
  */
-export const windgoeCanistrterId =
-  process.env.CANISTER_ID_WINDOGE ||
-  process.env.WINDOGE_CANISTER_ID;
+export const canisterId =
+  process.env.CANISTER_ID_WINDOGE_STAGING ||
+  process.env.WINDOGE_STAGING_CANISTER_ID;
 
-export const createWindogeActor = (canisterId, options = {}) => {
+export const createActor = (canisterId, options = {}) => {
   const agent = options.agent || new HttpAgent({ ...options.agentOptions });
 
   if (options.agent && options.agentOptions) {
@@ -40,4 +40,4 @@ export const createWindogeActor = (canisterId, options = {}) => {
   });
 };
 
-export const windoge = windgoeCanistrterId ? createWindogeActor(windgoeCanistrterId) : undefined;
+export const windoge_staging = canisterId ? createActor(canisterId) : undefined;

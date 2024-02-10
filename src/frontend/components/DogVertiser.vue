@@ -1,23 +1,94 @@
 <script setup lang="ts">
+// @ts-ignore
 import { ref, watch } from "vue";
 import { useAuthStore } from "../auth";
+// @ts-ignore
 import { storeToRefs } from "pinia";
+// @ts-ignore
 import NewDogvertisement from "./NewDogvertisement.vue";
 import { useDogvertiserNavStore } from "../stores/dogvertiserNavStore";
+import { Principal } from "@dfinity/principal";
 
 const authStore = useAuthStore();
 const whoami = ref("");
-const balance = ref("");
+const balance = ref("00000.000");
+const dogvertiserBalance = ref("00000.000");
+
 const { isAuthenticated } = storeToRefs(authStore);
+// @ts-ignore
 const { currentScreen, back, toScreen } = useDogvertiserNavStore();
 
-watch(isAuthenticated, async (value) => {
+const handleTransferDapp = async () => {
+  if (
+    authStore.dogvertiserActor !== null &&
+    authStore.dogvertiserActor !== undefined
+  ) {
+    let dogvertiserCanisterId =
+      await authStore.dogvertiserActor.dogvertiserCanister();
+    let whoamisub = await authStore.dogvertiserActor.whoamisub();
+    let account = {
+      owner: Principal.fromText(dogvertiserCanisterId),
+      subaccount: [whoamisub], // Pass the extracted array as the subaccount
+    };
+
+    let transerBalance = Number(balance.value) - 100000;
+    // @ts-ignore
+    let transferResult = await authStore.windogeActor.icrc1_transfer({
+      fee: [],
+      amount: transerBalance,
+      memo: [],
+      from_subaccount: [],
+      to: account,
+      created_at_time: [],
+    });
+      console.log("transferResult",transferResult)
+      //@ts-ignore
+         let dogvertiseBalance = await authStore.dogvertiserActor.getBalance();
+      dogvertiserBalance.value = Number(dogvertiseBalance).toString();
+      balance.value = "0000.000"
+  }
+};
+
+const handleWithdrawl = async () => {
+  if (
+    authStore.dogvertiserActor !== null &&
+    authStore.dogvertiserActor !== undefined
+  ) {
+    let principal = Principal.fromText(whoami.value);
+    //@ts-ignore
+    let response = await authStore.dogvertiserActor.withdraw();
+    //@ts-ignore
+     let newBalance = await authStore.windogeActor.icrc1_balance_of({
+        owner: principal,
+        subaccount: [],
+      });
+      balance.value = Number(newBalance).toString();
+      dogvertiserBalance.value = "0000.000"
+  } else {
+    // Handle the case when authStore.dogvertiserActor is null or undefined
+  }
+};
+
+watch(isAuthenticated, async (value: any) => {
   if (value) {
-    whoami.value = await authStore.dogvertiserActor.whoami();
-    let newBalance = await authStore.dogvertiserActor.getBalance();
-    balance.value = Number(newBalance).toString()
-    console.log("balance",Number(balance.value))
-    console.log("vale",whoami)
+    if (
+      authStore.dogvertiserActor !== null &&
+      authStore.dogvertiserActor !== undefined
+    ) {
+      whoami.value = await authStore.dogvertiserActor.whoami();
+      let principal = Principal.fromText(whoami.value);
+      //@ts-ignore
+      let dogvertiseBalance = await authStore.dogvertiserActor.getBalance();
+      dogvertiserBalance.value = Number(dogvertiseBalance).toString();
+      // @ts-ignore
+      let newBalance = await authStore.windogeActor.icrc1_balance_of({
+        owner: principal,
+        subaccount: [],
+      });
+      balance.value = Number(newBalance).toString();
+    } else {
+      // Handle the case when authStore.dogvertiserActor is null or undefined
+    }
   }
 });
 </script>
@@ -49,8 +120,15 @@ watch(isAuthenticated, async (value) => {
 
         <!-- Column 2: My Wallet -->
         <div class="column">
+          <button class="tab" @click="handleTransferDapp()">
+            Transfer to dapp
+          </button>
+          <button class="tab" @click="handleWithdrawl()">Withdral</button>
+
           <h1 class="column-title">My Wallet</h1>
-          <p>{{balance}}</p>
+          <p>{{ balance }}</p>
+          <h1 class="column-title">Dapp Wallet</h1>
+          <p>{{ dogvertiserBalance }}</p>
         </div>
       </div>
 
