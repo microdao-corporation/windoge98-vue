@@ -3,6 +3,7 @@ import { defineStore } from "pinia";
 import { watch } from "vue";
 import WelcomeWindow from "../components/WelcomeWindow.vue";
 import DevelopersWindow from "../components/DevelopersWindow.vue";
+import ShutDownWindow from "../components/ShutDownWindow.vue";
 import IframeWindow from "../components/IframeWindow.vue";
 import defaultAppIcon from "../assets/default_app_icon.png";
 import startIcon from "../assets/start-icon.png";
@@ -160,6 +161,8 @@ export const useWindowStore = defineStore("windowStore", {
 				case "newbie_guide":
 					console.log("newbie_guide")
 					return { component: NewbieGuide, props: {} };
+				case "shutdown":
+					return { component: ShutDownWindow, props: {} };
 				case "dogvertiser":
 					return { component: DogVertiser, props: {} };
 				default:
