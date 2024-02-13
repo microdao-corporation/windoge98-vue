@@ -14,7 +14,7 @@ const primaryMenuOptions = [
 ];
 
 const secondaryMenuOptions = [
-  { id: 1, text: "1. Start Windows 98 Setup from CD-ROM." },
+  { id: 1, text: "1. Start Windoge 98 Setup from CD-ROM." },
   { id: 2, text: "2. Start computer with CD-ROM support." },
   { id: 3, text: "3. Start computer without CD-ROM support." },
 ];
@@ -24,9 +24,7 @@ const menuOptions = computed(() =>
 );
 
 const maxOptionId = computed(() =>
-  showSecondaryMenu.value
-    ? secondaryMenuOptions.length
-    : primaryMenuOptions.length
+  showSecondaryMenu.value ? secondaryMenuOptions.length : primaryMenuOptions.length
 );
 
 function selectOption(optionId: number) {
@@ -57,11 +55,9 @@ onUnmounted(() => {
 function handleKeyDown(event: KeyboardEvent) {
   const maxId = maxOptionId.value;
   if (event.key === "ArrowUp") {
-    selectedOption.value =
-      selectedOption.value > 1 ? selectedOption.value - 1 : maxId;
+    selectedOption.value = selectedOption.value > 1 ? selectedOption.value - 1 : maxId;
   } else if (event.key === "ArrowDown") {
-    selectedOption.value =
-      selectedOption.value < maxId ? selectedOption.value + 1 : 1;
+    selectedOption.value = selectedOption.value < maxId ? selectedOption.value + 1 : 1;
   } else if (event.key === "Enter") {
     if (!showSecondaryMenu.value && selectedOption.value === 2) {
       showSecondaryMenu.value = true;
@@ -84,24 +80,24 @@ function navigateToLoadingView() {
 <template>
   <div class="boot-container">
     <div class="boot-loader">
-      <h1 v-if="!showSecondaryMenu">
-        Microsoft Windoge 98 CD-ROM Startup Menu
-      </h1>
-      <h1 v-else>Microsoft Windows 98 Startup Menu</h1>
+      <h1 v-if="!showSecondaryMenu">Microdao Windoge 98 CD-ROM Startup Menu</h1>
+      <h1 v-else>Microdao Windoge 98 Startup Menu</h1>
       <ul>
-        <li
+        <ul
           v-for="option in menuOptions"
           :key="option.id"
-          :class="{ selected: selectedOption === option.id }"
+          :class="{ selected: selectedOption == option.id }"
           @click="selectOption(option.id)"
         >
-          {{ option.text }}
-        </li>
+          {{
+            option.text
+          }}
+        </ul>
       </ul>
       <p>
         Enter your choice:
         <span v-if="selectedOption">{{ selectedOption }}</span>
-        <span v-else-if="blink" class="blink"></span>
+        <span v-if="blink" class="blink"></span>
       </p>
     </div>
   </div>
@@ -134,13 +130,13 @@ function navigateToLoadingView() {
   margin: 0 0 20px 0;
 }
 
-.boot-loader li,
+.boot-loader ul,
 p,
 span {
   font-size: 24px;
 }
 
-.boot-loader li.selected {
+.boot-loader ul.selected {
   color: black;
   background-color: rgba(255, 255, 255, 0.75);
 }

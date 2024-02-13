@@ -1,18 +1,18 @@
 <script setup lang="ts">
 import { useRouter } from "vue-router";
-import { shuttingDownState } from "../states/sharedStates.vue";
+import { shuttingDownState } from "../stores/sharedStates";
 import computerImage from "../assets/shut_down.png";
 
 const router = useRouter();
 
 const handleShutdown = () => {
   shuttingDownState.value = true;
-  emit('onClose'); // close window of shutdown dialog
+  emit("onClose"); // close window of shutdown dialog
   router.push("/loading");
 };
 
 const handleHelp = () => {
-  emit('onClose'); // close window of shutdown dialog
+  emit("onClose"); // close window of shutdown dialog
   router.push("/bsod");
 };
 

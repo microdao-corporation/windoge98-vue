@@ -80,7 +80,7 @@ function handleWindowClick(windowId: number) {
 <style scoped>
 .window-icon {
   padding-right: 10px;
-  font-family: "MS Sans Serif";
+  font-family: Arial;
   font-size: 11px;
   background: no-repeat center / auto 20px;
   min-width: 150px;

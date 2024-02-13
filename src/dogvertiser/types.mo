@@ -6,19 +6,17 @@ import Nat8 "mo:base/Nat8";
 
 module {
 
-
   public type BlockIndex = Nat;
   public type Tokens = Nat;
   public type TxIndex = Nat;
   public type Subaccount = [Nat8];
-    public type TimeStamp = Nat64;
-    public type Time = Time.Time;
+  public type TimeStamp = Nat64;
+  public type Time = Time.Time;
 
   public type Account = {
     owner : Principal;
     subaccount : ?Subaccount;
   };
-
 
   public type TransferError = {
     #GenericError : { message : Text; error_code : Nat };
@@ -31,7 +29,7 @@ module {
     #InsufficientFunds : { balance : Nat };
   };
 
- public type TransferArg = {
+  public type TransferArg = {
     to : Account;
     fee : ?Tokens;
     memo : ?[Nat8];
@@ -40,29 +38,24 @@ module {
     amount : Tokens;
   };
 
+  public type Advertisement = {
+    index : Nat;
+    title : Text;
+    image : Blob;
+    caller : Principal;
+    total_burned : Nat;
+    timestamp : Time.Time;
+  };
 
-public type Advertisement = {
-        index : Nat;
-        title : Text;
-        image : Blob;
-        caller : Principal;
-        total_burned : Nat;
-        timestamp : Time.Time;
-    };
+  public type NewAdRequest = {
+    title : Text;
+    image : Blob;
+    timestamp : Time.Time;
+  };
 
-
-
-public type NewAdRequest = {
-        title : Text;
-        image : Blob;
-        timestamp : Time.Time;
-};
-
-public type TransferResult = {
-      #Ok:BlockIndex;
-      #Err:TransferError;
-};
-
-
+  public type TransferResult = {
+    #Ok : BlockIndex;
+    #Err : TransferError;
+  };
 
 };

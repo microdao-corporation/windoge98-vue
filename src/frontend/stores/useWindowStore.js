@@ -159,7 +159,6 @@ export const useWindowStore = defineStore("windowStore", {
 				case "developers":
 					return { component: DevelopersWindow, props: {} };
 				case "newbie_guide":
-					console.log("newbie_guide")
 					return { component: NewbieGuide, props: {} };
 				case "shutdown":
 					return { component: ShutDownWindow, props: {} };

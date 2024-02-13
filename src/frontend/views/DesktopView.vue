@@ -17,7 +17,6 @@ const contextMenuPosition = ref({ x: "0px", y: "0px" });
 const contextMenuVisible = ref(false);
 let closeTimer: number | null = null;
 
-
 onMounted(() => {
   clippyText.value = getRandomClippyJoke();
   document.addEventListener("contextmenu", showContextMenuWindow);
@@ -101,9 +100,7 @@ function openBsodWindow() {
 
 function openShutdownWindow() {
   forceCloseContextMenu();
-  const shutdownItem = startMenuData.bottom.find(
-    (item) => item.name === "Shut Down"
-  );
+  const shutdownItem = startMenuData.bottom.find((item) => item.name === "Shut Down");
   if (shutdownItem) {
     openNewWindow(shutdownItem);
   }
@@ -115,16 +112,15 @@ function openShutdownWindow() {
     class="context-menu"
     v-if="contextMenuVisible"
     :style="{
-      position: 'absolute',
       top: contextMenuPosition.y,
       left: contextMenuPosition.x,
     }"
     @mouseleave="closeContextMenu"
     @mouseenter="cancelCloseContextMenu"
   >
-    <div @click="triggerArrangeIcons">Arrange icons</div>
-    <div @click="openBsodWindow">New folder</div>
-    <div @click="openShutdownWindow">Shutdown</div>
+    <div class="context-item" @click="triggerArrangeIcons">Arrange icons</div>
+    <div class="context-item" @click="openBsodWindow">New folder</div>
+    <div class="context-item" @click="openShutdownWindow">Shutdown</div>
   </div>
   <div
     @contextmenu="showContextMenuWindow"
@@ -228,20 +224,21 @@ body {
 }
 
 .context-menu {
+  position: absolute;
+  width: 300px;
+  height: 200px;
   background-color: #c0c0c0;
-  font-size: 11px;
+  font-family: Arial;
+  font-size: 14px;
   color: black;
   border: 2px solid #7c7c7c;
   border-top-color: #fff;
   border-left-color: #fff;
-  width: fit-content;
-  max-height: fit-content;
-  padding-top: 2px;
-  padding-bottom: 2px;
+  margin-top: 2px;
+  margin-bottom: 2px;
   display: flex;
   flex-direction: column;
   animation: grow-effect 0.3s ease-out forwards;
-  overflow: hidden;
   z-index: 1000;
 }
 
@@ -257,14 +254,22 @@ body {
   overflow: hidden;
 }
 
+.context-item {
+  padding: 5px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  color: black;
+  cursor: pointer;
+}
+
 @keyframes grow-effect {
   from {
     width: 0px;
     height: 0px;
   }
   to {
-    width: 110px;
-    height: 60px;
+    width: 200px;
+    height: 100px;
   }
 }
 </style>

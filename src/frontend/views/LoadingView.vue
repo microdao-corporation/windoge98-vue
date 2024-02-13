@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, watch } from "vue";
+import { onMounted, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
 import logo from "../assets/windoge98-pixel-banner.png";
-import { shuttingDownState } from "../states/sharedStates.vue";
+import { shuttingDownState } from "../stores/sharedStates";
 
 const router = useRouter();
 
@@ -15,7 +15,6 @@ onMounted(() => {
   document.addEventListener("click", preventDefaultAction);
 
   if (shuttingDownState.value === true) {
-    console.log("Shutting down..., value is true");
     shuttingDownState.value = false;
     setTimeout(() => {
       router.push("/boot");

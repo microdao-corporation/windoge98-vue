@@ -32,7 +32,7 @@ import { initialise } from "@open-ic/openchat-xframe";
 export const useMenuItemStore = defineStore("startMenu", () => {
   const authStore = useAuthStore();
   const whoami = ref("");
-  const devOnly = import.meta.env.DEV;
+  // const devOnly = import.meta.env.DEV;
 
   function handleSignIn() {
     authStore.login();
@@ -98,14 +98,7 @@ export const useMenuItemStore = defineStore("startMenu", () => {
             subType: "unknown",
             visible: true,
           },
-          {
-            name: "Dogvertiser",
-            iconHeight: 30,
-            icon: pixelIcon,
-            subType: "unknown",
-            visible: devOnly,
-            virtualWindow: "dogvertiser",
-          },
+
           {
             name: "ICPCoins",
             icon: icpcoinsLogo,
@@ -204,7 +197,7 @@ export const useMenuItemStore = defineStore("startMenu", () => {
         virtualWindow: "none",
         icon: fileIcon,
         subType: "unknown",
-        visible: devOnly,
+        visible: false,
         submenu: [
           {
             name: "Wallet Guide",
@@ -213,7 +206,7 @@ export const useMenuItemStore = defineStore("startMenu", () => {
             height: 494,
             width: 632,
             subType: "unknown",
-            visible: true,
+            visible: false,
             virtualWindow: "newbie_guide",
           },
         ],
@@ -309,7 +302,7 @@ export const useMenuItemStore = defineStore("startMenu", () => {
         url: undefined,
         virtualWindow: "none",
         subType: "unknown",
-        visible: devOnly,
+        visible: false,
         action: handleSignIn,
       },
       {

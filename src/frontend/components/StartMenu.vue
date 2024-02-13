@@ -13,8 +13,8 @@ onMounted(() => {
   console.log("Start menu data", startMenuData);
   filteredMenu.value = startMenuData; // Clone to avoid direct mutation
   if (filteredMenu.value) {
-    filterInPlace(filteredMenu.value.main, (item: any) => item.visible === true);
-    filterInPlace(filteredMenu.value.bottom, (item: any) => item.visible === true);
+    filterInPlace(filteredMenu.value.main, (item: any) => item.visible == true);
+    filterInPlace(filteredMenu.value.bottom, (item: any) => item.visible == true);
   }
 });
 

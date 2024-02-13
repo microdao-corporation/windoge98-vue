@@ -2,8 +2,6 @@ import { createRouter, createWebHashHistory } from "vue-router";
 import DesktopView from "./views/DesktopView.vue";
 import ShutdownView from "./views/ShutdownView.vue";
 import VerificationView from "./views/VerificationView.vue";
-import DogVertiserView from "./views/DogVertiserView.vue";
-import NewDogvertisment from "./views/NewDogvertisment.vue";
 import LoadingView from "./views/LoadingView.vue";
 import BootView from "./views/BootView.vue";
 import BsodView from "./views/BsodView.vue";
