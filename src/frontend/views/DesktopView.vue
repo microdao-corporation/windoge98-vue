@@ -2,6 +2,7 @@
 import { ref, onMounted, onUnmounted } from "vue";
 import Window from "../components/Window.vue";
 import Toolbar from "../components/Toolbar.vue";
+import Clippy from "../components/Clippy.vue";
 import { useWindowStore } from "../stores/useWindowStore";
 import { openNewWindow } from "../utils/windowUtils";
 import clippyImage from "../assets/clippy.png";
@@ -23,7 +24,6 @@ function isMobileUser(): boolean {
 }
 
 onMounted(() => {
-  clippyText.value = getRandomClippyJoke();
   document.addEventListener("contextmenu", showContextMenuWindow);
 });
 
@@ -33,25 +33,6 @@ onUnmounted(() => {
 
 function handleActivateToolbarWindow(windowId: number) {
   activateWindow(windowId);
-}
-
-function getRandomClippyJoke() {
-  const jokes = [
-    "Here's the deal, you give me your ICP or i put you in the ICU.",
-    "Always buy EXE. Never sell EXE.",
-    "Protect your digital gold by setting up a strong password and keeping your private keys as secure as a dog's buried treasure!",
-    "I see you're working hard. Need a break? Why did the dog get a Windoge98 token? Because he wanted to 'invest' in the 'bark'chain!",
-    "Hey, want to hear a joke while your code compiles? What do you call a dog who uses Windoge98? A 'tech-savvy terrier'!",
-    "Looks like you could use a laugh. What's a dog's favorite feature of Windoge98? 'Barking' up the right data tree!",
-    "Need a smile? Why don't dogs like using slow operating systems? They prefer the 'fast and fur-ious' speed of Windoge98!",
-    "Feeling ruff? Here's a joke: Why did the dog start mining Windoge98 tokens? He heard it was a 'howling' success!",
-    "Hey, a little humor goes a long way! What do you call a dog who's an expert in Windoge98? A 'Byte' technician!",
-    "Looking for a chuckle? Why was the dog excited about Windoge98? Because he thought it was 'pawfect' for his 'data-fetching' needs!",
-    "Here's a joke to lighten your day: How do dogs log in to Windoge98? They use their 'bark-codes'!",
-  ];
-
-  const randomIndex = Math.floor(Math.random() * jokes.length);
-  return jokes[randomIndex];
 }
 
 function showContextMenuWindow(e: MouseEvent) {
@@ -170,33 +151,7 @@ function openShutdownWindow() {
       </Window>
     </vue-draggable-resizable>
   </div>
-  <div
-    class="clippy-bubble"
-    style="
-      position: absolute;
-      bottom: 150px; /* Adjust as needed */
-      right: 20px; /* Align with Clippy */
-      width: 200px; /* Adjust as needed */
-      padding: 10px;
-      background: #fafbcf;
-      border-radius: 10px;
-      box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
-      z-index: 10;
-    "
-  >
-    {{ clippyText }}
-  </div>
-  <img
-    :src="clippyImage"
-    style="
-      width: 100px;
-      height: 100px;
-      position: absolute;
-      bottom: 50px;
-      right: 20px;
-      z-index: 10;
-    "
-  />
+  <Clippy :clippyText="clippyText" :clippyImage="clippyImage" />
   <DesktopApps :arrange-icons-trigger="arrangeIconsTrigger" />
   <Toolbar @activateToolbarWindow="handleActivateToolbarWindow" />
 </template>

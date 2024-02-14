@@ -173,6 +173,7 @@ function filterInPlace(a: any, condition: any) {
 .toolbar-start-menu {
   float: left;
   cursor: url("../assets/cursors/pointer.cur");
+  z-index: 1000;
 
   .start-button {
     background: url("../assets/start-icon.png") no-repeat 2px center / 24px;
