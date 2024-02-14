@@ -9,7 +9,6 @@
     "preview": "vite preview",
     "deploy:ledger": "npm run private-dids && dfx canister create windoge &&  PRINCIPAL=$(dfx identity get-principal) && dfx deploy windoge --argument \"(variant {Init = record {minting_account = record { owner = principal \\\"$PRINCIPAL\\\" };transfer_fee = 10;token_symbol = \\\"ckBTC\\\";token_name = \\\"Token ckBTC\\\";metadata = vec {};initial_balances = vec {record { record {owner = principal \\\"$PRINCIPAL\\\"}; 100_000_000_000 } };archive_options = record {num_blocks_to_archive = 10_000;trigger_threshold = 20_000;cycles_for_archive_creation = opt 4_000_000_000_000;controller_id = principal \\\"$PRINCIPAL\\\";};}})\"  --mode=reinstall -y",
     "private-dids": "perl -i -pe 's|icrc1\\.public\\.did|icrc1\\.did|g' dfx.json"
-
   },
   "dependencies": {
     "@dfinity/agent": "^0.21.4",
@@ -24,7 +23,7 @@
     "pinia": "^2.1.7",
     "pinia-plugin-persist": "^1.0.0",
     "pinia-plugin-persistedstate": "^3.2.1",
-    "prettier": "^3.1.1",
+    "sass": "^1.70.0",
     "uuid": "^9.0.1",
     "vite-plugin-environment": "^1.1.3",
     "vite-plugin-wasm": "^3.2.2",
@@ -39,8 +38,12 @@
     "@types/uuid": "^9.0.7",
     "@vitejs/plugin-vue": "^4.6.2",
     "@vitejs/plugin-vue-jsx": "^3.1.0",
+    "eslint": "^8.56.0",
+    "eslint-plugin-vue": "^9.21.1",
     "jsx-dom": "^8.1.2",
     "less": "^4.2.0",
+    "prettier": "^3.2.5",
+    "prettier-plugin-motoko": "^0.8.3",
     "typescript": "^5.0.2",
     "vite": "^4.4.5",
     "vue-tsc": "^1.8.5"

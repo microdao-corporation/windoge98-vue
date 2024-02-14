@@ -80,7 +80,7 @@ function handleWindowClick(windowId: number) {
 <style scoped>
 .window-icon {
   padding-right: 10px;
-  font-family: "MS Sans Serif";
+  font-family: Arial;
   font-size: 11px;
   background: no-repeat center / auto 20px;
   min-width: 150px;
@@ -115,7 +115,6 @@ function handleWindowClick(windowId: number) {
 }
 
 body {
-  cursor: url(http://www.rw-designer.com/cursor-download.php?id=90885), auto;
   font-family: "MS Sans Serif";
   letter-spacing: 0.001em;
   font-size: 14px;

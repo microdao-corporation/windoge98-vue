@@ -1,4 +1,4 @@
-<script setup lang="ts"></script>
+<script setup lang="ts"/>
 
 <template>
   <RouterView />
@@ -7,8 +7,8 @@
 <style scoped>
 .desktop-icon {
   position: absolute;
-  top: 10;
-  left: 10;
+  top: 10px;
+  left: 10px;
   width: 80px;
   background-image: url("/assets/desktop.png");
   background-size: cover;

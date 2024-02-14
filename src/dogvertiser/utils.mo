@@ -9,12 +9,11 @@ import Nat "mo:base/Nat";
 
 module {
   public func hashNat(id : Nat) : Hash.Hash {
-		Text.hash(Nat.toText(id));
-	};
+    Text.hash(Nat.toText(id));
+  };
 
-
-  public func hashText(text : Text): Hash.Hash {
-        Text.hash(text);
+  public func hashText(text : Text) : Hash.Hash {
+    Text.hash(text);
   };
 
   /// Convert Principal to ICRC1.Subaccount

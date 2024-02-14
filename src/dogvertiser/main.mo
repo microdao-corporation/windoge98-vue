@@ -13,23 +13,21 @@ import Nat64 "mo:base/Nat64";
 import Buffer "mo:base/Buffer";
 
 
-
 import Windoge "canister:windoge";
 
 //gives error in vscode but should still work
 
 import Types "./types";
-import { 
-  toAccount; 
+import {
+  toAccount;
   toSubaccount;
-  hashNat; 
+  hashNat;
   hashText;
 } "utils";
 
 import Blob "mo:base/Blob";
 import Array "mo:base/Array";
 import Nat8 "mo:base/Nat8";
-
 
 actor Dogvertiser {
 
@@ -43,24 +41,20 @@ actor Dogvertiser {
     ecdsa_public_key : ({
       canister_id : ?Principal;
       derivation_path : [Blob];
-      key_id : { curve: { #secp256k1; } ; name: Text };
-    }) -> async ({ public_key : Blob; chain_code : Blob; });
+      key_id : { curve : { #secp256k1 }; name : Text };
+    }) -> async ({ public_key : Blob; chain_code : Blob });
     sign_with_ecdsa : ({
       message_hash : Blob;
       derivation_path : [Blob];
-      key_id : { curve: { #secp256k1; } ; name: Text };
+      key_id : { curve : { #secp256k1 }; name : Text };
     }) -> async ({ signature : Blob });
   };
 
-  let ic : IC = actor("aaaaa-aa");
-
+  let ic : IC = actor ("aaaaa-aa");
 
   stable var stableAds : [(Text, Types.Advertisement)] = [];
 
-
-
   let advertisements = HashMap.fromIter<Text, Types.Advertisement>(Iter.fromArray(stableAds), stableAds.size(), Text.equal, hashText);
-
 
   // Upgrade canister
   system func preupgrade() {
@@ -153,9 +147,51 @@ public shared({caller}) func boost_ad(index: Nat, amount: Nat): async Result.Res
                 #err errorMessage
               };
 
+  public shared ({ caller }) func boost_ad(index : Nat, amount : Nat) : async Result.Result<Nat, Types.TransferError> {
+    switch (advertisements.get(Nat.toText(index))) {
+      case (?advertisement) {
+        let request = {
+          amount = amount;
+          fee = ?1;
+          memo = null;
+          from_subaccount = null;
+          to = toAccount(Principal.fromText("aaaaa-aa"));
+          created_at_time = null;
         };
-    };
+        let response : Types.TransferResult = await Windoge.icrc1_transfer(request);
+        let newBurnt = advertisement.total_burned +amount;
 
+        switch (response) {
+          case (#Ok(msg)) {
+            // Update the total_burned in the buffer
+            let updatedMessage = {
+              index = advertisement.index;
+              title = advertisement.title;
+              image = advertisement.image;
+              caller = advertisement.caller;
+              total_burned = newBurnt;
+              timestamp = advertisement.timestamp;
+            };
+            advertisements.put(Nat.toText(index), updatedMessage);
+            return #ok(msg);
+          };
+          case (#Err(msg)) {
+            return #err(msg);
+          };
+        };
+      };
+      case null {
+        let errorMessage : Types.TransferError = #GenericError {
+          message = "Ad Not found";
+          error_code = 1;
+        };
+        #err errorMessage;
+      };
+
+    };
+  };
+
+  public shared (msg) func newAddRequest(ad : Types.NewAdRequest) : async Result.Result<Nat, Text> {
 
 public shared ({caller}) func newAdRequest(ad : Types.NewAdRequest) : async Result.Result<Nat, Types.TransferError> {
     let nullTimestamp: ?Types.TimeStamp = null;
@@ -226,14 +262,7 @@ public shared ({caller}) func newAdRequest(ad : Types.NewAdRequest) : async Resu
   // icrc1_transfer : (TransferArg) -> (TransferResult);
   // icrc1_supported_standards : () -> (vec record { name : text; url : text }) query;
   // get_transactions : (GetTransactionsRequest) -> (GetTransactionsResponse) query;
-  // get_blocks : (GetBlocksArgs) -> (GetBlocksResponse) query;  
-  // get_data_certificate : () -> (DataCertificate) query;   
-
-
-
-
-
-
-
+  // get_blocks : (GetBlocksArgs) -> (GetBlocksResponse) query;
+  // get_data_certificate : () -> (DataCertificate) query;
 
 };

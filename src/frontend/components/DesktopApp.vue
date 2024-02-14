@@ -21,7 +21,7 @@ const handleDragStart = (event: DragEvent) => {
 };
 
 const handleDragEnd = (event: DragEvent) => {
-  emits("dragend", { app: props.app, event, x: event.clientX, y: event.clientY });
+  emits("dragend", { app: props.app, x: event.clientX, y: event.clientY });
 };
 
 const handleDrop = (event: DragEvent) => {
@@ -56,7 +56,7 @@ const handleDrop = (event: DragEvent) => {
   align-items: center;
   width: 75px;
   padding: 4px;
-  cursor: pointer;
+  cursor: url("../assets/cursors/pointer.cur"), pointer;
 }
 
 .desktop-icon img {

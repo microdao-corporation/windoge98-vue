@@ -27,300 +27,296 @@ import coinGeckoIcon from "../assets/coingecko_logo.png";
 import cmcIcon from "../assets/cmc_logo.png";
 import mergeIcon from "../assets/merge_icon.png";
 import keysIcon from "../assets/keys-4.png";
-import { initialise } from "@open-ic/openchat-xframe"
+import { initialise } from "@open-ic/openchat-xframe";
 
 export const useMenuItemStore = defineStore("startMenu", () => {
-	const authStore = useAuthStore();
+  const authStore = useAuthStore();
   const whoami = ref("");
-	const devOnly = import.meta.env.DEV;
+  // const devOnly = import.meta.env.DEV;
 
-	function handleSignIn() {
-		authStore.login();
-	}
+  function handleSignIn() {
+    authStore.login();
+  }
 
-	function initialiseOpenChat(frame: HTMLIFrameElement) {
-		initialise(frame, {
-			targetOrigin: "https://oc.app",
-			initialPath:
-				"/community/ow6el-gyaaa-aaaar-av5na-cai/?ref=y3rqn-fyaaa-aaaaf-a7z6a-cai",
-			theme: {
-				base: "light",
-				name: "windoge98",
-				overrides: {},
-			},
-		});
-	};
+  function initialiseOpenChat(frame: HTMLIFrameElement) {
+    initialise(frame, {
+      targetOrigin: "https://oc.app",
+      initialPath:
+        "/community/ow6el-gyaaa-aaaar-av5na-cai/?ref=y3rqn-fyaaa-aaaaf-a7z6a-cai",
+      theme: {
+        base: "light",
+        name: "windoge98",
+        overrides: {},
+      },
+    });
+  }
 
-  watch(() => authStore.isAuthenticated, async (isAuthenticated) => {
-    if (isAuthenticated) {
-			if(authStore.dogvertiserActor) {
-      	let getWho =  await authStore.dogvertiserActor.whoami();
-      	whoami.value = getWho.substring(0, 8);
-        startMenuData.bottom[2].name = `Sign Out (${whoami.value})`;
-        startMenuData.bottom[2].action = authStore.logout;
-			}
-    } else {
-      startMenuData.bottom[2].name = "Sign In";
-      startMenuData.bottom[2].action = handleSignIn;
+  watch(
+    () => authStore.isAuthenticated,
+    async (isAuthenticated) => {
+      if (isAuthenticated) {
+        if (authStore.dogvertiserActor) {
+          let getWho = await authStore.dogvertiserActor.whoami();
+          whoami.value = getWho.substring(0, 8);
+          startMenuData.bottom[2].name = `Sign Out (${whoami.value})`;
+          startMenuData.bottom[2].action = authStore.logout;
+        }
+      } else {
+        startMenuData.bottom[2].name = "Sign In";
+        startMenuData.bottom[2].action = handleSignIn;
+      }
     }
-  });
+  );
 
-	// Define the state as a function that returns the data structure
-	const startMenuData: StartMenuData = reactive({
-		main: [
-			{
-				name: "DApps",
-				iconHeight: 30,
-				url: "#",
-				virtualWindow: "none",
-				icon: programsIcon,
-				subType: "unknown",
-				visible: true,
-				submenu: [
-					{
-						name: "Beacon DEX (Experimental!)",
-						icon: beaconIcon,
-						url: "https://beacondex.link/#/rh2pm-ryaaa-aaaan-qeniq-cai",
-						iconHeight: 30,
-						virtualWindow: "iframe",
-						subType: "unknown",
-						visible: true,
-					},
-					{
-						name: "Dmail",
-						icon: dmailIcon,
-						url: "https://mail.dmail.ai/",
-						iconHeight: 30,
-						virtualWindow: "iframe",
-						subType: "unknown",
-						visible: true,
-					},
-					{
-						name: "Dogvertiser",
-						iconHeight: 30,
-						icon: pixelIcon,
-						subType: "unknown",
-						visible: devOnly,
-						virtualWindow: "dogvertiser",
-					},
-					{
-						name: "ICPCoins",
-						icon: icpcoinsLogo,
-						url: "https://icpcoins.com/#/token/EXE",
-						iconHeight: 30,
-						virtualWindow: "iframe",
-						subType: "unknown",
-						visible: true,
-					},
-					{
-						name: "ICPSwap DEX",
-						icon: icpSwapIcon,
-						url: "https://app.icpswap.com/swap?input=ryjl3-tyaaa-aaaaa-aaaba-cai&output=rh2pm-ryaaa-aaaan-qeniq-cai",
-						iconHeight: 30,
-						height: 600,
-						virtualWindow: "iframe",
-						subType: "unknown",
-						visible: true,
-					},
-					{
-						name: "OpenChat",
-						icon: ocDogeIcon,
-						url: "https://oc.app/community/ow6el-gyaaa-aaaar-av5na-cai/?ref=y3rqn-fyaaa-aaaaf-a7z6a-cai",
-						iconHeight: 30,
-						virtualWindow: "iframe",
-						subType: "openchat",
-						init: initialiseOpenChat,
-					},
-					{
-						name: "Sonic DEX",
-						icon: sonicIcon,
-						url: "https://app.sonic.ooo/swap?from=rh2pm-ryaaa-aaaan-qeniq-cai&to=ryjl3-tyaaa-aaaaa-aaaba-cai",
-						iconHeight: 30,
-						height: 600,
-						virtualWindow: "iframe",
-						subType: "unknown",
-						visible: true,
-					},
-					{
-						name: "Taggr",
-						icon: taggrIcon,
-						url: "https://6qfxa-ryaaa-aaaai-qbhsq-cai.ic0.app",
-						iconHeight: 30,
-						virtualWindow: "iframe",
-						subType: "unknown",
-						visible: true,
-					},
-					{
-						name: "ICDraw",
-						icon: icdrawIcon,
-						url: "https://icdraw.com",
-						iconHeight: 30,
-						virtualWindow: "iframe",
-						subType: "unknown",
-						visible: true,
-					},
-				],
-			},
-			{
-				name: "Games",
-				iconHeight: 30,
-				url: "#",
-				virtualWindow: "none",
-				icon: gamesIcon,
-				subType: "unknown",
-				visible: true,
-				submenu: [
-					{
-						name: "3D Pinball",
-						icon: pinballIcon,
-						url: "https://windoge98.com/spacecadetpinball.html",
-						iconHeight: 28,
-						height: 494,
-						width: 632,
-						virtualWindow: "iframe",
-						subType: "unknown",
-						visible: true,
-					},
-					{
-						name: "MoonMerge98",
-						icon: mergeIcon,
-						url: "https://windoge98.com/moon_merge/index.html",
-						iconHeight: 30,
-						height: 840,
-						width: 1078,
-						virtualWindow: "iframe",
-						subType: "unknown",
-						visible: true,
-					},
-				],
-			},
-			{
-				name: "Guides",
-				iconHeight: 30,
-				url: "#",
-				virtualWindow: "none",
-				icon: fileIcon,
-				subType: "unknown",
-				visible: devOnly,
-				submenu: [
-					{
-						name: "Wallet Guide",
-						icon: walletIcon,
-						iconHeight: 28,
-						height: 494,
-						width: 632,
-						subType: "unknown",
-						visible: true,
-						virtualWindow: "newbie_guide",
-					},
-				],
-			},
-			{
-				name: "Socials/Off Chain",
-				iconHeight: 30,
-				url: "#",
-				virtualWindow: "none",
-				icon: socialIcon,
-				subType: "unknown",
-				visible: true,
-				submenu: [
-					{
-						name: "CoinGecko",
-						icon: coinGeckoIcon,
-						iconHeight: 25,
-						url: "https://www.coingecko.com/en/coins/windoge98",
-						virtualWindow: "blank",
-						subType: "unknown",
-						visible: true,
-					},
-					{
-						name: "CoinMarketCap",
-						icon: cmcIcon,
-						iconHeight: 25,
-						url: "https://coinmarketcap.com/currencies/windoge98",
-						virtualWindow: "blank",
-						subType: "unknown",
-						visible: true,
-					},
-					{
-						name: "Discord",
-						icon: discordIcon,
-						iconHeight: 25,
-						url: "https://discord.gg/CnMRrtaj3h",
-						virtualWindow: "blank",
-						subType: "unknown",
-						visible: true,
-					},
-					{
-						name: "SourceForge",
-						icon: sfIcon,
-						iconHeight: 25,
-						url: "https://sourceforge.net/p/windoge98-token/code/ci/main/tree",
-						virtualWindow: "blank",
-						subType: "unknown",
-						visible: true,
-					},
-					{
-						name: "Telegram",
-						icon: telegramIcon,
-						url: "https://x.com/windoge_98",
-						iconHeight: 25,
-						virtualWindow: "blank",
-						subType: "unknown",
-						visible: true,
-					},
-					{
-						name: "X",
-						icon: xIcon,
-						iconHeight: 25,
-						url: "https://x.com/windoge_98",
-						virtualWindow: "blank",
-						subType: "unknown",
-						visible: true,
-					},
-				],
-			},
-		],
-		bottom: [
-			{
-				name: "About Windoge98",
-				iconHeight: 30,
-				icon: pixelIcon,
-				subType: "unknown",
-				visible: true,
-				virtualWindow: "welcome",
-			},
-			{
-				name: "Deployed with Juno",
-				icon: junoIcon,
-				url: "https://juno.build/",
-				iconHeight: 25,
-				virtualWindow: "blank",
-				subType: "unknown",
-				visible: true,
-			},
-			{
-				name: "Sign In",
-				icon: keysIcon,
-				iconHeight: 25,
+  // Define the state as a function that returns the data structure
+  const startMenuData: StartMenuData = reactive({
+    main: [
+      {
+        name: "DApps",
+        iconHeight: 30,
+        url: "#",
+        virtualWindow: "none",
+        icon: programsIcon,
+        subType: "unknown",
+        visible: true,
+        submenu: [
+          {
+            name: "Beacon DEX (Experimental!)",
+            icon: beaconIcon,
+            url: "https://beacondex.link/#/rh2pm-ryaaa-aaaan-qeniq-cai",
+            iconHeight: 30,
+            virtualWindow: "iframe",
+            subType: "unknown",
+            visible: true,
+          },
+          {
+            name: "Dmail",
+            icon: dmailIcon,
+            url: "https://mail.dmail.ai/",
+            iconHeight: 30,
+            virtualWindow: "iframe",
+            subType: "unknown",
+            visible: true,
+          },
+
+          {
+            name: "ICPCoins",
+            icon: icpcoinsLogo,
+            url: "https://icpcoins.com/#/token/EXE",
+            iconHeight: 30,
+            virtualWindow: "iframe",
+            subType: "unknown",
+            visible: true,
+          },
+          {
+            name: "ICPSwap DEX",
+            icon: icpSwapIcon,
+            url: "https://app.icpswap.com/swap?input=ryjl3-tyaaa-aaaaa-aaaba-cai&output=rh2pm-ryaaa-aaaan-qeniq-cai",
+            iconHeight: 30,
+            height: 600,
+            virtualWindow: "iframe",
+            subType: "unknown",
+            visible: true,
+          },
+          {
+            name: "OpenChat",
+            icon: ocDogeIcon,
+            url: "https://oc.app/community/ow6el-gyaaa-aaaar-av5na-cai/?ref=y3rqn-fyaaa-aaaaf-a7z6a-cai",
+            iconHeight: 30,
+            virtualWindow: "iframe",
+            subType: "openchat",
+            init: initialiseOpenChat,
+          },
+          {
+            name: "Sonic DEX",
+            icon: sonicIcon,
+            url: "https://app.sonic.ooo/swap?from=rh2pm-ryaaa-aaaan-qeniq-cai&to=ryjl3-tyaaa-aaaaa-aaaba-cai",
+            iconHeight: 30,
+            height: 600,
+            virtualWindow: "iframe",
+            subType: "unknown",
+            visible: true,
+          },
+          {
+            name: "Taggr",
+            icon: taggrIcon,
+            url: "https://6qfxa-ryaaa-aaaai-qbhsq-cai.ic0.app",
+            iconHeight: 30,
+            virtualWindow: "iframe",
+            subType: "unknown",
+            visible: true,
+          },
+          {
+            name: "ICDraw",
+            icon: icdrawIcon,
+            url: "https://icdraw.com",
+            iconHeight: 30,
+            virtualWindow: "iframe",
+            subType: "unknown",
+            visible: true,
+          },
+        ],
+      },
+      {
+        name: "Games",
+        iconHeight: 30,
+        url: "#",
+        virtualWindow: "none",
+        icon: gamesIcon,
+        subType: "unknown",
+        visible: true,
+        submenu: [
+          {
+            name: "3D Pinball",
+            icon: pinballIcon,
+            url: "https://windoge98.com/spacecadetpinball.html",
+            iconHeight: 28,
+            height: 494,
+            width: 632,
+            virtualWindow: "iframe",
+            subType: "unknown",
+            visible: true,
+          },
+          {
+            name: "MoonMerge98",
+            icon: mergeIcon,
+            url: "https://windoge98.com/moon_merge/index.html",
+            iconHeight: 30,
+            height: 840,
+            width: 1078,
+            virtualWindow: "iframe",
+            subType: "unknown",
+            visible: true,
+          },
+        ],
+      },
+      {
+        name: "Guides",
+        iconHeight: 30,
+        url: "#",
+        virtualWindow: "none",
+        icon: fileIcon,
+        subType: "unknown",
+        visible: false,
+        submenu: [
+          {
+            name: "Wallet Guide",
+            icon: walletIcon,
+            iconHeight: 28,
+            height: 494,
+            width: 632,
+            subType: "unknown",
+            visible: false,
+            virtualWindow: "newbie_guide",
+          },
+        ],
+      },
+      {
+        name: "Socials/Off Chain",
+        iconHeight: 30,
+        url: "#",
+        virtualWindow: "none",
+        icon: socialIcon,
+        subType: "unknown",
+        visible: true,
+        submenu: [
+          {
+            name: "CoinGecko",
+            icon: coinGeckoIcon,
+            iconHeight: 25,
+            url: "https://www.coingecko.com/en/coins/windoge98",
+            virtualWindow: "blank",
+            subType: "unknown",
+            visible: true,
+          },
+          {
+            name: "CoinMarketCap",
+            icon: cmcIcon,
+            iconHeight: 25,
+            url: "https://coinmarketcap.com/currencies/windoge98",
+            virtualWindow: "blank",
+            subType: "unknown",
+            visible: true,
+          },
+          {
+            name: "Discord",
+            icon: discordIcon,
+            iconHeight: 25,
+            url: "https://discord.gg/CnMRrtaj3h",
+            virtualWindow: "blank",
+            subType: "unknown",
+            visible: true,
+          },
+          {
+            name: "SourceForge",
+            icon: sfIcon,
+            iconHeight: 25,
+            url: "https://sourceforge.net/p/windoge98-token/code/ci/main/tree",
+            virtualWindow: "blank",
+            subType: "unknown",
+            visible: true,
+          },
+          {
+            name: "Telegram",
+            icon: telegramIcon,
+            url: "https://x.com/windoge_98",
+            iconHeight: 25,
+            virtualWindow: "blank",
+            subType: "unknown",
+            visible: true,
+          },
+          {
+            name: "X",
+            icon: xIcon,
+            iconHeight: 25,
+            url: "https://x.com/windoge_98",
+            virtualWindow: "blank",
+            subType: "unknown",
+            visible: true,
+          },
+        ],
+      },
+    ],
+    bottom: [
+      {
+        name: "About Windoge98",
+        iconHeight: 30,
+        icon: pixelIcon,
+        subType: "unknown",
+        visible: true,
+        virtualWindow: "welcome",
+      },
+      {
+        name: "Deployed with Juno",
+        icon: junoIcon,
+        url: "https://juno.build/",
+        iconHeight: 25,
+        virtualWindow: "blank",
+        subType: "unknown",
+        visible: true,
+      },
+      {
+        name: "Sign In",
+        icon: keysIcon,
+        iconHeight: 25,
         url: undefined,
-				virtualWindow: "none",
-				subType: "unknown",
-				visible: devOnly,
-				action: handleSignIn,
-			},
-			{
-				name: "Shut Down",
-				icon: computerIcon,
-				url: "https://windoge98.com/#/shutdown",
-				iconHeight: 30,
-				virtualWindow: "none",
-				subType: "unknown",
-				visible: true,
-			},
-		],
-	});
-	return {
-		startMenuData,
-	};
+        virtualWindow: "none",
+        subType: "unknown",
+        visible: false,
+        action: handleSignIn,
+      },
+      {
+        name: "Shut Down",
+        icon: computerIcon,
+        url: undefined,
+        iconHeight: 30,
+        virtualWindow: "shutdown",
+        subType: "unknown",
+        visible: true,
+      },
+    ],
+  });
+  return {
+    startMenuData,
+  };
 });

@@ -8,7 +8,6 @@ import { createPinia } from 'pinia';
 import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
 
 import "./style.css";
-import "./assets/snow.css";
 
 const app = createApp(App);
 const pinia = createPinia();
