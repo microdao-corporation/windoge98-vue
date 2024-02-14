@@ -44,31 +44,13 @@ function showContextMenuWindow(e: MouseEvent) {
 }
 
 function closeContextMenu(): void {
-  if (!contextMenuVisible.value) return;
-  if (closeTimer !== null) {
-    clearTimeout(closeTimer);
-  }
-  closeTimer = window.setTimeout(() => {
-    contextMenuVisible.value = false;
-    closeTimer = null;
-  }, 360); // actually the sweet spot
-}
-
-function cancelCloseContextMenu(): void {
-  if (closeTimer !== null) {
-    clearTimeout(closeTimer);
-    closeTimer = null;
-  }
-}
-
-function forceCloseContextMenu(): void {
   contextMenuVisible.value = false;
 }
 
 const arrangeIconsTrigger = ref(false);
 
 function triggerArrangeIcons() {
-  forceCloseContextMenu();
+  closeContextMenu();
   arrangeIconsTrigger.value = !arrangeIconsTrigger.value; // toggle
 }
 
@@ -81,13 +63,13 @@ const closeShutdownWindow = () => {
 };
 
 function openBsodWindow() {
-  forceCloseContextMenu();
+  closeContextMenu();
   closeShutdownWindow();
   router.push("/bsod");
 }
 
 function openShutdownWindow() {
-  forceCloseContextMenu();
+  closeContextMenu();
   const shutdownItem = startMenuData.bottom.find((item) => item.name === "Shut Down");
   if (shutdownItem) {
     openNewWindow(shutdownItem);
@@ -104,7 +86,6 @@ function openShutdownWindow() {
       left: contextMenuPosition.x,
     }"
     @mouseleave="closeContextMenu"
-    @mouseenter="cancelCloseContextMenu"
   >
     <div class="context-item" @click="triggerArrangeIcons">Arrange icons</div>
     <div class="context-item" @click="openBsodWindow">New folder</div>
