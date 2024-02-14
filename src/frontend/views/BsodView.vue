@@ -17,10 +17,10 @@ onMounted(() => {
 
 <template>
   <div class="bsod-container">
-    <div class="bsod-header">Windows</div>
+    <div class="bsod-header">Windoge</div>
     <div class="bsod-body">
       An error has occurred. To continue:
-      <p>Press Enter to return to Windows, or</p>
+      <p>Press Enter to return to Windoge, or</p>
       <p>Press CTRL+ALT+DEL to restart your computer. If you do this,</p>
       <p>you will lose any unsaved information in all open applications.</p>
       <p>Error: 0E : 016F : BFF9B3D4</p>
