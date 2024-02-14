@@ -3,20 +3,20 @@ import { ref, onMounted, onUnmounted, computed } from "vue";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
-const selectedOption = ref(1); // Default to the first option
+const selectedOption = ref(0); // Default to no option selected
 const blink = ref(true);
 
 const showSecondaryMenu = ref(false);
 
 const primaryMenuOptions = [
-  { id: 1, text: "1. Boot from Hard Disk" },
-  { id: 2, text: "2. Boot from CD-ROM" },
+  { id: 1, text: "Boot from Hard Disk" },
+  { id: 2, text: "Boot from CD-ROM" },
 ];
 
 const secondaryMenuOptions = [
-  { id: 1, text: "1. Start Windoge 98 Setup from CD-ROM." },
-  { id: 2, text: "2. Start computer with CD-ROM support." },
-  { id: 3, text: "3. Start computer without CD-ROM support." },
+  { id: 1, text: "Start Windoge 98 Setup from CD-ROM." },
+  { id: 2, text: "Start computer with CD-ROM support." },
+  { id: 3, text: "Start computer without CD-ROM support." },
 ];
 
 const menuOptions = computed(() =>
@@ -29,11 +29,23 @@ const maxOptionId = computed(() =>
 
 function selectOption(optionId: number) {
   selectedOption.value = optionId;
-  navigateToLoadingView();
+
+  setTimeout(() => {
+    if (!showSecondaryMenu.value && optionId === 2) {
+      showSecondaryMenu.value = true;
+      selectedOption.value = 1;
+    } else {
+      setTimeout(navigateToLoadingView, 250);
+    }
+  }, 250);
 }
 
 function toggleBlink() {
-  blink.value = !blink.value;
+  if (selectedOption.value === 0) {
+    blink.value = !blink.value;
+  } else {
+    blink.value = false;
+  }
 }
 
 let intervalId: number | undefined;
@@ -63,7 +75,7 @@ function handleKeyDown(event: KeyboardEvent) {
       showSecondaryMenu.value = true;
       selectedOption.value = 1; // Reset to the first option in the secondary menu
     } else {
-      navigateToLoadingView();
+      setTimeout(navigateToLoadingView, 250);
     }
   }
 }
@@ -90,14 +102,14 @@ function navigateToLoadingView() {
           @click="selectOption(option.id)"
         >
           {{
-            option.text
+            option.id + ". " + option.text
           }}
         </ul>
       </ul>
       <p>
         Enter your choice:
         <span v-if="selectedOption">{{ selectedOption }}</span>
-        <span v-if="blink" class="blink"></span>
+        <span v-if="blink && selectedOption === 0" class="blink"></span>
       </p>
     </div>
   </div>
