@@ -17,6 +17,11 @@ const contextMenuPosition = ref({ x: "0px", y: "0px" });
 const contextMenuVisible = ref(false);
 let closeTimer: number | null = null;
 
+
+function isMobileUser(): boolean {
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
+
 onMounted(() => {
   clippyText.value = getRandomClippyJoke();
   document.addEventListener("contextmenu", showContextMenuWindow);
@@ -50,9 +55,11 @@ function getRandomClippyJoke() {
 }
 
 function showContextMenuWindow(e: MouseEvent) {
-  e.preventDefault();
-  contextMenuPosition.value = { x: `${e.pageX}px`, y: `${e.pageY}px` };
-  contextMenuVisible.value = true;
+  if (!isMobileUser()) {
+    e.preventDefault();
+    contextMenuPosition.value = { x: `${e.pageX}px`, y: `${e.pageY}px` };
+    contextMenuVisible.value = true;
+  }
 }
 
 function closeContextMenu(): void {
