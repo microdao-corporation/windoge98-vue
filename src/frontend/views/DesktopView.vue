@@ -16,8 +16,6 @@ const activateWindow = windowStore.activateWindow;
 const clippyText = ref("");
 const contextMenuPosition = ref({ x: "0px", y: "0px" });
 const contextMenuVisible = ref(false);
-let closeTimer: number | null = null;
-
 
 function isMobileUser(): boolean {
   return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -143,27 +141,6 @@ body {
   background-size: initial;
   overflow: hidden;
   cursor: url("../assets/cursors/arrow.cur"), auto;
-}
-
-.clippy-bubble::after {
-  content: "";
-  position: absolute;
-  bottom: -20px;
-  /* Adjust as needed */
-  right: 20px;
-  /* Align with Clippy */
-  border-width: 10px;
-  border-style: solid;
-  border-color: #fafbcf transparent transparent transparent;
-}
-
-.clippy-bubble {
-  background-color: #fafbcf;
-  border: 1px solid black;
-}
-
-.title-bar-controls button {
-  cursor: url("../assets/cursors/pointer.cur"), pointer;
 }
 
 .context-menu {
