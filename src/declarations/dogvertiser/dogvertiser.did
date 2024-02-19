@@ -21,14 +21,18 @@ type Result =
  };
 type NewAdRequest = 
  record {
+   adtype: text;
+   description: opt text;
    image: blob;
    timestamp: Time;
    title: text;
  };
 type Advertisement = 
  record {
+   adtype: text;
    caller: principal;
-   image: blob;
+   description: opt text;
+   image: opt blob;
    index: nat;
    timestamp: Time;
    title: text;
@@ -39,6 +43,7 @@ service : {
   dogvertiserCanister: () -> (text) query;
   getAllads: () -> (vec Advertisement) query;
   getBalance: () -> (nat);
+  getUserAds: () -> (vec Advertisement) query;
   newAdRequest: (NewAdRequest) -> (Result);
   setCreationFee: (nat) -> () oneway;
   whoami: () -> (text) query;

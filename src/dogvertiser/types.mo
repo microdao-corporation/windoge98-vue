@@ -41,16 +41,20 @@ module {
   public type Advertisement = {
     index : Nat;
     title : Text;
-    image : Blob;
+    image : ?Blob;
     caller : Principal;
     total_burned : Nat;
     timestamp : Time.Time;
+    adtype: Text;
+    description:?Text;
   };
 
   public type NewAdRequest = {
     title : Text;
     image : Blob;
     timestamp : Time.Time;
+    adtype: Text;
+    description:?Text;
   };
 
   public type TransferResult = {

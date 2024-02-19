@@ -13,6 +13,7 @@ const authStore = useAuthStore();
 const whoami = ref("");
 const balance = ref("00000.000");
 const dogvertiserBalance = ref("00000.000");
+const myAds = ref([]);
 
 const { isAuthenticated } = storeToRefs(authStore);
 // @ts-ignore
@@ -69,6 +70,13 @@ const handleWithdrawl = async () => {
   }
 };
 
+const handleGetMyads = async () => {
+      //@ts-ignore
+  let userAds = await authStore.dogvertiserActor.getUserAds();
+  console.log("my ads",userAds)
+  myAds.value= userAds;
+}
+
 watch(isAuthenticated, async (value: any) => {
   if (value) {
     if (
@@ -106,7 +114,7 @@ watch(isAuthenticated, async (value: any) => {
       <!-- Tab Menu -->
       <div class="tab-menu">
         <div class="tab">Current Ads</div>
-        <div class="tab">My Ads</div>
+        <div class="tab" @click="handleGetMyads()">My Ads</div>
         <button class="tab" @click="toScreen('new-ad')">New Ad</button>
       </div>
 

@@ -62,7 +62,8 @@ actor Dogvertiser {
   };
 
   system func postupgrade() {
-    stableAds := [];
+    stableAds := Iter.toArray(advertisements.entries());
+
   };
 
 public query func dogvertiserCanister():async Text {
@@ -132,7 +133,9 @@ public shared({caller}) func boost_ad(index: Nat, amount: Nat): async Result.Res
                       image=advertisement.image;
                       caller=advertisement.caller;
                       total_burned=newBurnt;
-                      timestamp=advertisement.timestamp
+                      timestamp=advertisement.timestamp;
+                      adtype=advertisement.adtype;
+                      description=advertisement.description;
                     };
                     advertisements.put(Nat.toText(index), updatedMessage);
                     return #ok(msg);
@@ -146,52 +149,10 @@ public shared({caller}) func boost_ad(index: Nat, amount: Nat): async Result.Res
                 let errorMessage:Types.TransferError = #GenericError{message="Ad Not found";error_code=1;};
                 #err errorMessage
               };
-
-  public shared ({ caller }) func boost_ad(index : Nat, amount : Nat) : async Result.Result<Nat, Types.TransferError> {
-    switch (advertisements.get(Nat.toText(index))) {
-      case (?advertisement) {
-        let request = {
-          amount = amount;
-          fee = ?1;
-          memo = null;
-          from_subaccount = null;
-          to = toAccount(Principal.fromText("aaaaa-aa"));
-          created_at_time = null;
         };
-        let response : Types.TransferResult = await Windoge.icrc1_transfer(request);
-        let newBurnt = advertisement.total_burned +amount;
 
-        switch (response) {
-          case (#Ok(msg)) {
-            // Update the total_burned in the buffer
-            let updatedMessage = {
-              index = advertisement.index;
-              title = advertisement.title;
-              image = advertisement.image;
-              caller = advertisement.caller;
-              total_burned = newBurnt;
-              timestamp = advertisement.timestamp;
-            };
-            advertisements.put(Nat.toText(index), updatedMessage);
-            return #ok(msg);
-          };
-          case (#Err(msg)) {
-            return #err(msg);
-          };
-        };
-      };
-      case null {
-        let errorMessage : Types.TransferError = #GenericError {
-          message = "Ad Not found";
-          error_code = 1;
-        };
-        #err errorMessage;
-      };
+};
 
-    };
-  };
-
-  public shared (msg) func newAddRequest(ad : Types.NewAdRequest) : async Result.Result<Nat, Text> {
 
 public shared ({caller}) func newAdRequest(ad : Types.NewAdRequest) : async Result.Result<Nat, Types.TransferError> {
     let nullTimestamp: ?Types.TimeStamp = null;
@@ -208,11 +169,13 @@ public shared ({caller}) func newAdRequest(ad : Types.NewAdRequest) : async Resu
     let newid = advertisements.size();
     let newAd : Types.Advertisement = {
       index = newid;
-      image = ad.image;
+      image = ?ad.image;
       caller = caller;
       total_burned = adCreationFee;
       timestamp= ad.timestamp;
       title=ad.title;
+      adtype=ad.adtype;
+      description=ad.description;
     };
     switch(response){
       case(#Ok(msg)){
@@ -241,6 +204,18 @@ public shared ({caller}) func newAdRequest(ad : Types.NewAdRequest) : async Resu
       AdvertismentBuffer.add(advertisementResponse)
     };
     return Buffer.toArray(AdvertismentBuffer)
+  };
+
+
+
+  public shared query({caller}) func getUserAds():async [Types.Advertisement] {
+    let AdvertismentBuffer: Buffer.Buffer<Types.Advertisement> = Buffer.Buffer<Types.Advertisement>(0);
+    for(value in advertisements.vals()){
+      if( value.caller==caller ){
+        AdvertismentBuffer.add(value);
+      }
+    };
+    return Buffer.toArray(AdvertismentBuffer);
   };
 
 

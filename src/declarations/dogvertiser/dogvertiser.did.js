@@ -17,14 +17,18 @@ export const idlFactory = ({ IDL }) => {
   const Advertisement = IDL.Record({
     'title' : IDL.Text,
     'total_burned' : IDL.Nat,
+    'description' : IDL.Opt(IDL.Text),
     'timestamp' : Time,
+    'adtype' : IDL.Text,
     'caller' : IDL.Principal,
-    'image' : IDL.Vec(IDL.Nat8),
+    'image' : IDL.Opt(IDL.Vec(IDL.Nat8)),
     'index' : IDL.Nat,
   });
   const NewAdRequest = IDL.Record({
     'title' : IDL.Text,
+    'description' : IDL.Opt(IDL.Text),
     'timestamp' : Time,
+    'adtype' : IDL.Text,
     'image' : IDL.Vec(IDL.Nat8),
   });
   const Subaccount = IDL.Vec(IDL.Nat8);
@@ -33,6 +37,7 @@ export const idlFactory = ({ IDL }) => {
     'dogvertiserCanister' : IDL.Func([], [IDL.Text], ['query']),
     'getAllads' : IDL.Func([], [IDL.Vec(Advertisement)], ['query']),
     'getBalance' : IDL.Func([], [IDL.Nat], []),
+    'getUserAds' : IDL.Func([], [IDL.Vec(Advertisement)], ['query']),
     'newAdRequest' : IDL.Func([NewAdRequest], [Result], []),
     'setCreationFee' : IDL.Func([IDL.Nat], [], ['oneway']),
     'whoami' : IDL.Func([], [IDL.Text], ['query']),

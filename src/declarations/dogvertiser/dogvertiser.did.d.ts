@@ -4,14 +4,18 @@ import type { ActorMethod } from '@dfinity/agent';
 export interface Advertisement {
   'title' : string,
   'total_burned' : bigint,
+  'description' : [] | [string],
   'timestamp' : Time,
+  'adtype' : string,
   'caller' : Principal,
-  'image' : Uint8Array | number[],
+  'image' : [] | [Uint8Array | number[]],
   'index' : bigint,
 }
 export interface NewAdRequest {
   'title' : string,
+  'description' : [] | [string],
   'timestamp' : Time,
+  'adtype' : string,
   'image' : Uint8Array | number[],
 }
 export type Result = { 'ok' : bigint } |
@@ -33,6 +37,7 @@ export interface _SERVICE {
   'dogvertiserCanister' : ActorMethod<[], string>,
   'getAllads' : ActorMethod<[], Array<Advertisement>>,
   'getBalance' : ActorMethod<[], bigint>,
+  'getUserAds' : ActorMethod<[], Array<Advertisement>>,
   'newAdRequest' : ActorMethod<[NewAdRequest], Result>,
   'setCreationFee' : ActorMethod<[bigint], undefined>,
   'whoami' : ActorMethod<[], string>,
