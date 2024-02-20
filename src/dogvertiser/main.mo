@@ -58,12 +58,13 @@ actor Dogvertiser {
 
   // Upgrade canister
   system func preupgrade() {
-    stableAds := Iter.toArray(advertisements.entries());
+    let unstableAds = Iter.toArray(advertisements.entries());
+     stableAds := Array.append(stableAds,unstableAds);
   };
 
   system func postupgrade() {
-    stableAds := Iter.toArray(advertisements.entries());
-
+  let unstableAds = Iter.toArray(advertisements.entries());
+     stableAds := Array.append(stableAds,unstableAds);
   };
 
 public query func dogvertiserCanister():async Text {
