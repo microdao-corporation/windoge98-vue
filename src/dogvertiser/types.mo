@@ -9,9 +9,9 @@ module {
   public type BlockIndex = Nat;
   public type Tokens = Nat;
   public type TxIndex = Nat;
-  public type Subaccount = Blob;
-    public type TimeStamp = Nat64;
-    public type Time = Time.Time;
+  public type Subaccount = [Nat8];
+  public type TimeStamp = Nat64;
+  public type Time = Time.Time;
 
   public type Account = {
     owner : Principal;
@@ -32,7 +32,7 @@ module {
   public type TransferArg = {
     to : Account;
     fee : ?Tokens;
-    memo : ?Blob;
+    memo : ?[Nat8];
     from_subaccount : ?Subaccount;
     created_at_time : ?TimeStamp;
     amount : Tokens;
@@ -45,16 +45,16 @@ module {
     caller : Principal;
     total_burned : Nat;
     timestamp : Time.Time;
-    adtype: Text;
-    description:?Text;
+    adtype : Text;
+    description : ?Text;
   };
 
   public type NewAdRequest = {
     title : Text;
     image : Blob;
     timestamp : Time.Time;
-    adtype: Text;
-    description:?Text;
+    adtype : Text;
+    description : ?Text;
   };
 
   public type TransferResult = {
