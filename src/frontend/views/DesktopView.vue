@@ -2,6 +2,7 @@
 import { ref, onMounted, onUnmounted } from "vue";
 import Window from "../components/Window.vue";
 import Toolbar from "../components/Toolbar.vue";
+import Clippy from "../components/Clippy.vue";
 import { useWindowStore } from "../stores/useWindowStore";
 import { openNewWindow } from "../utils/windowUtils";
 import clippyImage from "../assets/clippy.png";
@@ -15,10 +16,12 @@ const activateWindow = windowStore.activateWindow;
 const clippyText = ref("");
 const contextMenuPosition = ref({ x: "0px", y: "0px" });
 const contextMenuVisible = ref(false);
-let closeTimer: number | null = null;
+
+function isMobileUser(): boolean {
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
 
 onMounted(() => {
-  clippyText.value = getRandomClippyJoke();
   document.addEventListener("contextmenu", showContextMenuWindow);
 });
 
@@ -30,57 +33,22 @@ function handleActivateToolbarWindow(windowId: number) {
   activateWindow(windowId);
 }
 
-function getRandomClippyJoke() {
-  const jokes = [
-    "Here's the deal, you give me your ICP or i put you in the ICU.",
-    "Always buy EXE. Never sell EXE.",
-    "Protect your digital gold by setting up a strong password and keeping your private keys as secure as a dog's buried treasure!",
-    "I see you're working hard. Need a break? Why did the dog get a Windoge98 token? Because he wanted to 'invest' in the 'bark'chain!",
-    "Hey, want to hear a joke while your code compiles? What do you call a dog who uses Windoge98? A 'tech-savvy terrier'!",
-    "Looks like you could use a laugh. What's a dog's favorite feature of Windoge98? 'Barking' up the right data tree!",
-    "Need a smile? Why don't dogs like using slow operating systems? They prefer the 'fast and fur-ious' speed of Windoge98!",
-    "Feeling ruff? Here's a joke: Why did the dog start mining Windoge98 tokens? He heard it was a 'howling' success!",
-    "Hey, a little humor goes a long way! What do you call a dog who's an expert in Windoge98? A 'Byte' technician!",
-    "Looking for a chuckle? Why was the dog excited about Windoge98? Because he thought it was 'pawfect' for his 'data-fetching' needs!",
-    "Here's a joke to lighten your day: How do dogs log in to Windoge98? They use their 'bark-codes'!",
-  ];
-
-  const randomIndex = Math.floor(Math.random() * jokes.length);
-  return jokes[randomIndex];
-}
-
 function showContextMenuWindow(e: MouseEvent) {
-  e.preventDefault();
-  contextMenuPosition.value = { x: `${e.pageX}px`, y: `${e.pageY}px` };
-  contextMenuVisible.value = true;
+  if (!isMobileUser()) {
+    e.preventDefault();
+    contextMenuPosition.value = { x: `${e.pageX}px`, y: `${e.pageY}px` };
+    contextMenuVisible.value = true;
+  }
 }
 
 function closeContextMenu(): void {
-  if (!contextMenuVisible.value) return;
-  if (closeTimer !== null) {
-    clearTimeout(closeTimer);
-  }
-  closeTimer = window.setTimeout(() => {
-    contextMenuVisible.value = false;
-    closeTimer = null;
-  }, 360); // actually the sweet spot
-}
-
-function cancelCloseContextMenu(): void {
-  if (closeTimer !== null) {
-    clearTimeout(closeTimer);
-    closeTimer = null;
-  }
-}
-
-function forceCloseContextMenu(): void {
   contextMenuVisible.value = false;
 }
 
 const arrangeIconsTrigger = ref(false);
 
 function triggerArrangeIcons() {
-  forceCloseContextMenu();
+  closeContextMenu();
   arrangeIconsTrigger.value = !arrangeIconsTrigger.value; // toggle
 }
 
@@ -93,13 +61,13 @@ const closeShutdownWindow = () => {
 };
 
 function openBsodWindow() {
-  forceCloseContextMenu();
+  closeContextMenu();
   closeShutdownWindow();
   router.push("/bsod");
 }
 
 function openShutdownWindow() {
-  forceCloseContextMenu();
+  closeContextMenu();
   const shutdownItem = startMenuData.bottom.find((item) => item.name === "Shut Down");
   if (shutdownItem) {
     openNewWindow(shutdownItem);
@@ -116,7 +84,6 @@ function openShutdownWindow() {
       left: contextMenuPosition.x,
     }"
     @mouseleave="closeContextMenu"
-    @mouseenter="cancelCloseContextMenu"
   >
     <div class="context-item" @click="triggerArrangeIcons">Arrange icons</div>
     <div class="context-item" @click="openBsodWindow">New folder</div>
@@ -163,33 +130,7 @@ function openShutdownWindow() {
       </Window>
     </vue-draggable-resizable>
   </div>
-  <div
-    class="clippy-bubble"
-    style="
-      position: absolute;
-      bottom: 150px; /* Adjust as needed */
-      right: 20px; /* Align with Clippy */
-      width: 200px; /* Adjust as needed */
-      padding: 10px;
-      background: #fafbcf;
-      border-radius: 10px;
-      box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
-      z-index: 10;
-    "
-  >
-    {{ clippyText }}
-  </div>
-  <img
-    :src="clippyImage"
-    style="
-      width: 100px;
-      height: 100px;
-      position: absolute;
-      bottom: 50px;
-      right: 20px;
-      z-index: 10;
-    "
-  />
+  <Clippy :clippyText="clippyText" :clippyImage="clippyImage" />
   <DesktopApps :arrange-icons-trigger="arrangeIconsTrigger" />
   <Toolbar @activateToolbarWindow="handleActivateToolbarWindow" />
 </template>
@@ -200,27 +141,6 @@ body {
   background-size: initial;
   overflow: hidden;
   cursor: url("../assets/cursors/arrow.cur"), auto;
-}
-
-.clippy-bubble::after {
-  content: "";
-  position: absolute;
-  bottom: -20px;
-  /* Adjust as needed */
-  right: 20px;
-  /* Align with Clippy */
-  border-width: 10px;
-  border-style: solid;
-  border-color: #fafbcf transparent transparent transparent;
-}
-
-.clippy-bubble {
-  background-color: #fafbcf;
-  border: 1px solid black;
-}
-
-.title-bar-controls button {
-  cursor: url("../assets/cursors/pointer.cur"), pointer;
 }
 
 .context-menu {

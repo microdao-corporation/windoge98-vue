@@ -178,7 +178,7 @@ function findNearestFreeSpot(
 
 function onMouseDown(event: MouseEvent) {
   if (event.target !== desktopAreaRef.value) return;
-  event.stopPropagation();
+  // event.stopPropagation();
   if (event.button === 2) return; // Right-click has a button value of 2
 
   const clickedElement = event.target as HTMLElement;
@@ -241,11 +241,11 @@ function onMouseUp(): void {
 }
 
 function handleDoubleClick(app: MenuItem): void {
+  selectedApps.value = [];
   if (app.url) {
     console.log(`Opening ${app.url}`);
     openNewWindow(app);
   }
-  selectedApps.value = [];
 }
 
 onMounted(() => {
@@ -297,8 +297,8 @@ function getSelectionStyle() {
         top: `${app.position?.y ?? 0}px`,
       }"
       @dragend="handleDragEnd"
-      @click.native="toggleSelection({ app, event: $event })"
-      @dblclick.native="handleDoubleClick(app)"
+      @click="toggleSelection({ app, event: $event })"
+      @dblclick="handleDoubleClick(app)"
     />
   </div>
 </template>

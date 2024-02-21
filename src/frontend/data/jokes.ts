@@ -1,0 +1,40 @@
+const jokes = [
+    "Here's the deal, you give me your ICP or i put you in the ICU.",
+    "Always buy EXE. Never sell EXE.",
+    "Protect your digital gold by setting up a strong password and keeping your private keys as secure as a dog's buried treasure!",
+    "I see you're working hard. Need a break? Why did the dog get a Windoge98 token? Because he wanted to 'invest' in the 'bark'chain!",
+    "Hey, want to hear a joke while your code compiles? What do you call a dog who uses Windoge98? A 'tech-savvy terrier'!",
+    "Looks like you could use a laugh. What's a dog's favorite feature of Windoge98? 'Barking' up the right data tree!",
+    "Need a smile? Why don't dogs like using slow operating systems? They prefer the 'fast and fur-ious' speed of Windoge98!",
+    "Feeling ruff? Here's a joke: Why did the dog start mining Windoge98 tokens? He heard it was a 'howling' success!",
+    "Hey, a little humor goes a long way! What do you call a dog who's an expert in Windoge98? A 'Byte' technician!",
+    "Looking for a chuckle? Why was the dog excited about Windoge98? Because he thought it was 'pawfect' for his 'data-fetching' needs!",
+    "Here's a joke to lighten your day: How do dogs log in to Windoge98? They use their 'bark-codes'!",
+    "Clippy in the Windoge98 era: 'I see you're trying to HODL. Much brave. So finance. Wow. Need assistance with diamond paws?'",
+    "Why did the $EXE investor get a boat? 'To surf the blockchain waves, fren. Much liquidity. So sail. Wow.'",
+    "Clippy's take on market dips: 'Fear not, hooman. In the world of $EXE, we don't just ride the dip, we eat the dip. Much snack. So tasty. Wow.'",
+    "Why is $EXE like a space mission? 'Because we're all about reaching new frontiers, fren. Much explore. So moon. Very Mars. Wow.'",
+    "The philosophy of $EXE: 'In the beginning, there was code. And then came the Doges, bringing forth the era of much wow. So genesis. Very block. Wow.'",
+    "How Clippy handles security: 'Fear not, for I am the guardian of your digital realm. Hackers? Much block. So secure. Very password. Wow.'",
+    "The secret to Windoge98's success: 'It's all in the algorithm, fren. Much secret. So math. Very code. Wow. But actually, it's just love and memes.'",
+    "Why do Doges love Windoge98? 'Because it's the only coin that truly speaks their language. Much bark. So communicate. Very currency. Wow.'",
+    "Clippy's advice on staying calm during market fluctuations: 'Keep calm and Doge on, fren. Much zen. So peace. Very chill. Wow.'",
+    "The essence of Windoge98: 'Not just a coin, but a way of life. Embrace the Doge within. Much soul. So essence. Very wow.'",
+    "Clippy's final thought: 'In the vast expanse of the crypto universe, $EXE shines the brightest. Because at its core, it's all about love, laughter, and a little bit of Doge speak. Much wow. So community. Very together. Wow.'",   
+    "If I had a dime for every time Windoge98 outsmarted a cat... I'd have a lot of dimes and a very confused cat.",
+    "I'd tell you a Fibonacci joke, but it's probably as irrational as not backing up your wallet.",
+    "I'm reading a book on anti-gravity. It's impossible to put down, much like the appeal of Windoge98.",
+    "Parallel lines have so much in common. It's a shame they'll never meet, unlike us and the Windoge98 community.",
+    "I'm no photographer, but I can picture us making memes with Windoge98.",
+    "Windoge98 is not a monster under your bed, it's the friendly ghost in your machine.",
+    "I was going to make a joke about an echo, but I didn't hear anything back. Clippy's Windoge98 tips, on the other hand, always resonate.",
+    "Why did the scarecrow win an award? Because he was outstanding in his field, just like Windoge98 in the world of memes.",
+    "I have a joke about a broken pencil, but it's pointless. Unlike sharing Windoge98 memes, which is always a sharp idea.",
+    "I'd tell you a chemistry joke, but I know I wouldn't get a reaction. It's not like Windoge98, which always gets a positive charge.",
+    "Why did the computer go to the doctor? Because it had a virus! Good thing Windoge98 is immune to old-school problems.",
+    "Why don't we ever tell secrets on a farm? Because the potatoes have eyes and the corn has ears. But Windoge98? It's all about the bark."   
+  ];
+
+  export function getRandomClippyJoke() {
+    return jokes[Math.floor(Math.random() * jokes.length)];
+  }
