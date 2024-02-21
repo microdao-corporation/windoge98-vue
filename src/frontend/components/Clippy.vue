@@ -19,7 +19,6 @@ function showNextJoke() {
 }
 </script>
 
-
 <template>
   <div v-if="clippyVisible" class="clippy-container">
     <div class="clippy-bubble">
@@ -29,9 +28,11 @@ function showNextJoke() {
         <button @click="toggleVisibility" class="action-btn close-btn">Close</button>
       </div>
     </div>
-    <img :src="clippyImage" class="clippy-image"/>
+    <img :src="clippyImage" class="clippy-image" />
   </div>
-  <button v-if="!clippyVisible" @click="toggleVisibility" class="show-clippy-btn">Show Clippy</button>
+  <button v-if="!clippyVisible" @click="toggleVisibility" class="show-clippy-btn">
+    Show Clippy
+  </button>
 </template>
 
 <style scoped>
@@ -74,9 +75,10 @@ function showNextJoke() {
 }
 
 .action-btn {
+  font-family: Arial, sans-serif;
   margin-top: 10px;
   cursor: pointer;
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
   border: none;
   padding: 5px 10px;
@@ -110,7 +112,8 @@ function showNextJoke() {
   font-size: 14px;
 }
 
-.show-clippy-btn:hover, .action-btn:hover {
+.show-clippy-btn:hover,
+.action-btn:hover {
   opacity: 0.8;
 }
 </style>
