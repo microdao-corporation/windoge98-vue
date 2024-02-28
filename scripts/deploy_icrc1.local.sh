@@ -1,4 +1,4 @@
-  dfx deploy windoge --argument "(variant {Init = 
+dfx deploy windoge --argument "(variant {Init = 
   record {
        token_symbol = \"gdf\";
        token_name = \"ghjhghj\";
@@ -15,4 +15,3 @@
        };
    }
   })"
-  

@@ -90,6 +90,13 @@ export const useMenuItemStore = defineStore("startMenu", () => {
             visible: true,
           },
           {
+            name: "Dogvertiser",
+            icon: ocDogeIcon,
+            subType: "unknown",
+            visible: true,
+            virtualWindow: "dogvertiser",
+          },
+          {
             name: "Dmail",
             icon: dmailIcon,
             url: "https://mail.dmail.ai/",
