@@ -1,8 +1,9 @@
 import { useWindowStore } from "../stores/useWindowStore"; // Adjust the path as needed
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 class EventBus {
-  private _onOpenVirtualWindow: ((win: MenuItem) => void) | undefined = undefined;
+  private _onOpenVirtualWindow: ((win: MenuItem) => void) | undefined =
+    undefined;
 
   onOpenVirtualWindow(fn: (win: MenuItem) => void) {
     this._onOpenVirtualWindow = fn;
@@ -24,6 +25,7 @@ class EventBus {
         visible: true,
         active: true,
         type: win.virtualWindow,
+        color: win.color,
         subType: win.subType,
         maximised: false,
         init: win.init,
@@ -31,8 +33,8 @@ class EventBus {
         dimensions: {
           height: win.height || 420,
           width: win.width || 600,
-          x: 100 + (windowStore.windows.length * 20),
-          y: 200 + (windowStore.windows.length * 20),
+          x: 100 + windowStore.windows.length * 20,
+          y: 200 + windowStore.windows.length * 20,
         },
       });
 

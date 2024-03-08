@@ -7,10 +7,10 @@ import type {
 import type { Principal } from "@dfinity/principal";
 import type { IDL } from "@dfinity/candid";
 
-import { _SERVICE } from './windoge.did';
+import { _SERVICE } from "./windoge.did";
 
 export declare const idlFactory: IDL.InterfaceFactory;
-export declare const windgoeCanistrterId: string;
+export declare const canisterId: string;
 
 export declare interface CreateActorOptions {
   /**
@@ -38,9 +38,9 @@ export declare interface CreateActorOptions {
  * @param {CreateActorOptions["actorOptions"]} options.actorOptions - options for the Actor
  * @see {@link ActorConfig}
  */
-export declare const createWindogeActor: (
+export declare const createActor: (
   canisterId: string | Principal,
-  options?: CreateActorOptions
+  options?: CreateActorOptions,
 ) => ActorSubclass<_SERVICE>;
 
 /**

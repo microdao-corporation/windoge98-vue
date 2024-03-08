@@ -20,6 +20,7 @@ type DesktopWindow = {
   icon?: string;
   title?: string;
   type: WindowType;
+  color?: string;
   subType: VirtualWindowSubtype;
   visible: boolean;
   active: boolean;
@@ -32,6 +33,7 @@ type MenuItem = {
   visible: boolean;
   url?: string;
   type?: WindowType;
+  color?: string;
   virtualWindow: VirtualWindowType;
   subType: VirtualWindowSubtype;
   icon?: string;
@@ -53,6 +55,21 @@ type StartMenuData = {
   bottom: MenuItem[];
 };
 
-type VirtualWindowType = "iframe" | "none" | "welcome" | "newbie_guide" | "blank" | "dogvertiser" | "shutdown";
+type VirtualWindowType =
+  | "iframe"
+  | "none"
+  | "welcome"
+  | "newbie_guide"
+  | "blank"
+  | "dogvertiser"
+  | "shutdown";
 
 type VirtualWindowSubtype = "openchat" | "unknown" | "none" | "dogvertiser";
+
+type Subaccount = Uint8Array | number[];
+
+interface DogvertiserActor {
+  whoami: () => Promise<{ owner: string; subaccount: string }>;
+}
+
+interface WindogeActor {}

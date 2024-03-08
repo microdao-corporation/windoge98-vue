@@ -13,19 +13,19 @@ import icdrawIcon from "../assets/icdraw_icon.png";
 import icpSwapIcon from "../assets/icpswap_icon.png";
 import sonicIcon from "../assets/sonic_icon.png";
 import pixelIcon from "../assets/start-icon.png";
-import xIcon from "../assets/x-pixel.png"
-import socialIcon from "../assets/socials.png"
-import telegramIcon from "../assets/telegram-pixel.png"
-import discordIcon from "../assets/discord-pixel.png"
-import gamesIcon from "../assets/game.png"
-import sfIcon from "../assets/sf-pixel.png"
-import fileIcon from "../assets/file.png"
-import walletIcon from "../assets/wallet.png"
-import coinGeckoIcon from "../assets/coingecko_logo.png"
-import cmcIcon from "../assets/cmc_logo.png"
-import mergeIcon from "../assets/merge_icon.png"
+import xIcon from "../assets/x-pixel.png";
+import socialIcon from "../assets/socials.png";
+import telegramIcon from "../assets/telegram-pixel.png";
+import discordIcon from "../assets/discord-pixel.png";
+import gamesIcon from "../assets/game.png";
+import sfIcon from "../assets/sf-pixel.png";
+import fileIcon from "../assets/file.png";
+import walletIcon from "../assets/wallet.png";
+import coinGeckoIcon from "../assets/coingecko_logo.png";
+import cmcIcon from "../assets/cmc_logo.png";
+import mergeIcon from "../assets/merge_icon.png";
 
-const startMenuDataStructure : StartMenuData = {
+const startMenuDataStructure: StartMenuData = {
   main: [
     {
       name: "DApps",
@@ -142,7 +142,7 @@ const startMenuDataStructure : StartMenuData = {
           subType: "unknown",
           visible: true,
         },
-      ]
+      ],
     },
     {
       name: "Guides",
@@ -163,7 +163,7 @@ const startMenuDataStructure : StartMenuData = {
           visible: true,
           virtualWindow: "newbie_guide",
         },
-      ]
+      ],
     },
     {
       name: "Socials/Off Chain",
@@ -228,9 +228,8 @@ const startMenuDataStructure : StartMenuData = {
           subType: "unknown",
           visible: true,
         },
-      ]
+      ],
     },
-    
   ],
   bottom: [
     {
@@ -261,5 +260,3 @@ const startMenuDataStructure : StartMenuData = {
   ],
 };
 export const startMenuData = reactive(startMenuDataStructure);
-
-

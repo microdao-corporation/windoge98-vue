@@ -5,17 +5,23 @@ const props = defineProps({
   icon: String,
   url: String,
   init: Function,
+  color: {
+    type: String,
+    default: "none",
+  },
 });
 const emit = defineEmits(["onClose", "onMaximise", "onMinimise"]);
-
-</script><Window v-for="window in windows" :key="window.id" :window="window" />
-
+</script>
 
 <template>
-  <div class="window">
+  <div class="window" :style="`background-color: ${props.color};`">
     <div class="title-bar" @dblclick="emit('onMaximise')">
       <div class="title-bar-text" style="display: flex; align-items: center">
-        <img :src="props.icon" style="width: 16px; height: 16px; margin-right: 4px" v-if="props.icon" />
+        <img
+          :src="props.icon"
+          style="height: 18px; margin-right: 8px"
+          v-if="props.icon"
+        />
         {{ props.title }}
       </div>
       <div class="title-bar-controls">
@@ -32,13 +38,11 @@ const emit = defineEmits(["onClose", "onMaximise", "onMinimise"]);
 </template>
 
 <style scoped>
-
 * {
   cursor: url("../assets/cursors/arrow.cur"), auto;
 }
 
 .window {
-  overflow: auto;
   min-width: 100%;
   min-height: 100%;
   display: flex;
@@ -46,9 +50,10 @@ const emit = defineEmits(["onClose", "onMaximise", "onMinimise"]);
 }
 
 .window-body {
+  padding: 0px;
+  margin: 0px;
   flex: auto;
   display: flex;
   flex-direction: column;
 }
-
 </style>

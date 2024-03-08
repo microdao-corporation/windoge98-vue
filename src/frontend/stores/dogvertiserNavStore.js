@@ -3,7 +3,7 @@ import { defineStore } from "pinia";
 import { useAuthStore } from "../auth";
 
 export const useDogvertiserNavStore = defineStore("dogvertiserNav", () => {
-  const currentScreen = reactive({screen: "main"});
+  const currentScreen = reactive({ screen: "main" });
   const screenHistory = ref(["main"]);
 
   const toScreen = (screen) => {

@@ -25,12 +25,18 @@ function showNextJoke() {
       {{ clippyText }}
       <div class="button-container">
         <button @click="showNextJoke" class="action-btn">Next</button>
-        <button @click="toggleVisibility" class="action-btn close-btn">Close</button>
+        <button @click="toggleVisibility" class="action-btn close-btn">
+          Close
+        </button>
       </div>
     </div>
     <img :src="clippyImage" class="clippy-image" />
   </div>
-  <button v-if="!clippyVisible" @click="toggleVisibility" class="show-clippy-btn">
+  <button
+    v-if="!clippyVisible"
+    @click="toggleVisibility"
+    class="show-clippy-btn"
+  >
     Show Clippy
   </button>
 </template>

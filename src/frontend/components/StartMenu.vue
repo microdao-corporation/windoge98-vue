@@ -14,7 +14,10 @@ onMounted(() => {
   filteredMenu.value = startMenuData; // Clone to avoid direct mutation
   if (filteredMenu.value) {
     filterInPlace(filteredMenu.value.main, (item: any) => item.visible == true);
-    filterInPlace(filteredMenu.value.bottom, (item: any) => item.visible == true);
+    filterInPlace(
+      filteredMenu.value.bottom,
+      (item: any) => item.visible == true,
+    );
   }
 });
 
@@ -94,30 +97,53 @@ function filterInPlace(a: any, condition: any) {
       </div>
 
       <div class="start-menu">
-        <div v-if="filteredMenu" v-for="item in filteredMenu.main" class="start-menu-item"
-          @mouseenter="toggleSubMenu(item)" @click.once="openNewWindow(item)" @mouseleave="visibleSubMenu = null">
+        <div
+          v-if="filteredMenu"
+          v-for="item in filteredMenu.main"
+          class="start-menu-item"
+          @mouseenter="toggleSubMenu(item)"
+          @click.once="openNewWindow(item)"
+          @mouseleave="visibleSubMenu = null"
+        >
           <div class="start-menu-item-icon">
-            <img :src="item.icon" :height="item.iconHeight" v-if="item.icon" rel="preload" />
+            <img
+              :src="item.icon"
+              :height="item.iconHeight"
+              v-if="item.icon"
+              rel="preload"
+            />
           </div>
-          <div style="
+          <div
+            style="
               display: flex;
               justify-content: space-between;
               width: 100%;
               align-content: center;
-            ">
+            "
+          >
             <span>{{ item.name }}</span>
             <span v-if="item.submenu" class="submenu-expand-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" height="16" width="8" viewBox="0 0 256 512">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="16"
+                width="8"
+                viewBox="0 0 256 512"
+              >
                 <path
-                  d="M246.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-128-128c-9.2-9.2-22.9-11.9-34.9-6.9s-19.8 16.6-19.8 29.6l0 256c0 12.9 7.8 24.6 19.8 29.6s25.7 2.2 34.9-6.9l128-128z" />
-              </svg></span>
+                  d="M246.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-128-128c-9.2-9.2-22.9-11.9-34.9-6.9s-19.8 16.6-19.8 29.6l0 256c0 12.9 7.8 24.6 19.8 29.6s25.7 2.2 34.9-6.9l128-128z"
+                /></svg
+            ></span>
           </div>
 
           <!-- Render submenu if it exists -->
           <div v-if="isSubMenuVisible(item)" class="submenu">
-            <div v-for="subItem in item.submenu?.sort((a, b) =>
-              a.name.localeCompare(b.name)
-            )" @click="openNewWindow(subItem)" class="start-menu-item">
+            <div
+              v-for="subItem in item.submenu?.sort((a, b) =>
+                a.name.localeCompare(b.name),
+              )"
+              @click="openNewWindow(subItem)"
+              class="start-menu-item"
+            >
               <div class="start-menu-item-icon">
                 <img :src="subItem.icon" :width="16" rel="preload" />
               </div>
@@ -126,7 +152,12 @@ function filterInPlace(a: any, condition: any) {
           </div>
         </div>
         <hr />
-        <div v-if="filteredMenu" v-for="item in filteredMenu.bottom" @click="openNewWindow(item)" class="start-menu-item">
+        <div
+          v-if="filteredMenu"
+          v-for="item in filteredMenu.bottom"
+          @click="openNewWindow(item)"
+          class="start-menu-item"
+        >
           <div class="start-menu-item-icon">
             <img :src="item.icon" :height="item.iconHeight" rel="preload" />
           </div>
@@ -186,7 +217,6 @@ function filterInPlace(a: any, condition: any) {
     border-top-color: #fff;
     border-left-color: #fff;
     cursor: url("../assets/cursors/pointer.cur"), default;
-
 
     &:hover {
       background-color: darken(#c0c0c0, 10%);

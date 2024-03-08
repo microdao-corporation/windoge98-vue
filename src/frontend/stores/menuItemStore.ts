@@ -28,6 +28,7 @@ import cmcIcon from "../assets/cmc_logo.png";
 import mergeIcon from "../assets/merge_icon.png";
 import keysIcon from "../assets/keys-4.png";
 import { initialise } from "@open-ic/openchat-xframe";
+import adsIcon from "../assets/advertise_icon.png";
 
 export const useMenuItemStore = defineStore("startMenu", () => {
   const authStore = useAuthStore();
@@ -65,7 +66,7 @@ export const useMenuItemStore = defineStore("startMenu", () => {
         startMenuData.bottom[2].name = "Sign In";
         startMenuData.bottom[2].action = handleSignIn;
       }
-    }
+    },
   );
 
   // Define the state as a function that returns the data structure
@@ -81,7 +82,7 @@ export const useMenuItemStore = defineStore("startMenu", () => {
         visible: true,
         submenu: [
           {
-            name: "Beacon DEX (Experimental!)",
+            name: "Beacon DEX",
             icon: beaconIcon,
             url: "https://beacondex.link/#/rh2pm-ryaaa-aaaan-qeniq-cai",
             iconHeight: 30,
@@ -91,9 +92,10 @@ export const useMenuItemStore = defineStore("startMenu", () => {
           },
           {
             name: "Dogvertiser",
-            icon: ocDogeIcon,
+            icon: adsIcon,
             subType: "unknown",
             visible: true,
+            color: "#ffffff",
             virtualWindow: "dogvertiser",
           },
           {
@@ -309,7 +311,7 @@ export const useMenuItemStore = defineStore("startMenu", () => {
         url: undefined,
         virtualWindow: "none",
         subType: "unknown",
-        visible: false,
+        visible: true,
         action: handleSignIn,
       },
       {

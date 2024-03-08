@@ -1,14 +1,20 @@
 // auth.ts
-import { defineStore } from 'pinia';
-import { AuthClient, AuthClientCreateOptions, AuthClientLoginOptions } from '@dfinity/auth-client';
-import { Identity } from '@dfinity/agent';
-import { createActor, canisterId } from '../declarations/dogvertiser';
-import { createWindogeActor, windgoeCanistrterId } from '../declarations/windoge';
-import { toRaw } from 'vue';
+import { defineStore } from "pinia";
+import {
+  AuthClient,
+  AuthClientCreateOptions,
+  AuthClientLoginOptions,
+} from "@dfinity/auth-client";
+import { Identity } from "@dfinity/agent";
+import { createActor, canisterId } from "../declarations/dogvertiser";
+import {
+  createActor as createWindogeActor,
+  canisterId as windgoeCanisterId,
+} from "../declarations/windoge";
+import { toRaw } from "vue";
 
 let IICanister = process.env.CANISTER_ID_internet_identity;
- type Subaccount = Uint8Array | number[];
-
+type Subaccount = Uint8Array | number[];
 
 interface DogvertiserActor {
   whoami: () => Promise<string>;
@@ -16,14 +22,12 @@ interface DogvertiserActor {
   whoamisub: () => Promise<Subaccount>;
 }
 
-interface WindogeActor {
-}
+interface WindogeActor {}
 
 interface DefaultOptions {
   createOptions: AuthClientCreateOptions;
   loginOptions: AuthClientLoginOptions;
 }
-
 
 const defaultOptions: DefaultOptions = {
   createOptions: {
@@ -32,9 +36,10 @@ const defaultOptions: DefaultOptions = {
     },
   },
   loginOptions: {
-    identityProvider: process.env.DFX_NETWORK === 'ic'
-      ? 'https://identity.ic0.app/#authorize'
-      : `http://${IICanister}.localhost:8000`,
+    identityProvider:
+      process.env.DFX_NETWORK === "ic"
+        ? "https://identity.ic0.app/#authorize"
+        : `http://${IICanister}.localhost:8000`,
   },
 };
 
@@ -46,21 +51,23 @@ function actorFromIdentity(identity: Identity | Promise<Identity> | undefined) {
   });
 }
 
-function windogeActorFromIdentity(identity: Identity | Promise<Identity> | undefined) {
-  return createWindogeActor(windgoeCanistrterId, {
+function windogeActorFromIdentity(
+  identity: Identity | Promise<Identity> | undefined,
+) {
+  return createWindogeActor(windgoeCanisterId, {
     agentOptions: {
       identity,
     },
   });
 }
 
-export const useAuthStore = defineStore('auth', {
+export const useAuthStore = defineStore("auth", {
   state: (): {
     isReady: boolean;
     isAuthenticated: boolean | null;
     identity: Identity | null;
     dogvertiserActor: DogvertiserActor | null;
-    windogeActor:WindogeActor| null;
+    windogeActor: WindogeActor | null;
     authClient: AuthClient | null;
   } => {
     return {
@@ -68,7 +75,7 @@ export const useAuthStore = defineStore('auth', {
       isAuthenticated: null,
       identity: null,
       dogvertiserActor: null,
-      windogeActor:null,
+      windogeActor: null,
       authClient: null,
     };
   },
@@ -79,11 +86,11 @@ export const useAuthStore = defineStore('auth', {
       const isAuthenticated = await authClient.isAuthenticated();
       const identity = isAuthenticated ? authClient.getIdentity() : null;
       const dogvertiserActor = identity ? actorFromIdentity(identity) : null;
-      const windogeActor = identity ? windogeActorFromIdentity(identity): null;
+      const windogeActor = identity ? windogeActorFromIdentity(identity) : null;
 
       this.isAuthenticated = isAuthenticated;
       this.identity = identity;
-      this.dogvertiserActor = dogvertiserActor;
+      this.dogvertiserActor = dogvertiserActor as unknown as DogvertiserActor;
       this.windogeActor = windogeActor;
       this.isReady = true;
     },
@@ -98,13 +105,12 @@ export const useAuthStore = defineStore('auth', {
           this.identity = this.isAuthenticated
             ? authClient.getIdentity()
             : null;
-            this.windogeActor = this.identity
+          this.windogeActor = this.identity
             ? windogeActorFromIdentity(this.identity)
             : null;
           this.dogvertiserActor = this.identity
-            ? actorFromIdentity(this.identity)
+            ? (actorFromIdentity(this.identity) as unknown as DogvertiserActor)
             : null;
-        
         },
       });
     },

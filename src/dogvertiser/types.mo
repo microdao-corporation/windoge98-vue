@@ -3,6 +3,7 @@ import Blob "mo:base/Blob";
 import Time "mo:base/Time";
 import Nat64 "mo:base/Nat64";
 import Nat8 "mo:base/Nat8";
+import WT "./windoge"
 
 module {
 
@@ -31,35 +32,46 @@ module {
 
   public type TransferArg = {
     to : Account;
-    fee : ?Tokens;
+    fee : ?WT.Balance;
     memo : ?[Nat8];
     from_subaccount : ?Subaccount;
     created_at_time : ?TimeStamp;
-    amount : Tokens;
+    amount : WT.Balance;
   };
 
   public type Advertisement = {
     index : Nat;
     title : Text;
-    image : ?Blob;
+    link : Text;
+    image : Text;
     caller : Principal;
     total_burned : Nat;
     timestamp : Time.Time;
-    adtype : Text;
     description : ?Text;
   };
 
   public type NewAdRequest = {
     title : Text;
-    image : Blob;
-    timestamp : Time.Time;
-    adtype : Text;
+    image : Text;
+    link : Text;
     description : ?Text;
   };
 
   public type TransferResult = {
     #Ok : BlockIndex;
     #Err : TransferError;
+  };
+
+  public type DappMetadata = {
+    name : Text;
+    version : Text;
+  };
+
+  public type BurnRecord = {
+    ad_index : Nat;
+    from : Account;
+    amount : WT.Balance;
+    timestamp : Time.Time;
   };
 
 };

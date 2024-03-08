@@ -20,11 +20,13 @@ const secondaryMenuOptions = [
 ];
 
 const menuOptions = computed(() =>
-  showSecondaryMenu.value ? secondaryMenuOptions : primaryMenuOptions
+  showSecondaryMenu.value ? secondaryMenuOptions : primaryMenuOptions,
 );
 
 const maxOptionId = computed(() =>
-  showSecondaryMenu.value ? secondaryMenuOptions.length : primaryMenuOptions.length
+  showSecondaryMenu.value
+    ? secondaryMenuOptions.length
+    : primaryMenuOptions.length,
 );
 
 function selectOption(optionId: number) {
@@ -67,9 +69,11 @@ onUnmounted(() => {
 function handleKeyDown(event: KeyboardEvent) {
   const maxId = maxOptionId.value;
   if (event.key === "ArrowUp") {
-    selectedOption.value = selectedOption.value > 1 ? selectedOption.value - 1 : maxId;
+    selectedOption.value =
+      selectedOption.value > 1 ? selectedOption.value - 1 : maxId;
   } else if (event.key === "ArrowDown") {
-    selectedOption.value = selectedOption.value < maxId ? selectedOption.value + 1 : 1;
+    selectedOption.value =
+      selectedOption.value < maxId ? selectedOption.value + 1 : 1;
   } else if (event.key === "Enter") {
     if (!showSecondaryMenu.value && selectedOption.value === 2) {
       showSecondaryMenu.value = true;

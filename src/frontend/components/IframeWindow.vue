@@ -48,7 +48,12 @@ onMounted(() => {
 </script>
 
 <template>
-  <iframe ref="iframeRef" :title="title" :frameborder="frameBorder" :src="url" />
+  <iframe
+    ref="iframeRef"
+    :title="title"
+    :frameborder="frameBorder"
+    :src="url"
+  />
 </template>
 
 <style lang="css">

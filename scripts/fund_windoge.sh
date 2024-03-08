@@ -1,6 +1,6 @@
-dfx canister call windoge icrc1_balance_of "(record {owner = principal \"6rtoj-omeex-hawum-7u3zx-v3yl6-qra24-43mbh-3qnmt-ipe22-riqye-4ae\"; subaccount=null;})"
+dfx canister call windoge icrc1_balance_of "(record {owner = principal \"dgrgz-snxwk-qyair-vkgeu-kphha-kib2a-nzs3u-zvko4-2s3jj-cmax6-fqe\"; subaccount=null;})"
 
 dfx canister call windoge icrc1_transfer "(record{
-                    to= record {owner = principal \"6rtoj-omeex-hawum-7u3zx-v3yl6-qra24-43mbh-3qnmt-ipe22-riqye-4ae\"; subaccount=null;};
-                    amount = 10_000_000_000;
+                    to= record {owner = principal \"dgrgz-snxwk-qyair-vkgeu-kphha-kib2a-nzs3u-zvko4-2s3jj-cmax6-fqe\"; subaccount=null;};
+                    amount = 100_000_000_000;
                 })"

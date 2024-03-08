@@ -17,18 +17,20 @@ export function useClippyAgent() {
   const error = ref("");
 
   function bigintReplacer(key, value) {
-    if (typeof value === 'bigint') {
+    if (typeof value === "bigint") {
       return value.toString();
     }
     return value;
   }
-  
+
   async function getAllSubmissions() {
     try {
       const res = await actor.getAllSubmissions();
       console.log("Clippy res", res);
       // Use the replacer function for handling BigInt
-      const resWithBigIntHandled = JSON.parse(JSON.stringify(res, bigintReplacer));
+      const resWithBigIntHandled = JSON.parse(
+        JSON.stringify(res, bigintReplacer),
+      );
       data.value.texts = resWithBigIntHandled;
       console.log("Clippy data", data.value.texts);
     } catch (e) {
@@ -36,6 +38,6 @@ export function useClippyAgent() {
       console.error("Error fetching data:", e);
     }
   }
-  
+
   return { data, error, getAllSubmissions };
 }

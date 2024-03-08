@@ -90,7 +90,10 @@ function handleWindowClick(windowId: number) {
   display: flex;
   padding-left: 10px;
   align-items: center;
-  box-shadow: inset -1px -1px #3d3d3d, inset 1px 1px #e3e3e3, inset -2px -2px grey,
+  box-shadow:
+    inset -1px -1px #3d3d3d,
+    inset 1px 1px #e3e3e3,
+    inset -2px -2px grey,
     inset 2px 2px #e6e6e6;
   &:hover {
     background-color: darken(#c0c0c0, 10%);
@@ -105,7 +108,10 @@ function handleWindowClick(windowId: number) {
   float: left;
   background-color: #f1f1f1; /* Active background color */
   color: black; /* Text color for active state */
-  box-shadow: inset 1px 1px #2c2c2c, inset -1px -1px #d4d4d4, inset 2px 2px grey,
+  box-shadow:
+    inset 1px 1px #2c2c2c,
+    inset -1px -1px #d4d4d4,
+    inset 2px 2px grey,
     inset -2px -2px #dfdfdf;
 }
 

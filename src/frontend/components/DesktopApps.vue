@@ -12,7 +12,7 @@ watch(
   () => props.arrangeIconsTrigger,
   () => {
     arrangeIcons();
-  }
+  },
 );
 
 const { startMenuData } = useMenuItemStore();
@@ -67,7 +67,13 @@ function isSelected(appName: string): boolean {
   return selectedApps.value.includes(appName);
 }
 
-function toggleSelection({ app, event }: { app: MenuItem; event: MouseEvent }): void {
+function toggleSelection({
+  app,
+  event,
+}: {
+  app: MenuItem;
+  event: MouseEvent;
+}): void {
   if (!isSelecting.value) {
     const index = selectedApps.value.indexOf(app.name);
     if (event.ctrlKey) {
@@ -83,7 +89,15 @@ function toggleSelection({ app, event }: { app: MenuItem; event: MouseEvent }): 
   }
 }
 
-function handleDragEnd({ app, x, y }: { app: MenuItem; x: number; y: number }): void {
+function handleDragEnd({
+  app,
+  x,
+  y,
+}: {
+  app: MenuItem;
+  x: number;
+  y: number;
+}): void {
   if (!selectedApps.value.includes(app.name)) {
     updateAppPosition(app, x, y);
   } else {
@@ -93,8 +107,12 @@ function handleDragEnd({ app, x, y }: { app: MenuItem; x: number; y: number }): 
     selectedApps.value.forEach((appName) => {
       const selectedApp = desktopApps.value.find((a) => a.name === appName);
       if (selectedApp) {
-        const newX = selectedApp.position ? selectedApp.position.x + offsetX : 0;
-        const newY = selectedApp.position ? selectedApp.position.y + offsetY : 0;
+        const newX = selectedApp.position
+          ? selectedApp.position.x + offsetX
+          : 0;
+        const newY = selectedApp.position
+          ? selectedApp.position.y + offsetY
+          : 0;
         updateAppPosition(selectedApp, newX, newY);
       }
     });
@@ -105,7 +123,7 @@ function updateAppPosition(
   app: MenuItem,
   x: number,
   y: number,
-  isInitialCall: boolean = true
+  isInitialCall: boolean = true,
 ): void {
   let gridX = Math.round((x - ICON_MARGIN) / ICON_TOTAL_WIDTH);
   let gridY = Math.round((y - ICON_MARGIN) / ICON_TOTAL_HEIGHT);
@@ -114,12 +132,12 @@ function updateAppPosition(
     0,
     Math.min(
       gridY,
-      Math.floor((window.innerHeight - TASKBAR_HEIGHT) / ICON_TOTAL_HEIGHT) - 1
-    )
+      Math.floor((window.innerHeight - TASKBAR_HEIGHT) / ICON_TOTAL_HEIGHT) - 1,
+    ),
   );
   gridX = Math.max(
     0,
-    Math.min(gridX, Math.floor(window.innerWidth / ICON_TOTAL_WIDTH) - 1)
+    Math.min(gridX, Math.floor(window.innerWidth / ICON_TOTAL_WIDTH) - 1),
   );
 
   if (isInitialCall) {
@@ -137,13 +155,15 @@ function updateAppPosition(
 function findNearestFreeSpot(
   startX: number,
   startY: number,
-  excludeAppName: string
+  excludeAppName: string,
 ): { x: number; y: number } {
   const gridWidth = Math.floor(window.innerWidth / ICON_TOTAL_WIDTH);
   const gridHeight = Math.floor(
-    (window.innerHeight - TASKBAR_HEIGHT) / ICON_TOTAL_HEIGHT
+    (window.innerHeight - TASKBAR_HEIGHT) / ICON_TOTAL_HEIGHT,
   );
-  const grid = Array.from({ length: gridHeight }, () => Array(gridWidth).fill(false));
+  const grid = Array.from({ length: gridHeight }, () =>
+    Array(gridWidth).fill(false),
+  );
 
   desktopApps.value.forEach((app) => {
     if (app.name !== excludeAppName && app.position) {
@@ -183,7 +203,8 @@ function onMouseDown(event: MouseEvent) {
 
   const clickedElement = event.target as HTMLElement;
   const isClickOnBackground =
-    clickedElement === desktopAreaRef.value || !clickedElement.closest(".desktop-icon");
+    clickedElement === desktopAreaRef.value ||
+    !clickedElement.closest(".desktop-icon");
 
   if (isClickOnBackground && event.button !== 2) {
     // Also allow to also select icons with left click
@@ -262,7 +283,8 @@ function getSelectionStyle() {
   const startX = Math.min(selectionStart.value.x, selectionEnd.value.x);
   const startY = Math.min(selectionStart.value.y, selectionEnd.value.y);
   const width = Math.max(selectionStart.value.x, selectionEnd.value.x) - startX;
-  const height = Math.max(selectionStart.value.y, selectionEnd.value.y) - startY;
+  const height =
+    Math.max(selectionStart.value.y, selectionEnd.value.y) - startY;
 
   return {
     left: `${startX}px`,

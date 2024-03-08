@@ -11,7 +11,7 @@ dfx deploy windoge --argument "(variant {Init =
            num_blocks_to_archive = 1000;
            trigger_threshold = 2000;
            controller_id = principal \"7ohni-sbpse-y327l-syhzk-jn6n4-hw277-erei5-xhkjr-lbh6b-rjqei-sqe\";
-           cycles_for_archive_creation = opt 10000000000000;
+           cycles_for_archive_creation = opt 10_000_000_000_000;
        };
    }
-  })"
+  })" --specified-id rh2pm-ryaaa-aaaan-qeniq-cai

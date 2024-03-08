@@ -21,6 +21,13 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src/frontend/**/*.ts", "src/frontend/**/*.d.ts", "src/frontend/**/*.tsx", "src/frontend/**/*.vue","src/frontend/**/*.jsx", "src/frontend/auth.js"],
+  "include": [
+    "src/frontend/**/*.ts",
+    "src/frontend/**/*.d.ts",
+    "src/frontend/**/*.tsx",
+    "src/frontend/**/*.vue",
+    "src/frontend/**/*.jsx",
+    "src/frontend/auth.js"
+  ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

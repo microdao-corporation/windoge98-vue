@@ -18,7 +18,9 @@ const contextMenuPosition = ref({ x: "0px", y: "0px" });
 const contextMenuVisible = ref(false);
 
 function isMobileUser(): boolean {
-  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    navigator.userAgent,
+  );
 }
 
 onMounted(() => {
@@ -68,7 +70,9 @@ function openBsodWindow() {
 
 function openShutdownWindow() {
   closeContextMenu();
-  const shutdownItem = startMenuData.bottom.find((item) => item.name === "Shut Down");
+  const shutdownItem = startMenuData.bottom.find(
+    (item) => item.name === "Shut Down",
+  );
   if (shutdownItem) {
     openNewWindow(shutdownItem);
   }
@@ -118,6 +122,7 @@ function openShutdownWindow() {
       <Window
         :title="win.title"
         :icon="win.icon"
+        :color="win.color"
         @onMinimise="windowStore.minimiseWindow(win.id)"
         @onMaximise="windowStore.maximiseWindow(win.id)"
         @onClose="windowStore.closeWindow(win.id)"

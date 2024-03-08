@@ -1,60 +1,69 @@
 <template>
-  <div class="AdvertisementForm">
-    <h2>Create New Advertisement</h2>
-    <button @click="back">Back</button>
-    <label>
-      Title:
-      <input type="text" v-model="title" />
-    </label>
-    <!-- Add conditional rendering for Image and Description fields -->
-    <label v-if="adType === 'text'">
-      Description:
-      <input type="text" v-model="description" />
-    </label>
-    <label v-else-if="adType === 'image'">
-      Image:
-      <input type="file" @change="onFileChange" />
-    </label>
-    <!-- Add dropdown for ad type -->
-    <label>
-      Ad Type:
-      <select v-model="adType">
-        <option value="text">Text</option>
-        <option value="image">Image</option>
-      </select>
-    </label>
-    <button @click="onSubmit">Submit</button>
+  <div class="new-ad-container">
+    <div class="new-ad-container2">
+      <h3
+        style="font-family: Arial; margin-top: 0px; margin-bottom; 20px; text-align: center"
+      >
+        New Advertisement
+      </h3>
+      <div class="error" v-if="state.errors.length > 0">
+        <div style="font-size: 14px; font-weight: bold; margin-right: 4px">Error:</div>
+
+        <span v-for="error in state.errors" :key="error">{{ error }}, </span>
+      </div>
+      <div class="form-group">
+        <div>
+          <img v-if="image" :src="image" alt="Ad Image" class="uploaded-image" />
+          <input id="image" type="file" @change="handleImageUpload" />
+        </div>
+
+        <div>
+          <label class="label-title" for="title">Title:</label>
+          <input id="title" type="text" v-model="title" />
+        </div>
+
+        <div>
+          <label class="label-title" for="link">Link:</label>
+          <input id="link" type="text" v-model="link" />
+        </div>
+      </div>
+
+      <button @click="onSubmit" :disabled="isLoading">Submit</button>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { reactive, toRefs } from "vue";
 import { useDogvertiserNavStore } from "../stores/dogvertiserNavStore";
 import { useAuthStore } from "../auth";
 
+const { back } = useDogvertiserNavStore();
 const authStore = useAuthStore();
-const isLoading = ref(false);
-const modal = ref(false);
-const modalMsg = ref("");
-const { currentScreen, back, toScreen } = useDogvertiserNavStore();
 
-const title = ref("");
-const image = ref(null); // Blob
-const caller = ref(""); // Principal
-const totalBurned = ref(0); // Nat
-const adType = ref("text"); // Default ad type to "text"
-const description = ref("Text"); // Description field
+// Grouping state variables into a single reactive object
+const state = reactive({
+  title: "",
+  link: "",
+  description: "",
+  image: null, // For storing the base64 encoded image
+  isLoading: false,
+  errors: [],
+});
 
-const onFileChange = (e) => {
-  image.value = e.target.files[0];
+const handleImageUpload = (event) => {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = () => (state.image = reader.result);
+  reader.readAsDataURL(file);
 };
 
 const onSubmit = async () => {
-  if (adType.value === "image" && !image.value) {
+  if (!state.image) {
     // Check if image is required for Image type
-    console.error("Image is required for Image type");
-    modalMsg.value = "Image is required for Image type";
-    modal.value = true;
+
     return;
   }
   await uploadAdvertisement();
@@ -63,74 +72,99 @@ const onSubmit = async () => {
 const uploadAdvertisement = async () => {
   const timestamp = new Date().getTime();
 
-  isLoading.value = true;
-  console.log("values",description.value, title.value)
+  state.isLoading = true;
   const advertisementData = {
-    title: title.value,
-    caller: caller.value,
-    total_burned: totalBurned.value,
-    timestamp: timestamp,
-    adtype: adType.value, // Include ad type in the advertisement data
-    description: [description.value], // Include description in the advertisement data
-    image:[]
+    title: state.title,
+    link: state.link,
+    image: `${state.image}`, // Include the image data only if adType is 'image'
+    description: [state.description],
   };
 
-  if (adType.value === "image") {
-    const file = image.value;
-    const reader = new FileReader();
-
-    reader.onload = async (event) => {
-      try {
-        const arrayBuffer = event.target.result;
-        const uint8Array = new Uint8Array(arrayBuffer);
-        const vec8 = Array.from(uint8Array);
-
-        advertisementData.image = vec8;
-
-        let response = await authStore.dogvertiserActor.newAdRequest(
-          advertisementData
-        );
-        console.log(response);
-
-        title.value = "";
-        image.value = [];
-        caller.value = "";
-        totalBurned.value = 0;
-      } catch (error) {
-        console.error("Error uploading advertisement:", error);
-        modalMsg.value = "Error uploading advertisement";
-        modal.value = true;
-      }
-
-      isLoading.value = false;
-    };
-
-    reader.readAsArrayBuffer(file);
-  } else {
-    try {
-      // Send advertisement data to backend for Text type
-      let response = await authStore.dogvertiserActor.newAdRequest(
-        advertisementData
-      );
-      console.log(response);
-
-      title.value = "";
-      description.value = "";
-      caller.value = "";
-      totalBurned.value = 0;
-    } catch (error) {
-      console.error("Error uploading advertisement:", error);
-      modalMsg.value = "Error uploading advertisement";
-      modal.value = true;
+  try {
+    // Send advertisement data to backend
+    let response = await authStore.dogvertiserActor.create_advertisement(
+      advertisementData
+    );
+    console.log("Advertisement created:", response.err);
+    if (response.err) {
+      Object.keys(response.err).forEach((key) => {
+        state.errors.push(response.err[key].message);
+      });
+    } else {
+      // Reset form values
+      resetForm();
     }
-
-    isLoading.value = false;
+  } catch (error) {
+    console.error("Error uploading advertisement:", error);
+    state.errors.push(error);
   }
+
+  state.isLoading = false;
 };
+
+function resetForm() {
+  state.title = "";
+  state.link = "";
+  state.description = "";
+  state.image = null;
+}
+
+// Use toRefs to destructure the reactive object for direct usage in the template
+const { title, link, isLoading, image, errors } = toRefs(state);
 </script>
 
 <style scoped>
-.AdvertisementForm {
+.label-title {
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+}
+.new-ad-container {
   /* Add your CSS styles here */
+  width: 100%;
+}
+
+.new-ad-container2 {
+  padding: 10px;
+}
+.form-group {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.form-group div {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+label {
+  font-family: "VT323", monospace;
+  font-size: 2rem;
+}
+
+.uploaded-image {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+.error {
+  display: flex;
+  align-items: center;
+  background-color: rgb(254, 154, 154);
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  padding: 6px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
 }
 </style>

@@ -18,6 +18,8 @@
     "@dfinity/principal": "^0.21.4",
     "@junobuild/core": "^0.0.44",
     "@open-ic/openchat-xframe": "^1.0.4",
+    "@vueuse/components": "^10.9.0",
+    "@vueuse/core": "^10.9.0",
     "98.css": "^0.1.20",
     "cors": "^2.8.5",
     "pinia": "^2.1.7",

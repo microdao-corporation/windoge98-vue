@@ -1,57 +1,47 @@
 {
-    "canisters": {
-      "dogvertiser": {
-        "main": "src/dogvertiser/main.mo",
-        "type": "motoko"
-      },
-      "internet_identity" : {
-        "type": "pull",
-        "id": "rdmx6-jaaaa-aaaaa-aaadq-cai"
-      },
-      "windoge": {
-        "type": "custom",
-        "wasm": "src/dogvertiser/icrc/icrc1.wasm",
-        "candid": "src/dogvertiser/icrc/icrc1.did",
-        "remote" : {
-          "candid": "src/dogvertiser/icrc/icrc1.did",
-          "id": {
-            "ic" : "mvlgq-eiaaa-aaaan-qepnq-cai"
-          }
+  "canisters": {
+    "dogvertiser": {
+      "main": "src/dogvertiser/main.mo",
+      "type": "motoko"
+    },
+    "internet_identity": {
+      "type": "pull",
+      "id": "rdmx6-jaaaa-aaaaa-aaadq-cai"
+    },
+    "windoge": {
+      "type": "custom",
+      "wasm": "src/dogvertiser/icrc/icrc1.wasm",
+      "candid": "src/dogvertiser/icrc/icrc1.did",
+      "remote": {
+        "id": {
+          "ic": "rh2pm-ryaaa-aaaan-qeniq-cai"
         }
+      }
+    },
+    "windoge_staging": {
+      "dependencies": ["dogvertiser", "internet_identity", "windoge"],
+      "frontend": {
+        "entrypoint": "dist/index.html"
       },
-      "windoge_staging": {
-        "dependencies": [
-          "dogvertiser",
-          "internet_identity",
-          "windoge"
-          ],
-        "frontend": {
-          "entrypoint": "dist/index.html"
-        },
-        "source": [
-          "dist/assets",
-          "dist"
-        ],
-        "type": "assets"
-      }
+      "source": ["dist/assets", "dist"],
+      "type": "assets"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": ""
+    }
+  },
+  "networks": {
+    "local": {
+      "bind": "127.0.0.1:8000",
+      "type": "ephemeral"
     },
-    "defaults": {
-      "build": {
-        "args": ""      
-      }
-    },
-    "networks": {
-      "local": {
-        "bind": "127.0.0.1:8000",
-        "type": "ephemeral"
-      },
-      "ic": {
-        "providers": [
-          "https://mainnet.dfinity.network"
-        ],
-        "type": "persistent"
-      }
-    },
-    "output_env_file": ".env",
-    "version": 1
-  }
+    "ic": {
+      "providers": ["https://mainnet.dfinity.network"],
+      "type": "persistent"
+    }
+  },
+  "output_env_file": ".env",
+  "version": 1
+}

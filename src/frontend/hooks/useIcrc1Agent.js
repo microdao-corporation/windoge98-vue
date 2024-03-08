@@ -4,7 +4,7 @@ import { idlFactory } from "./icrc1-idl.js";
 import { Principal } from "@dfinity/principal";
 
 export function useIcrc1Agent(canisterId) {
-  const agent = new HttpAgent({host: "https://ic0.app"});
+  const agent = new HttpAgent({ host: "https://ic0.app" });
   const actor = Actor.createActor(idlFactory, {
     agent,
     canisterId,

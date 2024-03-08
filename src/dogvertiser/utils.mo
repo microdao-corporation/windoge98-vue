@@ -8,17 +8,17 @@ import Text "mo:base/Text";
 import Nat "mo:base/Nat";
 
 module {
-  public func hashNat(id : Nat) : Hash.Hash {
+  public func hash_nat(id : Nat) : Hash.Hash {
     Text.hash(Nat.toText(id));
   };
 
-  public func hashText(text : Text) : Hash.Hash {
+  public func hash_text(text : Text) : Hash.Hash {
     Text.hash(text);
   };
 
   /// Convert Principal to ICRC1.Subaccount
   // from https://github.com/research-ag/motoko-lib/blob/2772d029c1c5087c2f57b022c84882f2ac16b79d/src/TokenHandler.mo#L51
-  public func toSubaccount(p : Principal) : Types.Subaccount {
+  public func to_subaccount(p : Principal) : Types.Subaccount {
     // p blob size can vary, but 29 bytes as most. We preserve it'subaccount size in result blob
     // and it'subaccount data itself so it can be deserialized back to p
     let bytes = Blob.toArray(Principal.toBlob(p));
@@ -41,10 +41,26 @@ module {
     return a;
   };
 
-  public func toAccount(caller : Principal) : Types.Account {
+  public func to_account(caller : Principal) : Types.Account {
     {
       owner = caller;
-      subaccount = ?toSubaccount(caller);
+      subaccount = ?to_subaccount(caller);
     };
+  };
+
+  public func is_url(text : Text) : Bool {
+    // Basic checks for http:// or https:// schemes
+    let httpPrefix = "http://";
+    let httpsPrefix = "https://";
+
+    // Check if the text starts with http:// or https://
+    if (Text.startsWith(text, #text httpPrefix) or Text.startsWith(text, #text httpsPrefix)) {
+      // Perform additional basic checks, e.g., contains a dot indicating a domain part
+      // This is a very naive check and might not cover all valid URLs or exclude all invalid ones
+      if (Text.contains(text, #text ".")) {
+        return true;
+      };
+    };
+    return false;
   };
 };
