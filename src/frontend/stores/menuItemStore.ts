@@ -9,7 +9,7 @@ import junoIcon from "../assets/juno_icon.png";
 import computerIcon from "../assets/computer-5.png";
 import programsIcon from "../assets/programs_icon.png";
 import taggrIcon from "../assets/taggr_icon.png";
-import dmailIcon from "../assets/dmail_icon.png";
+// import dmailIcon from "../assets/dmail_icon.png";
 import beaconIcon from "../assets/beacon_icon.png";
 import icdrawIcon from "../assets/icdraw_icon.png";
 import icpSwapIcon from "../assets/icpswap_icon.png";
@@ -28,7 +28,7 @@ import cmcIcon from "../assets/cmc_logo.png";
 import mergeIcon from "../assets/merge_icon.png";
 import keysIcon from "../assets/keys-4.png";
 import { initialise } from "@open-ic/openchat-xframe";
-import adsIcon from "../assets/advertise_icon.png";
+// import adsIcon from "../assets/advertise_icon.png";
 
 export const useMenuItemStore = defineStore("startMenu", () => {
   const authStore = useAuthStore();
@@ -90,24 +90,26 @@ export const useMenuItemStore = defineStore("startMenu", () => {
             subType: "unknown",
             visible: true,
           },
+
+          // {
+          //   name: "Dmail",
+          //   icon: dmailIcon,
+          //   url: "https://mail.dmail.ai/",
+          //   iconHeight: 30,
+          //   virtualWindow: "iframe",
+          //   subType: "unknown",
+          //   visible: true,
+          // },
           {
             name: "Dogvertiser",
-            icon: adsIcon,
+            icon: ocDogeIcon,
+            iconHeight: 28,
+            height: 494,
+            width: 632,
             subType: "unknown",
-            visible: true,
-            color: "#ffffff",
+            visible: false,
             virtualWindow: "dogvertiser",
           },
-          {
-            name: "Dmail",
-            icon: dmailIcon,
-            url: "https://mail.dmail.ai/",
-            iconHeight: 30,
-            virtualWindow: "iframe",
-            subType: "unknown",
-            visible: true,
-          },
-
           {
             name: "ICPCoins",
             icon: icpcoinsLogo,
@@ -178,7 +180,7 @@ export const useMenuItemStore = defineStore("startMenu", () => {
           {
             name: "3D Pinball",
             icon: pinballIcon,
-            url: "https://windoge98.com/spacecadetpinball.html",
+            url: "https://desktop.windoge98.com/spacecadetpinball.html",
             iconHeight: 28,
             height: 494,
             width: 632,
@@ -189,7 +191,7 @@ export const useMenuItemStore = defineStore("startMenu", () => {
           {
             name: "MoonMerge98",
             icon: mergeIcon,
-            url: "https://windoge98.com/moon_merge/index.html",
+            url: "https://desktop.windoge98.com/moon_merge/index.html",
             iconHeight: 30,
             height: 840,
             width: 1078,
@@ -311,7 +313,7 @@ export const useMenuItemStore = defineStore("startMenu", () => {
         url: undefined,
         virtualWindow: "none",
         subType: "unknown",
-        visible: true,
+        visible: false,
         action: handleSignIn,
       },
       {

@@ -30,7 +30,7 @@ export const useWindowStore = defineStore("windowStore", {
       windows: [
         {
           id: uuidv4(),
-          zIndex: 100,
+          zIndex: 50,
           title: "About Windoge98",
           icon: startIcon,
           component: WelcomeWindow,
@@ -65,7 +65,7 @@ export const useWindowStore = defineStore("windowStore", {
           },
         },
       ],
-      highestZIndex: 100,
+      highestZIndex: 99,
       screenWidth: window.innerWidth,
       screenHeight: window.innerHeight - 40,
       // Add more default state properties if needed
@@ -85,12 +85,15 @@ export const useWindowStore = defineStore("windowStore", {
     },
     activateWindow(id) {
       this.windows.forEach((w) => {
-        w.active = w.id === id;
-        if (w.active) {
-          this.highestZIndex++;
-          w.zIndex = this.highestZIndex;
-        } else {
-          w.zIndex = 1;
+        w.active = w.id == id;
+        if (w.id == id) {
+          w.visible = true;
+          if (w.active) {
+            this.highestZIndex++;
+            w.zIndex = this.highestZIndex;
+          } else {
+            w.zIndex = 1;
+          }
         }
       });
     },
@@ -119,9 +122,8 @@ export const useWindowStore = defineStore("windowStore", {
 
     setActiveToLastWindow() {
       const visibleWindows = this.windows.filter((w) => w.visible);
-
-      if (visibleWindows.length > 1) {
-        const lastWindow = this.windows[this.windows.length - 1];
+      if (visibleWindows.length > 0) {
+        const lastWindow = this.windows[this.windows.length - 2];
         if (lastWindow) {
           this.activateWindow(lastWindow.id);
         }

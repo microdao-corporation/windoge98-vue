@@ -7,7 +7,7 @@ import junoIcon from "../assets/juno_icon.png";
 import computerIcon from "../assets/computer-5.png";
 import programsIcon from "../assets/programs_icon.png";
 import taggrIcon from "../assets/taggr_icon.png";
-import dmailIcon from "../assets/dmail_icon.png";
+// import dmailIcon from "../assets/dmail_icon.png";
 import beaconIcon from "../assets/beacon_icon.png";
 import icdrawIcon from "../assets/icdraw_icon.png";
 import icpSwapIcon from "../assets/icpswap_icon.png";
@@ -45,14 +45,24 @@ const startMenuDataStructure: StartMenuData = {
           subType: "unknown",
           visible: true,
         },
+        // {
+        //   name: "Dmail",
+        //   icon: dmailIcon,
+        //   url: "https://mail.dmail.ai/",
+        //   iconHeight: 30,
+        //   virtualWindow: "iframe",
+        //   subType: "unknown",
+        //   visible: true,
+        // },
         {
-          name: "Dmail",
-          icon: dmailIcon,
-          url: "https://mail.dmail.ai/",
-          iconHeight: 30,
-          virtualWindow: "iframe",
+          name: "Dogvertiser",
+          icon: ocDogeIcon,
+          iconHeight: 28,
+          height: 494,
+          width: 632,
           subType: "unknown",
-          visible: true,
+          visible: false,
+          virtualWindow: "dogvertiser",
         },
         {
           name: "ICPCoins",
@@ -123,7 +133,7 @@ const startMenuDataStructure: StartMenuData = {
         {
           name: "3D Pinball",
           icon: pinballIcon,
-          url: "https://windoge98.com/spacecadetpinball.html",
+          url: "https://desktop.windoge98.com/spacecadetpinball.html",
           iconHeight: 28,
           height: 494,
           width: 632,
@@ -134,7 +144,7 @@ const startMenuDataStructure: StartMenuData = {
         {
           name: "MoonMerge98",
           icon: mergeIcon,
-          url: "https://windoge98.com/moon_merge/index.html",
+          url: "https://desktop.windoge98.com/moon_merge/index.html",
           iconHeight: 30,
           height: 840,
           width: 1078,

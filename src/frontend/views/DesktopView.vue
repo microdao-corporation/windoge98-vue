@@ -19,7 +19,7 @@ const contextMenuVisible = ref(false);
 
 function isMobileUser(): boolean {
   return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-    navigator.userAgent,
+    navigator.userAgent
   );
 }
 
@@ -70,9 +70,7 @@ function openBsodWindow() {
 
 function openShutdownWindow() {
   closeContextMenu();
-  const shutdownItem = startMenuData.bottom.find(
-    (item) => item.name === "Shut Down",
-  );
+  const shutdownItem = startMenuData.bottom.find((item) => item.name === "Shut Down");
   if (shutdownItem) {
     openNewWindow(shutdownItem);
   }

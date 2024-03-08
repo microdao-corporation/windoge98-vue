@@ -54,6 +54,7 @@ const emit = defineEmits(["onClose", "onMaximise", "onMinimise"]);
   margin: 0px;
   flex: auto;
   display: flex;
+  padding: 8px;
   flex-direction: column;
 }
 </style>

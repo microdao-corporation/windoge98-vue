@@ -222,210 +222,219 @@ function formatBigDecimalToString(amount) {
 </script>
 
 <template>
-  <div class="header">
-    <div style="display: flex; align-items: center; align-content: center">
-      <img :src="adsIcon" style="width: 30%; margin-right: 8px" />
-      <h1 class="title" style="margin: 0px">Dogvertiser</h1>
-    </div>
-    <div style="display: flex">
-      <div class="sign-out" @click="refresh" style="margin-right: 4px">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke-width="1.5"
-          stroke="currentColor"
-          style="width: 14px; height: 14px"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"
-          />
-        </svg>
+  <div class="dog-container">
+    <div class="header">
+      <div style="display: flex; align-items: center; align-content: center">
+        <img :src="adsIcon" style="width: 30%; margin-right: 8px" />
+        <h1 class="title" style="margin: 0px">Dogvertiser</h1>
       </div>
-      <div class="sign-out" @click="back" style="margin-right: 4px">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke-width="1.5"
-          stroke="currentColor"
-          style="width: 14px; height: 14px"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3"
-          />
-        </svg>
-      </div>
-      <div
-        class="sign-out"
-        @click="showWallet = !showWallet"
-        style="margin-right: 4px"
-        v-if="authStore.isAuthenticated"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke-width="1.5"
-          stroke="currentColor"
-          style="width: 14px; height: 14px"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M21 12a2.25 2.25 0 0 0-2.25-2.25H15a3 3 0 1 1-6 0H5.25A2.25 2.25 0 0 0 3 12m18 0v6a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 18v-6m18 0V9M3 12V9m18 0a2.25 2.25 0 0 0-2.25-2.25H5.25A2.25 2.25 0 0 0 3 9m18 0V6a2.25 2.25 0 0 0-2.25-2.25H5.25A2.25 2.25 0 0 0 3 6v3"
-          />
-        </svg>
-      </div>
-      <div
-        class="dogvertiser-create-button"
-        @click="toScreen('new-ad')"
-        v-if="authStore.isAuthenticated"
-      >
-        New Advert
-      </div>
-      <div
-        class="dogvertiser-create-button"
-        @click="authStore.login"
-        v-if="!authStore.isAuthenticated"
-      >
-        SIGN IN
-      </div>
-    </div>
-  </div>
-  <div class="row-grid" v-if="showWallet">
-    <!-- Column 1: My Principal -->
-    <div class="column">
-      <h1 class="column-title">My Principal</h1>
-      <p>{{ whoami }}</p>
-
-      <div v-if="whoami" @click="copy(whoami)" class="button inline-block">
-        <!-- by default, `copied` will be reset in 1.5s -->
-        <span v-if="!copied">📋 Copy</span>
-        <span v-else>✅ Copied!</span>
-      </div>
-    </div>
-
-    <!-- Column 2: My Wallet -->
-    <div class="column">
-      <h1 class="column-title">My Wallet</h1>
-      <div class="spinner" v-if="isTransfering">
-        <span class="loader"></span>
-      </div>
-      <p v-if="!isTransfering">
-        {{ isTransfering ? " " : formatBigDecimalToString(balance) + " EXE" }}
-      </p>
-      <div>
+      <div style="display: flex">
+        <div class="sign-out" @click="refresh" style="margin-right: 4px">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            style="width: 14px; height: 14px"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"
+            />
+          </svg>
+        </div>
+        <div class="sign-out" @click="back" style="margin-right: 4px">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            style="width: 14px; height: 14px"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3"
+            />
+          </svg>
+        </div>
         <div
-          class="button inline-block"
-          :style="`pointer-events: ${isTransfering ? 'none' : ''}`"
-          @click="handleTransfer"
+          class="sign-out"
+          @click="showWallet = !showWallet"
           style="margin-right: 4px"
+          v-if="authStore.isAuthenticated"
         >
-          <span class="button__text">Withdraw</span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            style="width: 14px; height: 14px"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M21 12a2.25 2.25 0 0 0-2.25-2.25H15a3 3 0 1 1-6 0H5.25A2.25 2.25 0 0 0 3 12m18 0v6a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 18v-6m18 0V9M3 12V9m18 0a2.25 2.25 0 0 0-2.25-2.25H5.25A2.25 2.25 0 0 0 3 9m18 0V6a2.25 2.25 0 0 0-2.25-2.25H5.25A2.25 2.25 0 0 0 3 6v3"
+            />
+          </svg>
         </div>
         <div
-          class="button inline-block"
-          :style="`pointer-events: ${isTransfering ? 'none' : ''}`"
-          @click="handleDappDeposit()"
+          class="dogvertiser-create-button"
+          @click="toScreen('new-ad')"
+          v-if="authStore.isAuthenticated"
         >
-          <span class="button__text">Transfer to DApp</span>
+          New Advert
         </div>
-      </div>
-      <h1 class="column-title">Dapp Wallet</h1>
-      <div class="spinner" v-if="isTransfering">
-        <span class="loader"></span>
-      </div>
-      <p v-if="!isTransfering">
-        {{ isTransfering ? " " : formatBigDecimalToString(dogvertiserBalance) + " EXE" }}
-      </p>
-      <div class="wallet-buttons">
         <div
-          class="button inline-block"
-          :style="`pointer-events: ${isTransfering ? 'none' : ''}`"
-          @click="handleTransferToWalletl()"
+          class="dogvertiser-create-button"
+          @click="authStore.login"
+          v-if="!authStore.isAuthenticated"
         >
-          <span class="button__text">Transfer to My Wallet</span>
+          SIGN IN
         </div>
       </div>
     </div>
-  </div>
-  <div
-    v-if="currentScreen.screen == 'main'"
-    style="
-      background-color: white;
-      min-height: 100%;
-      max-height: 500px;
-      overflow: auto;
-      font-family: Arial, sans-serif;
-    "
-    class="dog-container"
-  >
-    <div v-if="authStore.isAuthenticated">
-      <div class="my-ads">
-        <h3>My Ads</h3>
-        <!-- List of Ads -->
-        <div class="ad-list">
-          <!-- Example Ad Card -->
-          <div class="ad-card" v-for="ad in myAds" v-if="myAds" key="ad.index">
-            <div
-              style="display: flex; align-items: center; justify-content: space-between"
-            >
-              <h3 style="margin: 0; padding: 0">{{ ad.title }}</h3>
-            </div>
-            <div>
-              <div
-                style="
-                  margin-top: 4px;
-                  background-color: rgb(255, 223, 223);
-                  color: rgb(144, 0, 0);
-                  padding: 2px 8px;
-                  border-radius: 4px;
-                  font-size: 12px;
-                  font-weight: bold;
-                "
-              >
-                <span v-if="isBoosting.index != ad.index"
-                  >{{ formatBigDecimalToString(ad.total_burned) }} EXE Burned</span
-                >
-                <span v-else-if="isBoosting.status && isBoosting.index == ad.index"
-                  >Boosting...</span
-                >
-              </div>
-            </div>
-            <div class="ad-url">
-              Links to <a :href="ad.link" target="_blank">{{ ad.link }}</a>
-            </div>
-            <br />
+    <div class="row-grid dogvertiser-wallet" v-if="showWallet">
+      <!-- Column 1: My Principal -->
+      <div class="column">
+        <h1 class="column-title">My Principal</h1>
+        <p>{{ whoami }}</p>
 
-            <img :src="ad.image" alt="Ad Image" />
-            <div
-              :class="`button ${
-                isBoosting.status && isBoosting.index == ad.index ? 'button--loading' : ''
-              }`"
-              :style="`pointer-events: ${
-                isBoosting.status && isBoosting.index == ad.index ? 'none' : ''
-              }`"
-              @click="handleBoost(ad.index)"
-            >
-              <span class="button__text" style="font-size: 16px">🚀 &nbsp; Boost Ad</span>
-            </div>
+        <div v-if="whoami" @click="copy(whoami)" class="button inline-block">
+          <!-- by default, `copied` will be reset in 1.5s -->
+          <span v-if="!copied">📋 Copy</span>
+          <span v-else>✅ Copied!</span>
+        </div>
+      </div>
+
+      <!-- Column 2: My Wallet -->
+      <div class="column">
+        <h1 class="column-title">My Wallet</h1>
+        <div class="spinner" v-if="isTransfering">
+          <span class="loader"></span>
+        </div>
+        <p v-if="!isTransfering">
+          {{ isTransfering ? " " : formatBigDecimalToString(balance) + " EXE" }}
+        </p>
+        <div>
+          <div
+            class="button inline-block"
+            :style="`pointer-events: ${isTransfering ? 'none' : ''}`"
+            @click="handleTransfer"
+            style="margin-right: 4px"
+          >
+            <span class="button__text">Withdraw</span>
+          </div>
+          <div
+            class="button inline-block"
+            :style="`pointer-events: ${isTransfering ? 'none' : ''}`"
+            @click="handleDappDeposit()"
+          >
+            <span class="button__text">Transfer to DApp</span>
+          </div>
+        </div>
+        <h1 class="column-title">Dapp Wallet</h1>
+        <div class="spinner" v-if="isTransfering">
+          <span class="loader"></span>
+        </div>
+        <p v-if="!isTransfering">
+          {{
+            isTransfering ? " " : formatBigDecimalToString(dogvertiserBalance) + " EXE"
+          }}
+        </p>
+        <div class="wallet-buttons">
+          <div
+            class="button inline-block"
+            :style="`pointer-events: ${isTransfering ? 'none' : ''}`"
+            @click="handleTransferToWalletl()"
+          >
+            <span class="button__text">Transfer to My Wallet</span>
           </div>
         </div>
       </div>
     </div>
+    <div
+      v-if="currentScreen.screen == 'main'"
+      style="
+        background-color: white;
+        min-height: 100%;
+        max-height: 500px;
+        overflow: auto;
+        font-family: Arial, sans-serif;
+      "
+      class="dog-container"
+    >
+      <div v-if="authStore.isAuthenticated">
+        <div class="my-ads">
+          <h3>My Ads</h3>
+          <!-- List of Ads -->
+          <div class="ad-list">
+            <!-- Example Ad Card -->
+            <div class="" v-if="myAds.length == 0">You haven't created any ads yet</div>
+            <div class="ad-card" v-for="ad in myAds" v-if="myAds" key="ad.index">
+              <div
+                style="display: flex; align-items: center; justify-content: space-between"
+              >
+                <h3 style="margin: 0; padding: 0">{{ ad.title }}</h3>
+              </div>
+              <div>
+                <div
+                  style="
+                    margin-top: 4px;
+                    background-color: rgb(255, 223, 223);
+                    color: rgb(144, 0, 0);
+                    padding: 2px 8px;
+                    border-radius: 4px;
+                    font-size: 12px;
+                    font-weight: bold;
+                  "
+                >
+                  <span v-if="isBoosting.index != ad.index"
+                    >{{ formatBigDecimalToString(ad.total_burned) }} EXE Burned</span
+                  >
+                  <span v-else-if="isBoosting.status && isBoosting.index == ad.index"
+                    >Boosting...</span
+                  >
+                </div>
+              </div>
+              <div class="ad-url">
+                Links to <a :href="ad.link" target="_blank">{{ ad.link }}</a>
+              </div>
+              <br />
 
-    <div v-else class="login-container">
-      <img :src="adsIcon" />
-      <div><h2 style="margin-top: 0px">Dogvertiser</h2></div>
+              <img :src="ad.image" alt="Ad Image" />
+              <div
+                :class="`button ${
+                  isBoosting.status && isBoosting.index == ad.index
+                    ? 'button--loading'
+                    : ''
+                }`"
+                :style="`pointer-events: ${
+                  isBoosting.status && isBoosting.index == ad.index ? 'none' : ''
+                }`"
+                @click="handleBoost(ad.index)"
+              >
+                <span class="button__text" style="font-size: 16px"
+                  >🚀 &nbsp; Boost Ad</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div v-else class="login-container">
+        <img :src="adsIcon" />
+        <div><h2 style="margin-top: 0px">Dogvertiser</h2></div>
+      </div>
     </div>
-  </div>
-  <div v-if="currentScreen.screen == 'new-ad'">
-    <NewDogvertisement />
+    <div v-if="currentScreen.screen == 'new-ad'">
+      <NewDogvertisement />
+    </div>
   </div>
 </template>
 
@@ -438,6 +447,10 @@ function formatBigDecimalToString(amount) {
 }
 .my-ads {
   padding: 8px;
+}
+.dogvertiser-wallet {
+  font-family: Arial, sans-serif;
+  font-smooth: antialiased;
 }
 .wallet-buttons {
   display: flex;
@@ -549,6 +562,8 @@ function formatBigDecimalToString(amount) {
 .dog-container {
   -webkit-font-smoothing: antialiased !important;
   -moz-osx-font-smoothing: grayscale !important;
+  background-color: white;
+  height: 100%;
 }
 
 .ad-description {
