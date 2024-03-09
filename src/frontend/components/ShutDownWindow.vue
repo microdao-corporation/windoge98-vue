@@ -75,6 +75,7 @@ const emit = defineEmits(["onClose"]);
 
 .title {
   margin-bottom: 10px;
+  font-size: 16px;
 }
 
 .options .option {
