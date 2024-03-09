@@ -12,9 +12,9 @@ const props = defineProps({
 
 const emits = defineEmits(["select", "dragend", "drop"]);
 
-const handleSelection = (event: MouseEvent) => {
-  emits("select", { app: props.app, event });
-};
+// const handleSelection = (event: MouseEvent) => {
+//   emits("select", { app: props.app, event });
+// };
 
 const handleDragStart = (event: DragEvent) => {
   event.dataTransfer?.setData("text/plain", JSON.stringify(props.app));
@@ -38,7 +38,7 @@ const handleDrop = (event: DragEvent) => {
     class="desktop-icon"
     :class="{ 'icon-selected': isSelected }"
     :style="positionStyle"
-    @click="handleSelection"
+
     @dragstart="handleDragStart"
     @dragend="handleDragEnd"
     @drop="handleDrop"
