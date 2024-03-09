@@ -28,6 +28,7 @@ import {
 import Blob "mo:base/Blob";
 import Array "mo:base/Array";
 import Nat8 "mo:base/Nat8";
+import Debug "mo:base/Debug";
 
 actor Dogvertiser {
 
@@ -46,6 +47,7 @@ actor Dogvertiser {
 
   // Variables
   let Windoge : WT.Self = actor ("rh2pm-ryaaa-aaaan-qeniq-cai");
+  let BURN_PRINCIPAL : Principal = Principal.fromText("xscoq-ggfay-isg3d-ivuvu-6qpnt-mvlt6-llf4q-ve6q7-3nht5-4ab7q-4qe");
   let ic : IC = actor ("aaaaa-aa");
 
   stable var _stable_ads : [(Text, Types.Advertisement)] = [];
@@ -60,6 +62,7 @@ actor Dogvertiser {
     return {
       name = "Dogvertiser";
       version = "0.1.0";
+      canisterId = Principal.fromActor(Dogvertiser);
     };
   };
 
@@ -77,6 +80,14 @@ actor Dogvertiser {
 
   public shared query func ad_creation_fee() : async Nat {
     return _ad_creation_fee;
+  };
+
+  public shared query func fetch_total_burned() : async Nat {
+    var totalBurned : Nat = 0;
+    for (value in advertisements.vals()) {
+      totalBurned := totalBurned + value.total_burned;
+    };
+    return totalBurned;
   };
 
   public shared query func fetch_ads() : async [Types.Advertisement] {
@@ -154,6 +165,7 @@ actor Dogvertiser {
       owner = Principal.fromActor(Dogvertiser);
       subaccount = ?Blob.fromArray(to_subaccount(caller));
     });
+
     let fee = await Windoge.icrc1_fee();
     let request : WT.TransferArgs = {
       amount = amount - fee;
@@ -182,7 +194,10 @@ actor Dogvertiser {
           fee = null;
           memo = null;
           from_subaccount = ?Blob.fromArray(to_subaccount(caller));
-          to = { owner = Principal.fromText("aaaaa-aa"); subaccount = null };
+          to = {
+            owner = BURN_PRINCIPAL;
+            subaccount = null;
+          };
           created_at_time = null;
         };
         let response : Types.TransferResult = await Windoge.icrc1_transfer(request);
@@ -243,7 +258,10 @@ actor Dogvertiser {
           fee = null;
           memo = null;
           from_subaccount = ?Blob.fromArray(to_subaccount(caller));
-          to = { owner = Principal.fromText("aaaaa-aa"); subaccount = null };
+          to = {
+            owner = BURN_PRINCIPAL;
+            subaccount = null;
+          };
           created_at_time = null;
         };
 

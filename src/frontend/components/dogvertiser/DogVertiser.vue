@@ -1,13 +1,13 @@
 <script setup>
 import { ref, watch, onMounted } from "vue";
-import { useAuthStore } from "../auth";
+import { useAuthStore } from "../../auth";
 import { storeToRefs } from "pinia";
 import NewDogvertisement from "./NewDogvertisement.vue";
-import { useDogvertiserNavStore } from "../stores/dogvertiserNavStore";
+import { useDogvertiserNavStore } from "../../stores/dogvertiserNavStore";
 import { Principal } from "@dfinity/principal";
 import { useClipboard } from "@vueuse/core";
-import { canisterId as dogvertiserCanisterId } from "../../declarations/dogvertiser";
-import adsIcon from "../assets/advertise_icon.png";
+import { canisterId as dogvertiserCanisterId } from "../../../declarations/dogvertiser";
+import adsIcon from "../../assets/advertise_icon.png";
 
 const authStore = useAuthStore();
 const whoami = ref("");
@@ -18,6 +18,7 @@ const { copy, copied, isSupported, text } = useClipboard();
 const isTransfering = ref(false);
 const creationErrors = ref([]);
 const showWallet = ref(false);
+const totalBurned = ref(0);
 const isBoosting = ref({
   status: false,
   index: null,
@@ -29,6 +30,7 @@ const { currentScreen, back, toScreen } = useDogvertiserNavStore();
 onMounted(async () => {
   if (authStore.dogvertiserActor !== null && authStore.dogvertiserActor !== undefined) {
     whoami.value = await authStore.dogvertiserActor.whoami();
+    totalBurned.value = await authStore.dogvertiserActor.fetch_total_burned();
 
     let dogvertiseBalanceRaw = await authStore.dogvertiserActor.exe_balance_of(
       whoami.value
@@ -119,6 +121,8 @@ const refresh = async () => {
   if (authStore.dogvertiserActor !== null && authStore.dogvertiserActor !== undefined) {
     isTransfering.value = true;
     whoami.value = await authStore.dogvertiserActor.whoami();
+    totalBurned.value = await authStore.dogvertiserActor.fetch_total_burned();
+    console.log("totalBurned", totalBurned.value);
 
     let dogvertiseBalanceRaw = await authStore.dogvertiserActor.exe_balance_of(
       whoami.value
@@ -211,6 +215,24 @@ function formatBigDecimalToString(amount) {
 
   // Insert the decimal point at the correct position
   let formattedAmount = amountStr.slice(0, -8) + "." + amountStr.slice(-8);
+
+  // If the number is less than 1, ensure it starts with '0.'
+  if (formattedAmount.startsWith(".")) {
+    formattedAmount = "0" + formattedAmount;
+  }
+
+  return formattedAmount;
+}
+
+function formatBigDecimalToString2(amount) {
+  // Convert the number to a string
+  let amountStr = amount.toString();
+
+  // Ensure there are at least 8 digits to add leading zeros if necessary
+  amountStr = amountStr.padStart(9, "0"); // Ensure at least 8 digits + 1 for leading zeros
+
+  // Insert the decimal point at the correct position
+  let formattedAmount = amountStr.slice(0, -8) + "." + amountStr.slice(-2);
 
   // If the number is less than 1, ensure it starts with '0.'
   if (formattedAmount.startsWith(".")) {
@@ -370,16 +392,23 @@ function formatBigDecimalToString(amount) {
     >
       <div v-if="authStore.isAuthenticated">
         <div class="my-ads">
+          <h3>Dogvertiser has burned {{ formatBigDecimalToString2(totalBurned) }} EXE</h3>
+        </div>
+        <div class="my-ads">
           <h3>My Ads</h3>
           <!-- List of Ads -->
           <div class="ad-list">
             <!-- Example Ad Card -->
-            <div class="" v-if="myAds.length == 0">You haven't created any ads yet</div>
+            <div class="" v-if="myAds.length == 0">
+              <a @click="currentScreen.screen = 'new-ad'"
+                >You haven't created any ads yet. Create one now!</a
+              >
+            </div>
             <div class="ad-card" v-for="ad in myAds" v-if="myAds" key="ad.index">
               <div
                 style="display: flex; align-items: center; justify-content: space-between"
               >
-                <h3 style="margin: 0; padding: 0">{{ ad.title }}</h3>
+                <h4 style="margin: 0; padding: 0">{{ ad.title }}</h4>
               </div>
               <div>
                 <div
@@ -433,7 +462,7 @@ function formatBigDecimalToString(amount) {
       </div>
     </div>
     <div v-if="currentScreen.screen == 'new-ad'">
-      <NewDogvertisement />
+      <NewDogvertisement :refresh="refresh" />
     </div>
   </div>
 </template>
@@ -579,3 +608,5 @@ function formatBigDecimalToString(amount) {
   cursor: pointer;
 }
 </style>
+./dogvertiser/NewDogvertisement.vue
+../../auth../../stores/dogvertiserNavStore../../../declarations/dogvertiser

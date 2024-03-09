@@ -1,63 +1,74 @@
-type TransferError = variant {
-  BadBurn : record { min_burn_amount : nat };
-  BadFee : record { expected_fee : nat };
-  CreatedInFuture : record { ledger_time : nat64 };
-  Duplicate : record { duplicate_of : nat };
-  GenericError : record {
-    error_code : nat;
-    message : text;
-  };
-  InsufficientFunds : record { balance : nat };
-  TemporarilyUnavailable;
-  TooOld;
-};
+type TransferError = 
+ variant {
+   BadBurn: record {min_burn_amount: nat;};
+   BadFee: record {expected_fee: nat;};
+   CreatedInFuture: record {ledger_time: nat64;};
+   Duplicate: record {duplicate_of: nat;};
+   GenericError: record {
+                   error_code: nat;
+                   message: text;
+                 };
+   InsufficientFunds: record {balance: nat;};
+   TemporarilyUnavailable;
+   TooOld;
+ };
 type Time = int;
 type Subaccount = vec nat8;
-type Result = variant {
-  err : TransferError;
-  ok : nat;
-};
-type NewAdRequest = record {
-  description : opt text;
-  image : text;
-  link : text;
-  title : text;
-};
-type DappMetadata = record {
-  name : text;
-  version : text;
-};
-type BurnRecord = record {
-  ad_index : nat;
-  amount : Balance;
-  from : Account;
-  timestamp : Time;
-};
+type Result = 
+ variant {
+   err: TransferError;
+   ok: nat;
+ };
+type NewAdRequest = 
+ record {
+   description: opt text;
+   image: text;
+   link: text;
+   title: text;
+ };
+type DappMetadata = 
+ record {
+   canisterId: principal;
+   name: text;
+   version: text;
+ };
+type BurnRecord = 
+ record {
+   ad_index: nat;
+   amount: Balance;
+   from: Account;
+   timestamp: Time;
+ };
 type Balance = nat;
-type Advertisement = record {
-  caller : principal;
-  description : opt text;
-  image : text;
-  index : nat;
-  link : text;
-  timestamp : Time;
-  title : text;
-  total_burned : nat;
-};
-type Account = record {
-  owner : principal;
-  subaccount : opt Subaccount;
-};
+type Advertisement = 
+ record {
+   caller: principal;
+   description: opt text;
+   image: text;
+   index: nat;
+   link: text;
+   timestamp: Time;
+   title: text;
+   total_burned: nat;
+ };
+type Account = 
+ record {
+   owner: principal;
+   subaccount: opt Subaccount;
+ };
 service : {
-  boost_ad : (nat, nat) -> (Result);
-  create_advertisement : (NewAdRequest) -> (Result);
-  dapp_metadata : () -> (DappMetadata) query;
-  exe_balance_of : (text) -> (nat);
-  fetch_ads : () -> (vec Advertisement) query;
-  fetch_burn_records : () -> (vec BurnRecord) query;
-  fetch_user_ads : () -> (vec Advertisement) query;
-  set_ad_creation_fee : (nat) -> () oneway;
-  transfer_to_wallet : () -> (Result);
-  whoami : () -> (text) query;
-  whoamisub : () -> (Subaccount) query;
-};
+  ad_creation_fee: () -> (nat) query;
+  boost_ad: (nat, nat) -> (Result);
+  create_advertisement: (NewAdRequest) -> (Result);
+  dapp_metadata: () -> (DappMetadata) query;
+  exe_balance_of: (text) -> (nat);
+  fetch_ads: () -> (vec Advertisement) query;
+  fetch_ads_by_total_burned: () -> (vec Advertisement) query;
+  fetch_burn_records: () -> (vec BurnRecord) query;
+  fetch_total_burned: () -> (nat) query;
+  fetch_user_ads: () -> (vec Advertisement) query;
+  set_ad_creation_fee: (nat) -> () oneway;
+  transfer_to_wallet: () -> (Result);
+  whoami: () -> (text) query;
+  whoamisub: () -> (Subaccount) query;
+}

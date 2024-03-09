@@ -1,45 +1,13 @@
-<template>
-  <div class="new-ad-container">
-    <div class="new-ad-container2">
-      <h3
-        style="font-family: Arial; margin-top: 0px; margin-bottom; 20px; text-align: center"
-      >
-        New Advertisement
-      </h3>
-      <div class="error" v-if="state.errors.length > 0">
-        <div style="font-size: 14px; font-weight: bold; margin-right: 4px">Error:</div>
-
-        <span v-for="error in state.errors" :key="error">{{ error }}, </span>
-      </div>
-      <div class="form-group">
-        <div>
-          <img v-if="image" :src="image" alt="Ad Image" class="uploaded-image" />
-          <input id="image" type="file" @change="handleImageUpload" />
-        </div>
-
-        <div>
-          <label class="label-title" for="title">Title:</label>
-          <input id="title" type="text" v-model="title" />
-        </div>
-
-        <div>
-          <label class="label-title" for="link">Link:</label>
-          <input id="link" type="text" v-model="link" />
-        </div>
-      </div>
-
-      <button @click="onSubmit" :disabled="isLoading">Submit</button>
-    </div>
-  </div>
-</template>
-
 <script setup>
 import { reactive, toRefs } from "vue";
-import { useDogvertiserNavStore } from "../stores/dogvertiserNavStore";
-import { useAuthStore } from "../auth";
+import { useDogvertiserNavStore } from "../../stores/dogvertiserNavStore";
+import { useAuthStore } from "../../auth";
 
 const { back } = useDogvertiserNavStore();
 const authStore = useAuthStore();
+const props = defineProps({
+  refresh: null,
+});
 
 // Grouping state variables into a single reactive object
 const state = reactive({
@@ -54,6 +22,13 @@ const state = reactive({
 const handleImageUpload = (event) => {
   const file = event.target.files[0];
   if (!file) return;
+
+  // check if file is under 2MB
+  if (file.size > 2 * 1024 * 1024) {
+    state.errors.push("Image size must be less than 2MB");
+    event.target.value = null;
+    return;
+  }
 
   const reader = new FileReader();
   reader.onload = () => (state.image = reader.result);
@@ -92,7 +67,9 @@ const uploadAdvertisement = async () => {
       });
     } else {
       // Reset form values
+      await props.refresh();
       resetForm();
+      back();
     }
   } catch (error) {
     console.error("Error uploading advertisement:", error);
@@ -112,6 +89,41 @@ function resetForm() {
 // Use toRefs to destructure the reactive object for direct usage in the template
 const { title, link, isLoading, image, errors } = toRefs(state);
 </script>
+
+<template>
+  <div class="new-ad-container">
+    <div class="new-ad-container2">
+      <h3
+        style="font-family: Arial; margin-top: 0px; margin-bottom; 20px; text-align: center"
+      >
+        New Advertisement
+      </h3>
+      <div class="error" v-if="state.errors.length > 0">
+        <div style="font-size: 14px; font-weight: bold; margin-right: 4px">Error:</div>
+
+        <span v-for="error in state.errors" :key="error">{{ error }}, </span>
+      </div>
+      <div class="form-group">
+        <div>
+          <img v-if="image" :src="image" alt="Ad Image" class="uploaded-image" />
+          <input id="image" type="file" @change="handleImageUpload" />
+        </div>
+
+        <div>
+          <label class="label-title" for="title">Title:</label>
+          <input id="title" type="text" v-model="title" />
+        </div>
+
+        <div>
+          <label class="label-title" for="link">Link:</label>
+          <input id="link" type="text" v-model="link" />
+        </div>
+      </div>
+
+      <button @click="onSubmit" :disabled="isLoading">Submit</button>
+    </div>
+  </div>
+</template>
 
 <style scoped>
 .label-title {
@@ -168,3 +180,4 @@ label {
   margin-bottom: 1rem;
 }
 </style>
+../../stores/dogvertiserNavStore../../auth

@@ -10,14 +10,15 @@ export { idlFactory } from "./dogvertiser.did.js";
  * beginning in dfx 0.15.0
  */
 export const canisterId =
-  process.env.CANISTER_ID_DOGVERTISER || process.env.DOGVERTISER_CANISTER_ID;
+  process.env.CANISTER_ID_DOGVERTISER ||
+  process.env.DOGVERTISER_CANISTER_ID;
 
 export const createActor = (canisterId, options = {}) => {
   const agent = options.agent || new HttpAgent({ ...options.agentOptions });
 
   if (options.agent && options.agentOptions) {
     console.warn(
-      "Detected both agent and agentOptions passed to createActor. Ignoring agentOptions and proceeding with the provided agent.",
+      "Detected both agent and agentOptions passed to createActor. Ignoring agentOptions and proceeding with the provided agent."
     );
   }
 
@@ -25,7 +26,7 @@ export const createActor = (canisterId, options = {}) => {
   if (process.env.DFX_NETWORK !== "ic") {
     agent.fetchRootKey().catch((err) => {
       console.warn(
-        "Unable to fetch root key. Check to ensure that your local replica is running",
+        "Unable to fetch root key. Check to ensure that your local replica is running"
       );
       console.error(err);
     });

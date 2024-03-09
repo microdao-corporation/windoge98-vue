@@ -8,7 +8,7 @@ import IframeWindow from "../components/IframeWindow.vue";
 import defaultAppIcon from "../assets/default_app_icon.png";
 import startIcon from "../assets/start-icon.png";
 import NewbieGuide from "../components/NewbieGuide.vue";
-import DogVertiser from "../components/DogVertiser.vue";
+import DogVertiser from "../components/dogvertiser/DogVertiser.vue";
 import { v4 as uuidv4 } from "uuid";
 
 export const useWindowStore = defineStore("windowStore", {

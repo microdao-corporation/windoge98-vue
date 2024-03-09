@@ -65,6 +65,7 @@ module {
   public type DappMetadata = {
     name : Text;
     version : Text;
+    canisterId : Principal;
   };
 
   public type BurnRecord = {
