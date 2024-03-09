@@ -14,6 +14,22 @@ export const openNewWindow = async (item: any) => {
     return;
   }
 
+  let dimensions = {
+    height: item.height || 570,
+    width: item.width || 600,
+    x: (window.innerWidth - (item.width || 600)) / 2,
+    y: (window.innerHeight - (item.height || 570)) / 2,
+  };
+
+  if (item.virtualWindow === "shutdown") {
+    dimensions = {
+      height: 165,
+      width: 310,
+      x: (window.innerWidth - 310) / 2,
+      y: (window.innerHeight - 165) / 2,
+    };
+  }
+
   const newWindow = {
     id: uuidv4(),
     zIndex: 100,
@@ -25,12 +41,7 @@ export const openNewWindow = async (item: any) => {
     maximised: false,
     type: item.virtualWindow || "defaultType",
     subType: item.subType || "unknown",
-    dimensions: {
-      height: item.height || 570,
-      width: item.width || 600,
-      x: item.x || (window.innerWidth - (item.width || 600)) / 2,
-      y: item.y || (window.innerHeight - (item.height || 570)) / 2,
-    },
+    dimensions,
   };
 
   if (item.virtualWindow === "iframe") {
