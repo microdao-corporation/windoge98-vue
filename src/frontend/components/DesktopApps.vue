@@ -51,14 +51,18 @@ let desktopApps = computed((): MenuItem[] => {
   startMenuData.main.forEach((item) => {
     if (!item.visible) return;
     if (item.submenu) {
-      apps.push(...item.submenu);
+      for (const subItem of item.submenu) {
+        if (subItem.visible) apps.push(subItem);
+      }
     }
   });
 
   startMenuData.bottom.forEach((item) => {
     if (!item.visible) return;
     if (item.submenu) {
-      apps.push(...item.submenu);
+      for (const subItem of item.submenu) {
+        if (subItem.visible) apps.push(subItem);
+      }
     }
   });
 

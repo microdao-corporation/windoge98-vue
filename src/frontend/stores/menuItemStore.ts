@@ -57,10 +57,12 @@ export const useMenuItemStore = defineStore("startMenu", () => {
     async (isAuthenticated) => {
       if (isAuthenticated) {
         if (authStore.dogvertiserActor) {
+          console.log("Getting whoami");
           let getWho = await authStore.dogvertiserActor.whoami();
           whoami.value = getWho.substring(0, 8);
           startMenuData.bottom[2].name = `Sign Out (${whoami.value})`;
           startMenuData.bottom[2].action = authStore.logout;
+          console.log("Whoami: ", whoami.value);
         }
       } else {
         startMenuData.bottom[2].name = "Sign In";
@@ -100,16 +102,16 @@ export const useMenuItemStore = defineStore("startMenu", () => {
             subType: "unknown",
             visible: true,
           },
-          // {
-          //   name: "Dogvertiser",
-          //   icon: ocDogeIcon,
-          //   iconHeight: 28,
-          //   height: 494,
-          //   width: 632,
-          //   subType: "unknown",
-          //   visible: false,
-          //   virtualWindow: "dogvertiser",
-          // },
+          {
+            name: "Dogvertiser",
+            icon: ocDogeIcon,
+            iconHeight: 28,
+            height: 494,
+            width: 632,
+            subType: "unknown",
+            visible: whoami.value == "fddf",
+            virtualWindow: "dogvertiser",
+          },
           {
             name: "ICPCoins",
             icon: icpcoinsLogo,
@@ -313,7 +315,7 @@ export const useMenuItemStore = defineStore("startMenu", () => {
         url: undefined,
         virtualWindow: "none",
         subType: "unknown",
-        visible: false,
+        visible: true,
         action: handleSignIn,
       },
       {

@@ -6,7 +6,7 @@ import {
   AuthClientLoginOptions,
 } from "@dfinity/auth-client";
 import { Identity } from "@dfinity/agent";
-import { createActor, canisterId } from "../declarations/dogvertiser";
+import { createActor as createDogvertiserActor, canisterId as dogvertiserId } from "../declarations/dogvertiser";
 import {
   createActor as createWindogeActor,
   canisterId as windgoeCanisterId,
@@ -22,7 +22,7 @@ interface DogvertiserActor {
   whoamisub: () => Promise<Subaccount>;
 }
 
-interface WindogeActor {}
+interface WindogeActor { }
 
 interface DefaultOptions {
   createOptions: AuthClientCreateOptions;
@@ -43,8 +43,8 @@ const defaultOptions: DefaultOptions = {
   },
 };
 
-function actorFromIdentity(identity: Identity | Promise<Identity> | undefined) {
-  return createActor(canisterId, {
+function dogvertiserActorFromIdentity(identity: Identity | Promise<Identity> | undefined) {
+  return createDogvertiserActor(dogvertiserId, {
     agentOptions: {
       identity,
     },
@@ -56,6 +56,7 @@ function windogeActorFromIdentity(
 ) {
   return createWindogeActor(windgoeCanisterId, {
     agentOptions: {
+      verifyQuerySignatures: false,
       identity,
     },
   });
@@ -85,7 +86,7 @@ export const useAuthStore = defineStore("auth", {
       this.authClient = authClient;
       const isAuthenticated = await authClient.isAuthenticated();
       const identity = isAuthenticated ? authClient.getIdentity() : null;
-      const dogvertiserActor = identity ? actorFromIdentity(identity) : null;
+      const dogvertiserActor = identity ? dogvertiserActorFromIdentity(identity) : null;
       const windogeActor = identity ? windogeActorFromIdentity(identity) : null;
 
       this.isAuthenticated = isAuthenticated;
@@ -109,7 +110,7 @@ export const useAuthStore = defineStore("auth", {
             ? windogeActorFromIdentity(this.identity)
             : null;
           this.dogvertiserActor = this.identity
-            ? (actorFromIdentity(this.identity) as unknown as DogvertiserActor)
+            ? (dogvertiserActorFromIdentity(this.identity) as unknown as DogvertiserActor)
             : null;
         },
       });

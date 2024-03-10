@@ -13,6 +13,7 @@ import Nat64 "mo:base/Nat64";
 import Buffer "mo:base/Buffer";
 import WT "./windoge";
 import Order "mo:base/Order";
+import Random "mo:base/Random";
 
 //gives error in vscode but should still work
 
