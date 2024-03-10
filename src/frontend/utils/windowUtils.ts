@@ -13,6 +13,7 @@ export const openNewWindow = async (item: MenuItem) => {
   }
 
   const windowStore = useWindowStore();
+  let windowData;
 
   if (item.virtualWindow == "iframe") {
     console.log("We'll open this in a virtual window");
@@ -20,7 +21,7 @@ export const openNewWindow = async (item: MenuItem) => {
   } else if (item.virtualWindow == "blank") {
     window.open(item.url, "_blank");
   } else {
-    windowStore.windows.push({
+    windowData = {
       id: uuidv4(),
       zIndex: 100,
       title: item.name,
@@ -43,6 +44,8 @@ export const openNewWindow = async (item: MenuItem) => {
             (item.height || (item.virtualWindow === "shutdown" ? 165 : 420))) /
           2,
       },
-    });
+    };
+    windowStore.windows.push(windowData);
   }
+  return windowData;
 };

@@ -3,6 +3,7 @@ import { ref, onMounted, onUnmounted, computed, watch } from "vue";
 import DesktopApp from "./DesktopApp.vue";
 import { useMenuItemStore } from "../stores/menuItemStore";
 import { openNewWindow } from "../utils/windowUtils";
+import { useWindowStore } from "../stores/useWindowStore";
 
 const props = defineProps({
   arrangeIconsTrigger: Boolean,
@@ -12,10 +13,11 @@ watch(
   () => props.arrangeIconsTrigger,
   () => {
     arrangeIcons();
-  },
+  }
 );
 
 const { startMenuData } = useMenuItemStore();
+const windowStore = useWindowStore();
 const ICON_MARGIN = 2;
 const ICON_TOTAL_WIDTH = 100;
 const ICON_TOTAL_HEIGHT = 100;
@@ -67,13 +69,7 @@ function isSelected(appName: string): boolean {
   return selectedApps.value.includes(appName);
 }
 
-function toggleSelection({
-  app,
-  event,
-}: {
-  app: MenuItem;
-  event: MouseEvent;
-}): void {
+function toggleSelection({ app, event }: { app: MenuItem; event: MouseEvent }): void {
   if (!isSelecting.value) {
     const index = selectedApps.value.indexOf(app.name);
     if (event.ctrlKey) {
@@ -89,15 +85,7 @@ function toggleSelection({
   }
 }
 
-function handleDragEnd({
-  app,
-  x,
-  y,
-}: {
-  app: MenuItem;
-  x: number;
-  y: number;
-}): void {
+function handleDragEnd({ app, x, y }: { app: MenuItem; x: number; y: number }): void {
   if (!selectedApps.value.includes(app.name)) {
     updateAppPosition(app, x, y);
   } else {
@@ -107,12 +95,8 @@ function handleDragEnd({
     selectedApps.value.forEach((appName) => {
       const selectedApp = desktopApps.value.find((a) => a.name === appName);
       if (selectedApp) {
-        const newX = selectedApp.position
-          ? selectedApp.position.x + offsetX
-          : 0;
-        const newY = selectedApp.position
-          ? selectedApp.position.y + offsetY
-          : 0;
+        const newX = selectedApp.position ? selectedApp.position.x + offsetX : 0;
+        const newY = selectedApp.position ? selectedApp.position.y + offsetY : 0;
         updateAppPosition(selectedApp, newX, newY);
       }
     });
@@ -123,7 +107,7 @@ function updateAppPosition(
   app: MenuItem,
   x: number,
   y: number,
-  isInitialCall: boolean = true,
+  isInitialCall: boolean = true
 ): void {
   let gridX = Math.round((x - ICON_MARGIN) / ICON_TOTAL_WIDTH);
   let gridY = Math.round((y - ICON_MARGIN) / ICON_TOTAL_HEIGHT);
@@ -132,12 +116,12 @@ function updateAppPosition(
     0,
     Math.min(
       gridY,
-      Math.floor((window.innerHeight - TASKBAR_HEIGHT) / ICON_TOTAL_HEIGHT) - 1,
-    ),
+      Math.floor((window.innerHeight - TASKBAR_HEIGHT) / ICON_TOTAL_HEIGHT) - 1
+    )
   );
   gridX = Math.max(
     0,
-    Math.min(gridX, Math.floor(window.innerWidth / ICON_TOTAL_WIDTH) - 1),
+    Math.min(gridX, Math.floor(window.innerWidth / ICON_TOTAL_WIDTH) - 1)
   );
 
   if (isInitialCall) {
@@ -155,15 +139,13 @@ function updateAppPosition(
 function findNearestFreeSpot(
   startX: number,
   startY: number,
-  excludeAppName: string,
+  excludeAppName: string
 ): { x: number; y: number } {
   const gridWidth = Math.floor(window.innerWidth / ICON_TOTAL_WIDTH);
   const gridHeight = Math.floor(
-    (window.innerHeight - TASKBAR_HEIGHT) / ICON_TOTAL_HEIGHT,
+    (window.innerHeight - TASKBAR_HEIGHT) / ICON_TOTAL_HEIGHT
   );
-  const grid = Array.from({ length: gridHeight }, () =>
-    Array(gridWidth).fill(false),
-  );
+  const grid = Array.from({ length: gridHeight }, () => Array(gridWidth).fill(false));
 
   desktopApps.value.forEach((app) => {
     if (app.name !== excludeAppName && app.position) {
@@ -203,8 +185,7 @@ function onMouseDown(event: MouseEvent) {
 
   const clickedElement = event.target as HTMLElement;
   const isClickOnBackground =
-    clickedElement === desktopAreaRef.value ||
-    !clickedElement.closest(".desktop-icon");
+    clickedElement === desktopAreaRef.value || !clickedElement.closest(".desktop-icon");
 
   if (isClickOnBackground && event.button !== 2) {
     // Also allow to also select icons with left click
@@ -261,11 +242,12 @@ function onMouseUp(): void {
   });
 }
 
-function handleDoubleClick(app: MenuItem): void {
+async function handleDoubleClick(app: MenuItem): Promise<void> {
   selectedApps.value = [];
   if (app.url) {
-    console.log(`Opening ${app.url}`);
-    openNewWindow(app);
+    await openNewWindow(app);
+    const lastWindow = windowStore.windows[windowStore.windows.length - 1];
+    windowStore.activateWindow(lastWindow.id);
   }
 }
 
@@ -283,8 +265,7 @@ function getSelectionStyle() {
   const startX = Math.min(selectionStart.value.x, selectionEnd.value.x);
   const startY = Math.min(selectionStart.value.y, selectionEnd.value.y);
   const width = Math.max(selectionStart.value.x, selectionEnd.value.x) - startX;
-  const height =
-    Math.max(selectionStart.value.y, selectionEnd.value.y) - startY;
+  const height = Math.max(selectionStart.value.y, selectionEnd.value.y) - startY;
 
   return {
     left: `${startX}px`,
@@ -331,6 +312,7 @@ function getSelectionStyle() {
   height: 100vh;
   position: relative;
   user-select: none;
+  z-index: 0;
 }
 
 .selection-rectangle {

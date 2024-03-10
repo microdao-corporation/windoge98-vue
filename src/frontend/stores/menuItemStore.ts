@@ -9,7 +9,7 @@ import junoIcon from "../assets/juno_icon.png";
 import computerIcon from "../assets/computer-5.png";
 import programsIcon from "../assets/programs_icon.png";
 import taggrIcon from "../assets/taggr_icon.png";
-// import dmailIcon from "../assets/dmail_icon.png";
+import dmailIcon from "../assets/dmail_icon.png";
 import beaconIcon from "../assets/beacon_icon.png";
 import icdrawIcon from "../assets/icdraw_icon.png";
 import icpSwapIcon from "../assets/icpswap_icon.png";
@@ -91,25 +91,25 @@ export const useMenuItemStore = defineStore("startMenu", () => {
             visible: true,
           },
 
-          // {
-          //   name: "Dmail",
-          //   icon: dmailIcon,
-          //   url: "https://mail.dmail.ai/",
-          //   iconHeight: 30,
-          //   virtualWindow: "iframe",
-          //   subType: "unknown",
-          //   visible: true,
-          // },
           {
-            name: "Dogvertiser",
-            icon: ocDogeIcon,
-            iconHeight: 28,
-            height: 494,
-            width: 632,
+            name: "Dmail",
+            icon: dmailIcon,
+            url: "https://mail.dmail.ai/",
+            iconHeight: 30,
+            virtualWindow: "blank",
             subType: "unknown",
-            visible: false,
-            virtualWindow: "dogvertiser",
+            visible: true,
           },
+          // {
+          //   name: "Dogvertiser",
+          //   icon: ocDogeIcon,
+          //   iconHeight: 28,
+          //   height: 494,
+          //   width: 632,
+          //   subType: "unknown",
+          //   visible: false,
+          //   virtualWindow: "dogvertiser",
+          // },
           {
             name: "ICPCoins",
             icon: icpcoinsLogo,
@@ -125,7 +125,7 @@ export const useMenuItemStore = defineStore("startMenu", () => {
             url: "https://app.icpswap.com/swap?input=ryjl3-tyaaa-aaaaa-aaaba-cai&output=rh2pm-ryaaa-aaaan-qeniq-cai",
             iconHeight: 30,
             height: 600,
-            virtualWindow: "iframe",
+            virtualWindow: "blank",
             subType: "unknown",
             visible: true,
           },
