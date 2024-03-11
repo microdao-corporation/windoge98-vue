@@ -11,8 +11,8 @@ import adsIcon from "../../assets/advertise_icon.png";
 
 const authStore = useAuthStore();
 const whoami = ref("");
-const balance = ref("loading...");
-const dogvertiserBalance = ref("loading...");
+const balance = ref(0);
+const dogvertiserBalance = ref(0);
 const myAds = ref([]);
 const { copy, copied, isSupported, text } = useClipboard();
 const isTransfering = ref(false);
@@ -40,12 +40,13 @@ const handleDappDeposit = async () => {
   if (authStore.dogvertiserActor !== null && authStore.dogvertiserActor !== undefined) {
     isTransfering.value = true;
     let whoamisub = await authStore.dogvertiserActor.whoamisub();
+    console.log("whoamisub", whoamisub);
     let account = {
       owner: Principal.fromText(dogvertiserCanisterId),
       subaccount: [whoamisub], // Pass the extracted array as the subaccount
     };
 
-    let transerBalance = Number(balance.value) - 100000;
+    let transerBalance = BigInt(balance.value);
     // @ts-ignore
     let transferResult = await authStore.windogeActor.icrc1_transfer({
       fee: [],
@@ -55,6 +56,7 @@ const handleDappDeposit = async () => {
       to: account,
       created_at_time: [],
     });
+    console.log("transferResult", transferResult);
     await refresh();
     isTransfering.value = false;
   }
@@ -102,7 +104,7 @@ watch(isAuthenticated, async (value) => {
         owner: principal,
         subaccount: [],
       });
-      balance.value = Number(newBalance).toString();
+      balance.value = newBalance.toString();
       handleGetMyads();
     } else {
       // Handle the case when authStore.dogvertiserActor is null or undefined
@@ -126,13 +128,13 @@ const refresh = async () => {
     let dogvertiseBalanceRaw = await authStore.dogvertiserActor.exe_balance_of(
       whoami.value
     );
-    dogvertiserBalance.value = Number(dogvertiseBalanceRaw).toFixed(8); // Formatting with 8 decimal places
+    dogvertiserBalance.value = Number(dogvertiseBalanceRaw); // Formatting with 8 decimal places
 
     let newBalanceRaw = await authStore.windogeActor.icrc1_balance_of({
       owner: Principal.fromText(whoami.value),
       subaccount: [],
     });
-    balance.value = Number(newBalanceRaw).toFixed(8); // Formatting with 8 decimal places
+    balance.value = Number(newBalanceRaw); // Formatting with 8 decimal places
 
     let userAds = await authStore.dogvertiserActor.fetch_user_ads();
     // Ensure userAds is a valid JSON string before parsing
@@ -167,7 +169,7 @@ const handleTransfer = async () => {
     // Ensure the amount is correctly formatted with 8 digits to the right of the decimal point
     let amountAsFloat = parseFloat(amount); // Convert user input to float
     let amountInSmallestUnit = Math.round(amountAsFloat * 1e8); // Adjust and remove decimal point
-
+    let whoamisub = await authStore.dogvertiserActor.whoamisub();
     let tx = await authStore.windogeActor.icrc1_transfer({
       fee: [],
       amount: amountInSmallestUnit,
@@ -221,8 +223,8 @@ const handleBoost = async (ad) => {
 };
 
 function formatBigDecimalToString(amount) {
-  // Convert the number to a string
-  let amountStr = amount.toString();
+  // Convert the number to a string while avoiding scientific notation
+  let amountStr = BigInt(amount).toString();
 
   // Ensure there are at least 8 digits to add leading zeros if necessary
   amountStr = amountStr.padStart(9, "0"); // Ensure at least 8 digits + 1 for leading zeros
@@ -477,7 +479,7 @@ const handleLogin = async () => {
                   "
                 >
                   <span v-if="isBoosting.index != ad.index"
-                    >{{ formatBigDecimalToString(ad.total_burned) }} EXE Burned</span
+                    >{{ formatBigDecimalToString2(ad.total_burned) }} EXE Burned</span
                   >
                   <span v-else-if="isBoosting.status && isBoosting.index == ad.index"
                     >Boosting...</span
