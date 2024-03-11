@@ -14,6 +14,11 @@ type TransferError =
  };
 type Time = int;
 type Subaccount = vec nat8;
+type Result_1 = 
+ variant {
+   err: text;
+   ok: text;
+ };
 type Result = 
  variant {
    err: TransferError;
@@ -63,11 +68,23 @@ service : {
   dapp_metadata: () -> (DappMetadata) query;
   exe_balance_of: (text) -> (nat);
   fetch_ads: () -> (vec Advertisement) query;
-  fetch_ads_by_total_burned: () -> (vec Advertisement) query;
   fetch_burn_records: () -> (vec BurnRecord) query;
+  fetch_heap_ads: () -> (vec record {
+                               text;
+                               Advertisement;
+                             }) query;
+  fetch_stable_ads: () -> (vec record {
+                                 text;
+                                 Advertisement;
+                               }) query;
   fetch_total_burned: () -> (nat) query;
   fetch_user_ads: () -> (vec Advertisement) query;
+  move_to_stable: () -> (Result_1);
   set_ad_creation_fee: (nat) -> () oneway;
+  stable_and_heap: () -> (vec record {
+                                text;
+                                Advertisement;
+                              }) query;
   transfer_to_wallet: () -> (Result);
   whoami: () -> (text) query;
   whoamisub: () -> (Subaccount) query;

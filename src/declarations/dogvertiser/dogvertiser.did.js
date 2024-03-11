@@ -47,6 +47,7 @@ export const idlFactory = ({ IDL }) => {
     'timestamp' : Time,
     'amount' : Balance,
   });
+  const Result_1 = IDL.Variant({ 'ok' : IDL.Text, 'err' : IDL.Text });
   return IDL.Service({
     'ad_creation_fee' : IDL.Func([], [IDL.Nat], ['query']),
     'boost_ad' : IDL.Func([IDL.Nat, IDL.Nat], [Result], []),
@@ -54,15 +55,26 @@ export const idlFactory = ({ IDL }) => {
     'dapp_metadata' : IDL.Func([], [DappMetadata], ['query']),
     'exe_balance_of' : IDL.Func([IDL.Text], [IDL.Nat], []),
     'fetch_ads' : IDL.Func([], [IDL.Vec(Advertisement)], ['query']),
-    'fetch_ads_by_total_burned' : IDL.Func(
+    'fetch_burn_records' : IDL.Func([], [IDL.Vec(BurnRecord)], ['query']),
+    'fetch_heap_ads' : IDL.Func(
         [],
-        [IDL.Vec(Advertisement)],
+        [IDL.Vec(IDL.Tuple(IDL.Text, Advertisement))],
         ['query'],
       ),
-    'fetch_burn_records' : IDL.Func([], [IDL.Vec(BurnRecord)], ['query']),
+    'fetch_stable_ads' : IDL.Func(
+        [],
+        [IDL.Vec(IDL.Tuple(IDL.Text, Advertisement))],
+        ['query'],
+      ),
     'fetch_total_burned' : IDL.Func([], [IDL.Nat], ['query']),
     'fetch_user_ads' : IDL.Func([], [IDL.Vec(Advertisement)], ['query']),
+    'move_to_stable' : IDL.Func([], [Result_1], []),
     'set_ad_creation_fee' : IDL.Func([IDL.Nat], [], ['oneway']),
+    'stable_and_heap' : IDL.Func(
+        [],
+        [IDL.Vec(IDL.Tuple(IDL.Text, Advertisement))],
+        ['query'],
+      ),
     'transfer_to_wallet' : IDL.Func([], [Result], []),
     'whoami' : IDL.Func([], [IDL.Text], ['query']),
     'whoamisub' : IDL.Func([], [Subaccount], ['query']),

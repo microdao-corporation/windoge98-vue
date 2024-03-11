@@ -32,8 +32,6 @@ onMounted(async () => {
   if (authStore.dogvertiserActor !== null && authStore.dogvertiserActor !== undefined) {
     console.log(authStore.dogvertiserActor.whoami());
     whoami.value = await authStore.dogvertiserActor.whoami();
-    totalBurned.value = await authStore.dogvertiserActor.fetch_total_burned();
-    allAds.value = await authStore.dogvertiserActor.fetch_ads();
 
     let dogvertiseBalanceRaw = await authStore.dogvertiserActor.exe_balance_of(
       whoami.value
@@ -50,7 +48,10 @@ onMounted(async () => {
     handleGetMyads();
   } else {
     // Handle the case when authStore.dogvertiserActor is null or undefined
+    await authStore.init();
   }
+  allAds.value = await authStore.dogvertiserActor.fetch_ads();
+  totalBurned.value = await authStore.dogvertiserActor.fetch_total_burned();
 });
 
 const handleDappDeposit = async () => {
@@ -116,7 +117,10 @@ watch(isAuthenticated, async (value) => {
       handleGetMyads();
     } else {
       // Handle the case when authStore.dogvertiserActor is null or undefined
+      authStore.init();
     }
+    allAds.value = await authStore.dogvertiserActor.fetch_ads();
+    totalBurned.value = await authStore.dogvertiserActor.fetch_total_burned();
   }
 });
 
@@ -124,10 +128,6 @@ const refresh = async () => {
   if (authStore.dogvertiserActor !== null && authStore.dogvertiserActor !== undefined) {
     isTransfering.value = true;
     whoami.value = await authStore.dogvertiserActor.whoami();
-    totalBurned.value = await authStore.dogvertiserActor.fetch_total_burned();
-    allAds.value = await authStore.dogvertiserActor.fetch_ads();
-    console.log(allAds.value);
-
     let dogvertiseBalanceRaw = await authStore.dogvertiserActor.exe_balance_of(
       whoami.value
     );
@@ -143,7 +143,11 @@ const refresh = async () => {
     handleGetMyads();
   } else {
     // Handle the case when authStore.dogvertiserActor is null or undefined
+    await authStore.init();
   }
+  allAds.value = await authStore.dogvertiserActor.fetch_ads();
+  totalBurned.value = await authStore.dogvertiserActor.fetch_total_burned();
+
   isTransfering.value = false;
 };
 
@@ -266,14 +270,14 @@ const handleLogin = async () => {
   <div class="container">
     <div class="header">
       <div style="display: flex; align-items: center; align-content: center">
-        <img :src="adsIcon" style="width: 30%; margin-right: 8px" />
-        <h1 class="title" style="margin: 0px">Dogvertiser</h1>
+        <img :src="adsIcon" style="width: 30%; margin-right: 12px; margin-top: -18px" />
+        <h1 class="title" style="margin: 0px">Dogvertiser BETA</h1>
       </div>
       <div style="display: flex">
         <div
           class="sign-out"
           @click="back"
-          style="display: flex; align-items: center"
+          style="display: flex; align-items: center; justify-content: center"
           v-if="screenHistory.length > 1"
         >
           <svg
@@ -292,7 +296,11 @@ const handleLogin = async () => {
           </svg>
           Back
         </div>
-        <div class="sign-out" @click="refresh">
+        <div
+          class="sign-out"
+          @click="refresh"
+          style="display: flex; align-items: center; justify-content: center"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -313,6 +321,7 @@ const handleLogin = async () => {
           class="sign-out"
           @click="showWallet = !showWallet"
           v-if="authStore.isAuthenticated"
+          style="display: flex; align-items: center; justify-content: center"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -329,14 +338,26 @@ const handleLogin = async () => {
             />
           </svg>
         </div>
-        <div class="sign-out" @click="toScreen('main')" v-if="authStore.isAuthenticated">
+        <div
+          class="sign-out"
+          @click="toScreen('main')"
+          v-if="authStore.isAuthenticated"
+          style="display: flex; align-items: center; justify-content: center"
+        >
           My Ads
         </div>
-        <div class="sign-out" @click="toScreen('all-ads')">All Ads</div>
+        <div
+          class="sign-out"
+          @click="toScreen('all-ads')"
+          style="display: flex; align-items: center; justify-content: center"
+        >
+          All Ads
+        </div>
         <div
           class="dogvertiser-create-button"
           @click="toScreen('new-ad')"
           v-if="authStore.isAuthenticated"
+          style="display: flex; align-items: center; justify-content: center"
         >
           New Advert
         </div>
@@ -344,6 +365,7 @@ const handleLogin = async () => {
           class="dogvertiser-create-button"
           @click="handleLogin"
           v-if="!authStore.isAuthenticated"
+          style="display: flex; align-items: center; justify-content: center"
         >
           SIGN IN
         </div>
@@ -477,12 +499,14 @@ const handleLogin = async () => {
                 }`"
                 :style="`pointer-events: ${
                   isBoosting.status && isBoosting.index == ad.index ? 'none' : ''
-                }`"
+                }; display:flex; justify-content: center; align-items: center`"
                 @click="handleBoost(ad)"
               >
-                <span class="button__text" style="font-size: 16px"
-                  >🚀 &nbsp; Boost Ad</span
-                >
+                <span class="button__text" style="font-size: 16px">{{
+                  isBoosting.status && isBoosting.index == ad.index
+                    ? "Boosting..."
+                    : "🚀 &nbsp; Boost Ad"
+                }}</span>
               </div>
             </div>
           </div>
@@ -497,7 +521,7 @@ const handleLogin = async () => {
 
     <div
       v-if="currentScreen.screen == 'all-ads'"
-      style="background-color: #c0c0c0; overflow: auto; font-family: Arial, sans-serif"
+      style="background-color: #c0c0c0; font-family: Arial, sans-serif"
       class="dog-container"
     >
       <div>
@@ -562,12 +586,14 @@ const handleLogin = async () => {
                 }`"
                 :style="`pointer-events: ${
                   isBoosting.status && isBoosting.index == ad.index ? 'none' : ''
-                }`"
+                }; display:flex; justify-content: center; align-items: center`"
                 @click="handleBoost(ad)"
               >
-                <span class="button__text" style="font-size: 16px"
-                  >🚀 &nbsp; Boost Ad</span
-                >
+                <span class="button__text" style="font-size: 16px">{{
+                  isBoosting.status && isBoosting.index == ad.index
+                    ? "Boosting..."
+                    : "🚀 &nbsp; Boost Ad"
+                }}</span>
               </div>
             </div>
           </div>
@@ -626,7 +652,6 @@ const handleLogin = async () => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 500px;
   max-height: 100%;
 }
 .sign-in-button {
@@ -712,7 +737,6 @@ const handleLogin = async () => {
   background-color: #c0c0c0;
   max-height: 100%;
   min-height: 100%;
-  max-width: 100%;
 }
 
 .container {

@@ -102,7 +102,7 @@ export const useWindowStore = defineStore("windowStore", {
       let id = uuidv4();
       this.windows.push({
         id: id,
-        zIndex: 1,
+        zIndex: 101,
         title: "Congratulations! Much wow! You just won an annoying ad!",
         icon: defaultAppIcon,
         component: PopupWindow,
@@ -113,7 +113,30 @@ export const useWindowStore = defineStore("windowStore", {
         subType: "unknown",
         dimensions: {
           height: 440,
-          width: 600,
+          width: 650,
+          x: 200,
+          y: 400,
+        },
+      });
+      this.activateWindow(id);
+    },
+
+    openDogvertiserWindow() {
+      let id = uuidv4();
+      this.windows.push({
+        id: id,
+        zIndex: 101,
+        title: "Dogvertiser",
+        icon: defaultAppIcon,
+        component: DogVertiser,
+        visible: true,
+        active: false,
+        maximised: false,
+        type: "dogvertiser",
+        subType: "unknown",
+        dimensions: {
+          height: 440,
+          width: 650,
           x: 200,
           y: 400,
         },

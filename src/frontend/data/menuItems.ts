@@ -25,6 +25,7 @@ import coinGeckoIcon from "../assets/coingecko_logo.png";
 import cmcIcon from "../assets/cmc_logo.png";
 import mergeIcon from "../assets/merge_icon.png";
 
+
 const startMenuDataStructure: StartMenuData = {
   main: [
     {
@@ -54,16 +55,7 @@ const startMenuDataStructure: StartMenuData = {
         //   subType: "unknown",
         //   visible: true,
         // },
-        {
-          name: "Dogvertiser",
-          icon: ocDogeIcon,
-          iconHeight: 28,
-          height: 494,
-          width: 632,
-          subType: "unknown",
-          visible: false,
-          virtualWindow: "dogvertiser",
-        },
+
         {
           name: "ICPCoins",
           icon: icpcoinsLogo,

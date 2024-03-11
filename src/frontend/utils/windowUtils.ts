@@ -3,6 +3,7 @@ import { useWindowStore } from "../stores/useWindowStore";
 import { v4 as uuidv4 } from "uuid";
 
 export const openNewWindow = async (item: MenuItem) => {
+  console.log("Opening new window", item);
   if (item.submenu && item.submenu.length > 0) {
     return;
   }
@@ -21,6 +22,7 @@ export const openNewWindow = async (item: MenuItem) => {
   } else if (item.virtualWindow == "blank") {
     window.open(item.url, "_blank");
   } else {
+    console.log("else", item);
     windowData = {
       id: uuidv4(),
       zIndex: 100,
@@ -45,6 +47,7 @@ export const openNewWindow = async (item: MenuItem) => {
           2,
       },
     };
+    console.log("Opening new window", windowData);
     windowStore.windows.push(windowData);
   }
   return windowData;

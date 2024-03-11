@@ -89,8 +89,8 @@ export const useAuthStore = defineStore("auth", {
       this.authClient = authClient;
       const isAuthenticated = await authClient.isAuthenticated();
       const identity = isAuthenticated ? authClient.getIdentity() : null;
-      const dogvertiserActor = identity ? dogvertiserActorFromIdentity(identity) : null;
-      const windogeActor = identity ? windogeActorFromIdentity(identity) : null;
+      const dogvertiserActor = dogvertiserActorFromIdentity(identity || undefined)
+      const windogeActor = windogeActorFromIdentity(identity || undefined)
 
       this.isAuthenticated = isAuthenticated;
       this.identity = identity;

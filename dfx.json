@@ -17,14 +17,6 @@
           "ic": "rh2pm-ryaaa-aaaan-qeniq-cai"
         }
       }
-    },
-    "windoge_staging": {
-      "dependencies": ["dogvertiser", "internet_identity", "windoge"],
-      "frontend": {
-        "entrypoint": "dist/index.html"
-      },
-      "source": ["dist/assets", "dist"],
-      "type": "assets"
     }
   },
   "defaults": {

@@ -36,6 +36,8 @@ export interface NewAdRequest {
 }
 export type Result = { 'ok' : bigint } |
   { 'err' : TransferError };
+export type Result_1 = { 'ok' : string } |
+  { 'err' : string };
 export type Subaccount = Uint8Array | number[];
 export type Time = bigint;
 export type TransferError = {
@@ -55,11 +57,14 @@ export interface _SERVICE {
   'dapp_metadata' : ActorMethod<[], DappMetadata>,
   'exe_balance_of' : ActorMethod<[string], bigint>,
   'fetch_ads' : ActorMethod<[], Array<Advertisement>>,
-  'fetch_ads_by_total_burned' : ActorMethod<[], Array<Advertisement>>,
   'fetch_burn_records' : ActorMethod<[], Array<BurnRecord>>,
+  'fetch_heap_ads' : ActorMethod<[], Array<[string, Advertisement]>>,
+  'fetch_stable_ads' : ActorMethod<[], Array<[string, Advertisement]>>,
   'fetch_total_burned' : ActorMethod<[], bigint>,
   'fetch_user_ads' : ActorMethod<[], Array<Advertisement>>,
+  'move_to_stable' : ActorMethod<[], Result_1>,
   'set_ad_creation_fee' : ActorMethod<[bigint], undefined>,
+  'stable_and_heap' : ActorMethod<[], Array<[string, Advertisement]>>,
   'transfer_to_wallet' : ActorMethod<[], Result>,
   'whoami' : ActorMethod<[], string>,
   'whoamisub' : ActorMethod<[], Subaccount>,

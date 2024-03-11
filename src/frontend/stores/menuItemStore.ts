@@ -33,6 +33,7 @@ import adsIcon from "../assets/advertise_icon.png";
 export const useMenuItemStore = defineStore("startMenu", () => {
   const authStore = useAuthStore();
   const whoami = ref("");
+  const fullWho = ref("");
   // const devOnly = import.meta.env.DEV;
 
   function handleSignIn() {
@@ -57,9 +58,9 @@ export const useMenuItemStore = defineStore("startMenu", () => {
     async (isAuthenticated) => {
       if (isAuthenticated) {
         if (authStore.dogvertiserActor) {
-          console.log("Getting whoami");
-          let getWho = await authStore.dogvertiserActor.whoami();
-          whoami.value = getWho.substring(0, 8);
+          fullWho.value = await authStore.dogvertiserActor.whoami();
+          console.log("Got whoami", fullWho.value);
+          whoami.value = fullWho.value.substring(0, 8);
           startMenuData.bottom[2].name = `Sign Out (${whoami.value})`;
           startMenuData.bottom[2].action = authStore.logout;
         }
@@ -106,9 +107,9 @@ export const useMenuItemStore = defineStore("startMenu", () => {
             icon: adsIcon,
             iconHeight: 28,
             height: 494,
-            width: 1000,
+            width: 700,
             subType: "unknown",
-            visible: true,
+            visible: false,
             virtualWindow: "dogvertiser",
           },
           {

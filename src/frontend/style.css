@@ -208,10 +208,6 @@ hr.start-menu {
   transition: all 0.2s;
 }
 
-.button--loading .button__text {
-  opacity: 0;
-}
-
 .button--loading::after {
   justify-content: center;
   justify-self: center;

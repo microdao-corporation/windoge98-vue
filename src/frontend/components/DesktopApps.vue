@@ -4,7 +4,7 @@ import DesktopApp from "./DesktopApp.vue";
 import { useMenuItemStore } from "../stores/menuItemStore";
 import { openNewWindow } from "../utils/windowUtils";
 import { useWindowStore } from "../stores/useWindowStore";
-
+import { storeToRefs } from "pinia";
 const props = defineProps({
   arrangeIconsTrigger: Boolean,
 });
@@ -16,12 +16,13 @@ watch(
   }
 );
 
-const { startMenuData } = useMenuItemStore();
+const menuStore = useMenuItemStore();
 const windowStore = useWindowStore();
 const ICON_MARGIN = 2;
 const ICON_TOTAL_WIDTH = 100;
 const ICON_TOTAL_HEIGHT = 100;
 const TASKBAR_HEIGHT = 50;
+const { startMenuData } = storeToRefs(menuStore);
 
 const selectionStart = ref({ x: 0, y: 0 });
 const selectionEnd = ref({ x: 0, y: 0 });
@@ -48,7 +49,7 @@ function arrangeIcons(): void {
 let desktopApps = computed((): MenuItem[] => {
   const apps: MenuItem[] = [];
 
-  startMenuData.main.forEach((item) => {
+  startMenuData.value.main.forEach((item) => {
     if (!item.visible) return;
     if (item.submenu) {
       for (const subItem of item.submenu) {
@@ -57,7 +58,7 @@ let desktopApps = computed((): MenuItem[] => {
     }
   });
 
-  startMenuData.bottom.forEach((item) => {
+  startMenuData.value.bottom.forEach((item) => {
     if (!item.visible) return;
     if (item.submenu) {
       for (const subItem of item.submenu) {
@@ -247,12 +248,11 @@ function onMouseUp(): void {
 }
 
 async function handleDoubleClick(app: MenuItem): Promise<void> {
+  console.log(app);
   selectedApps.value = [];
-  if (app.url) {
-    await openNewWindow(app);
-    const lastWindow = windowStore.windows[windowStore.windows.length - 1];
-    windowStore.activateWindow(lastWindow.id);
-  }
+  await openNewWindow(app);
+  const lastWindow = windowStore.windows[windowStore.windows.length - 1];
+  windowStore.activateWindow(lastWindow.id);
 }
 
 onMounted(() => {
@@ -305,7 +305,7 @@ function getSelectionStyle() {
       }"
       @dragend="handleDragEnd"
       @click="toggleSelection({ app, event: $event })"
-      @dblclick="handleDoubleClick(app)"
+      @dblclick.prevent="handleDoubleClick(app)"
     />
   </div>
 </template>

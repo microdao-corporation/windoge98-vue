@@ -298,6 +298,8 @@ actor Dogvertiser {
     let ads_in_heap = advertisements.size();
     _stable_ads := Array.append(_stable_ads, Iter.toArray(advertisements.entries()));
     _stable_burn_records := Array.append(_stable_burn_records, Buffer.toArray(burn_records));
+    advertisements := HashMap.fromIter<Text, Types.Advertisement>(Iter.fromArray([]), 0, Text.equal, hash_text);
+    burn_records := Buffer.Buffer<Types.BurnRecord>(0);
     #ok("Moved " # Nat.toText(ads_in_heap) # " ads to stable storage.");
   };
 
@@ -322,8 +324,6 @@ actor Dogvertiser {
     };
   };
 
-  let oneHourSeconds = 3600;
-
   private func move_stable() : async () {
     let post = await move_to_stable();
   };
@@ -331,7 +331,7 @@ actor Dogvertiser {
   ignore setTimer<system>(
     #seconds 10,
     func() : async () {
-      ignore recurringTimer<system>(#seconds 3600, move_stable);
+      ignore recurringTimer<system>(#seconds 60, move_stable);
       let post = await move_to_stable();
     },
   );
