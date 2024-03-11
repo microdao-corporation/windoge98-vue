@@ -20,6 +20,8 @@ interface DogvertiserActor {
   whoami: () => Promise<string>;
   dogvertiserCanister: () => Promise<string>;
   whoamisub: () => Promise<Subaccount>;
+  fetch_ads_by_total_burned: () => Promise<[]>;
+  fetch_ads: () => Promise<[]>;
 }
 
 interface WindogeActor { }
@@ -46,6 +48,7 @@ const defaultOptions: DefaultOptions = {
 function dogvertiserActorFromIdentity(identity: Identity | Promise<Identity> | undefined) {
   return createDogvertiserActor(dogvertiserId, {
     agentOptions: {
+      verifyQuerySignatures: false,
       identity,
     },
   });
@@ -96,24 +99,28 @@ export const useAuthStore = defineStore("auth", {
       this.isReady = true;
     },
     async login() {
-      const authClient = await AuthClient.create(defaultOptions.createOptions);
-      this.authClient = toRaw(authClient);
+      let authClient = await AuthClient.create();
 
-      authClient.login({
-        ...defaultOptions.loginOptions,
-        onSuccess: async () => {
-          this.isAuthenticated = await authClient.isAuthenticated();
-          this.identity = this.isAuthenticated
-            ? authClient.getIdentity()
-            : null;
-          this.windogeActor = this.identity
-            ? windogeActorFromIdentity(this.identity)
-            : null;
-          this.dogvertiserActor = this.identity
-            ? (dogvertiserActorFromIdentity(this.identity) as unknown as DogvertiserActor)
-            : null;
-        },
+      // start the login process and wait for it to finish
+      await new Promise((resolve) => {
+        authClient.login({
+          identityProvider: process.env.DFX_NETWORK === "ic" ? "https://identity.ic0.app/#authorize" : `http://${IICanister}.localhost:8000`,
+          onSuccess: async () => {
+            this.isAuthenticated = await authClient.isAuthenticated();
+            this.identity = this.isAuthenticated
+              ? authClient.getIdentity()
+              : null;
+            this.windogeActor = this.identity
+              ? windogeActorFromIdentity(this.identity)
+              : null;
+            this.dogvertiserActor = this.identity
+              ? (dogvertiserActorFromIdentity(this.identity) as unknown as DogvertiserActor)
+              : null;
+            resolve;
+          },
+        });
       });
+      this.authClient = toRaw(authClient);
     },
     async logout() {
       const authClient = toRaw(this.authClient);

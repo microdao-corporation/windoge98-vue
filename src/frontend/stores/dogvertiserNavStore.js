@@ -7,18 +7,21 @@ export const useDogvertiserNavStore = defineStore("dogvertiserNav", () => {
   const screenHistory = ref(["main"]);
 
   const toScreen = (screen) => {
-    console.log("toScreen", screen);
     screenHistory.value.push(screen);
     currentScreen.screen = screen;
   };
 
   const back = () => {
-    screenHistory.value.pop();
-    currentScreen.screen = screenHistory.value[screenHistory.value.length - 1];
+    if (screenHistory.value.length > 1) {
+      screenHistory.value.pop();
+      currentScreen.screen =
+        screenHistory.value[screenHistory.value.length - 1];
+    }
   };
 
   return {
     currentScreen,
+    screenHistory,
     toScreen,
     back,
   };

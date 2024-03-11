@@ -14,6 +14,8 @@ import Buffer "mo:base/Buffer";
 import WT "./windoge";
 import Order "mo:base/Order";
 import Random "mo:base/Random";
+import { setTimer; recurringTimer } = "mo:base/Timer";
+import { abs } = "mo:base/Int";
 
 //gives error in vscode but should still work
 
@@ -83,74 +85,51 @@ actor Dogvertiser {
     return _ad_creation_fee;
   };
 
+  public query func stable_and_heap() : async [(Text, Types.Advertisement)] {
+    // _stable_ads + advertisements
+    let entriesArray = Iter.toArray<(Text, Types.Advertisement)>(advertisements.entries());
+    let adsArray = Array.append(_stable_ads, entriesArray);
+    return adsArray;
+
+  };
+
   public shared query func fetch_total_burned() : async Nat {
+    let heapArray = Buffer.toArray(burn_records);
+    let join : [Types.BurnRecord] = Array.append(_stable_burn_records, heapArray);
     var totalBurned : Nat = 0;
-    for (value in advertisements.vals()) {
-      totalBurned := totalBurned + value.total_burned;
+    for (record in Iter.fromArray(join)) {
+      totalBurned := totalBurned + record.amount;
     };
     return totalBurned;
   };
 
   public shared query func fetch_ads() : async [Types.Advertisement] {
-    let AdvertismentBuffer : Buffer.Buffer<Types.Advertisement> = Buffer.Buffer<Types.Advertisement>(0);
-    for (value in advertisements.vals()) {
-      let advertisementResponse : Types.Advertisement = value;
-      AdvertismentBuffer.add(advertisementResponse);
-    };
     // Convert the Buffer to an Array
-    let adsArray : [Types.Advertisement] = Buffer.toArray(AdvertismentBuffer);
-
-    // Sort the array by total_burned in descending order (for ascending order, swap a and b in the comparison)
-    let sortedAds = Array.sort<Types.Advertisement>(
+    let entriesArray = Iter.toArray<(Text, Types.Advertisement)>(advertisements.entries());
+    let adsArray = Array.append(_stable_ads, entriesArray);
+    let res = Array.map<(Text, Types.Advertisement), Types.Advertisement>(
       adsArray,
-      func(a : Types.Advertisement, b : Types.Advertisement) : Order.Order {
-        if (a.total_burned > b.total_burned) {
-          return #less;
-        } else if (a.total_burned < b.total_burned) {
-          return #greater;
-        } else {
-          return #equal;
-        };
+      func(ad : (Text, Types.Advertisement)) : Types.Advertisement {
+        ad.1;
       },
     );
-
-    return sortedAds;
-  };
-
-  public query func fetch_ads_by_total_burned() : async [Types.Advertisement] {
-    let AdvertismentBuffer : Buffer.Buffer<Types.Advertisement> = Buffer.Buffer<Types.Advertisement>(0);
-    for (value in advertisements.vals()) {
-      let advertisementResponse : Types.Advertisement = value;
-      AdvertismentBuffer.add(advertisementResponse);
-    };
-    // Convert the Buffer to an Array
-    let adsArray : [Types.Advertisement] = Buffer.toArray(AdvertismentBuffer);
-
-    // Sort the array by total_burned in descending order (for ascending order, swap a and b in the comparison)
-    let sortedAds = Array.sort<Types.Advertisement>(
-      adsArray,
-      func(a : Types.Advertisement, b : Types.Advertisement) : Order.Order {
-        if (a.total_burned > b.total_burned) {
-          return #less;
-        } else if (a.total_burned < b.total_burned) {
-          return #greater;
-        } else {
-          return #equal;
-        };
-      },
-    );
-
-    return sortedAds;
+    return res;
   };
 
   public shared query ({ caller }) func fetch_user_ads() : async [Types.Advertisement] {
-    let AdvertismentBuffer : Buffer.Buffer<Types.Advertisement> = Buffer.Buffer<Types.Advertisement>(0);
-    for (value in advertisements.vals()) {
-      if (value.caller == caller) {
-        AdvertismentBuffer.add(value);
-      };
+    let user_ads_buff = Buffer.Buffer<Types.Advertisement>(0);
+    let entriesArray = Iter.toArray<(Text, Types.Advertisement)>(advertisements.entries());
+    let adsArray = Array.append(_stable_ads, entriesArray);
+    let user_ads : [(Text, Types.Advertisement)] = Array.filter<(Text, Types.Advertisement)>(
+      adsArray,
+      func(ad : (Text, Types.Advertisement)) : Bool {
+        ad.1.caller == caller;
+      },
+    );
+    for (ad in Iter.fromArray(user_ads)) {
+      user_ads_buff.add(ad.1);
     };
-    return Buffer.toArray(AdvertismentBuffer);
+    return Buffer.toArray(user_ads_buff);
   };
 
   // Public functions
@@ -306,6 +285,21 @@ actor Dogvertiser {
     _ad_creation_fee := fee;
   };
 
+  public shared func move_to_stable() : async Result.Result<Text, Text> {
+    let ads_in_heap = advertisements.size();
+    _stable_ads := Array.append(_stable_ads, Iter.toArray(advertisements.entries()));
+    _stable_burn_records := Array.append(_stable_burn_records, Buffer.toArray(burn_records));
+    #ok("Moved " # Nat.toText(ads_in_heap) # " ads to stable storage.");
+  };
+
+  public query func fetch_stable_ads() : async [(Text, Types.Advertisement)] {
+    return _stable_ads;
+  };
+
+  public query func fetch_heap_ads() : async [(Text, Types.Advertisement)] {
+    return Iter.toArray(advertisements.entries());
+  };
+
   // Private functions
   private func validate_advertisement(ad : Types.NewAdRequest) : Result.Result<Bool, Text> {
     let url_validation = is_url(ad.link);
@@ -319,26 +313,34 @@ actor Dogvertiser {
     };
   };
 
+  let oneHourSeconds = 3600;
+
+  private func move_stable() : async () {
+    let post = await move_to_stable();
+  };
+
+  ignore setTimer<system>(
+    #seconds 10,
+    func() : async () {
+      ignore recurringTimer<system>(#seconds 3600, move_stable);
+      let post = await move_to_stable();
+    },
+  );
+
   // Upgrade canister
   system func preupgrade() {
     // Serialize your data structures and store them in stable variables
     // Assuming _stable_ads and _stable_burn_records are declared as stable variables
-    _stable_ads := Iter.toArray(advertisements.entries());
-    _stable_burn_records := Buffer.toArray(burn_records);
+    _stable_ads := Array.append(_stable_ads, Iter.toArray(advertisements.entries()));
+    _stable_burn_records := Array.append(_stable_burn_records, Buffer.toArray(burn_records));
   };
 
   system func postupgrade() {
-    // Reinitialize `advertisements` from `_stable_ads`
-    advertisements := HashMap.fromIter<Text, Types.Advertisement>(
-      Iter.fromArray(_stable_ads),
-      _stable_ads.size(),
-      Text.equal,
-      hash_text,
-    );
+    // Reinitialize `advertisements` as empty
+    advertisements := HashMap.fromIter<Text, Types.Advertisement>(Iter.fromArray([]), 0, Text.equal, hash_text);
 
-    // Reinitialize `burn_records` from `_stable_burn_records`
-    // Assuming you have a suitable constructor or method to recreate the buffer
-    burn_records := Buffer.fromArray(_stable_burn_records);
+    // Reinitialize emmpty buffer
+    burn_records := Buffer.Buffer<Types.BurnRecord>(0);
   };
 
 };

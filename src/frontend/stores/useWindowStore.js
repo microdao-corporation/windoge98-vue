@@ -2,7 +2,7 @@
 import { defineStore } from "pinia";
 import { watch } from "vue";
 import WelcomeWindow from "../components/WelcomeWindow.vue";
-import DevelopersWindow from "../components/DevelopersWindow.vue";
+import PopupWindow from "../components/PopupWindow.vue";
 import ShutDownWindow from "../components/ShutDownWindow.vue";
 import IframeWindow from "../components/IframeWindow.vue";
 import defaultAppIcon from "../assets/default_app_icon.png";
@@ -49,9 +49,9 @@ export const useWindowStore = defineStore("windowStore", {
         {
           id: uuidv4(),
           zIndex: 1,
-          title: "Developers",
+          title: "Congratulations! Much wow! You just won an annoying ad!",
           icon: defaultAppIcon,
-          component: DevelopersWindow,
+          component: PopupWindow,
           visible: true,
           active: false,
           maximised: false,
@@ -158,7 +158,7 @@ export const useWindowStore = defineStore("windowStore", {
         case "welcome":
           return { component: WelcomeWindow, props: {} };
         case "developers":
-          return { component: DevelopersWindow, props: {} };
+          return { component: PopupWindow, props: {} };
         case "newbie_guide":
           return { component: NewbieGuide, props: {} };
         case "shutdown":

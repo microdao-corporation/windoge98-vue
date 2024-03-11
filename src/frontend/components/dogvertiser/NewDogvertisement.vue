@@ -48,6 +48,7 @@ const uploadAdvertisement = async () => {
   const timestamp = new Date().getTime();
 
   state.isLoading = true;
+  console.log(state);
   const advertisementData = {
     title: state.title,
     link: state.link,
@@ -94,7 +95,12 @@ const { title, link, isLoading, image, errors } = toRefs(state);
   <div class="new-ad-container">
     <div class="new-ad-container2">
       <h3
-        style="font-family: Arial; margin-top: 0px; margin-bottom; 20px; text-align: center"
+        style="
+          font-family: Arial;
+          margin-top: 0px;
+          margin-bottom: 20px;
+          text-align: center;
+        "
       >
         New Advertisement
       </h3>

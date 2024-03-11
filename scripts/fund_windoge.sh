@@ -1,6 +1,24 @@
-dfx canister call windoge icrc1_balance_of "(record {owner = principal \"qwn6v-4mwo3-kkhcs-giqbi-6c6mr-4xhot-hk4or-cfyqz-73g3o-yz674-wae\"; subaccount=null;})"
+#!/bin/bash
 
-dfx canister call windoge icrc1_transfer "(record{
-                    to= record {owner = principal \"qwn6v-4mwo3-kkhcs-giqbi-6c6mr-4xhot-hk4or-cfyqz-73g3o-yz674-wae\"; subaccount=null;};
-                    amount = 100_000_000_000;
+# Store the first argument provided to the script
+principal="$1"
+amount="100_000_000_000"
+
+# Check if an argument was provided
+if [[ -z "$principal" ]]; then
+    echo "Error: Please provide the owner principal as an argument."
+    exit 1
+fi
+
+if [[ -n "$2" ]]; then
+    # Use the provided argument
+    amount="$2"
+fi
+
+# Call the dfx canister commands using the provided argument
+dfx canister call windoge icrc1_balance_of "(record {owner = principal \"$principal\"; subaccount=null;})"
+
+dfx canister call windoge icrc1_transfer "(record {
+                    to= record {owner = principal \"$principal\"; subaccount=null;};
+                    amount = $amount;
                 })"

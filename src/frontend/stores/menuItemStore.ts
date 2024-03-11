@@ -28,7 +28,7 @@ import cmcIcon from "../assets/cmc_logo.png";
 import mergeIcon from "../assets/merge_icon.png";
 import keysIcon from "../assets/keys-4.png";
 import { initialise } from "@open-ic/openchat-xframe";
-// import adsIcon from "../assets/advertise_icon.png";
+import adsIcon from "../assets/advertise_icon.png";
 
 export const useMenuItemStore = defineStore("startMenu", () => {
   const authStore = useAuthStore();
@@ -62,7 +62,6 @@ export const useMenuItemStore = defineStore("startMenu", () => {
           whoami.value = getWho.substring(0, 8);
           startMenuData.bottom[2].name = `Sign Out (${whoami.value})`;
           startMenuData.bottom[2].action = authStore.logout;
-          console.log("Whoami: ", whoami.value);
         }
       } else {
         startMenuData.bottom[2].name = "Sign In";
@@ -104,12 +103,12 @@ export const useMenuItemStore = defineStore("startMenu", () => {
           },
           {
             name: "Dogvertiser",
-            icon: ocDogeIcon,
+            icon: adsIcon,
             iconHeight: 28,
             height: 494,
-            width: 632,
+            width: 1000,
             subType: "unknown",
-            visible: whoami.value == "fddf",
+            visible: true,
             virtualWindow: "dogvertiser",
           },
           {

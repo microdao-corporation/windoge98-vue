@@ -70,6 +70,9 @@ type Subaccount = Uint8Array | number[];
 
 interface DogvertiserActor {
   whoami: () => Promise<{ owner: string; subaccount: string }>;
+  dogvertiserCanister: () => Promise<string>;
+  whoamisub: () => Promise<Subaccount>;
+  fetch_ads: () => Promise<[]>;
 }
 
-interface WindogeActor {}
+interface WindogeActor { }

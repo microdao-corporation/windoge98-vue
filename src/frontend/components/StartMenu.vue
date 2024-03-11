@@ -14,10 +14,13 @@ onMounted(() => {
   filteredMenu.value = startMenuData; // Clone to avoid direct mutation
   if (filteredMenu.value) {
     filterInPlace(filteredMenu.value.main, (item: any) => item.visible == true);
-    filterInPlace(
-      filteredMenu.value.bottom,
-      (item: any) => item.visible == true,
-    );
+    filterInPlace(filteredMenu.value.bottom, (item: any) => item.visible == true);
+    // filter children
+    filteredMenu.value.main.forEach((item: any) => {
+      if (item.submenu) {
+        filterInPlace(item.submenu, (subItem: any) => subItem.visible == true);
+      }
+    });
   }
 });
 
@@ -139,7 +142,7 @@ function filterInPlace(a: any, condition: any) {
           <div v-if="isSubMenuVisible(item)" class="submenu">
             <div
               v-for="subItem in item.submenu?.sort((a, b) =>
-                a.name.localeCompare(b.name),
+                a.name.localeCompare(b.name)
               )"
               @click="openNewWindow(subItem)"
               class="start-menu-item"

@@ -18,6 +18,7 @@ const { copy, copied, isSupported, text } = useClipboard();
 const isTransfering = ref(false);
 const creationErrors = ref([]);
 const showWallet = ref(false);
+const allAds = ref([]);
 const totalBurned = ref(0);
 const isBoosting = ref({
   status: false,
@@ -25,12 +26,14 @@ const isBoosting = ref({
 });
 
 const { isAuthenticated } = storeToRefs(authStore);
-const { currentScreen, back, toScreen } = useDogvertiserNavStore();
+const { currentScreen, back, toScreen, screenHistory } = useDogvertiserNavStore();
 
 onMounted(async () => {
   if (authStore.dogvertiserActor !== null && authStore.dogvertiserActor !== undefined) {
+    console.log(authStore.dogvertiserActor.whoami());
     whoami.value = await authStore.dogvertiserActor.whoami();
     totalBurned.value = await authStore.dogvertiserActor.fetch_total_burned();
+    allAds.value = await authStore.dogvertiserActor.fetch_ads();
 
     let dogvertiseBalanceRaw = await authStore.dogvertiserActor.exe_balance_of(
       whoami.value
@@ -122,12 +125,12 @@ const refresh = async () => {
     isTransfering.value = true;
     whoami.value = await authStore.dogvertiserActor.whoami();
     totalBurned.value = await authStore.dogvertiserActor.fetch_total_burned();
-    console.log("totalBurned", totalBurned.value);
+    allAds.value = await authStore.dogvertiserActor.fetch_ads();
+    console.log(allAds.value);
 
     let dogvertiseBalanceRaw = await authStore.dogvertiserActor.exe_balance_of(
       whoami.value
     );
-    console.log("dogvertiseBalanceRaw", dogvertiseBalanceRaw);
     // Ensure dogvertiserBalance is formatted with 8 decimal places
     dogvertiserBalance.value = Number(dogvertiseBalanceRaw);
 
@@ -192,13 +195,24 @@ function updateIsBoosting(status = false, index = null) {
   isBoosting.value.index = index;
 }
 
-const handleBoost = async (index) => {
+const handleBoost = async (ad) => {
   if (authStore.dogvertiserActor !== null && authStore.dogvertiserActor !== undefined) {
-    updateIsBoosting(true, index);
-    let amount = prompt("Enter the amount of EXE to boost", "10");
+    updateIsBoosting(true, ad.index);
+    console.log(ad);
+    let amount = prompt(
+      `Enter the amount of EXE to boost advertisement ${ad.title} (${ad.link})...`,
+      "1"
+    );
+    if (!amount) {
+      updateIsBoosting(false);
+      return;
+    }
     let amountAsFloat = parseFloat(amount); // Convert user input to float
     let amountInSmallestUnit = Math.round(amountAsFloat * 1e8); // Adjust and remove decimal point
-    let response = await authStore.dogvertiserActor.boost_ad(index, amountInSmallestUnit);
+    let response = await authStore.dogvertiserActor.boost_ad(
+      ad.index,
+      amountInSmallestUnit
+    );
     await refresh();
     updateIsBoosting(false);
   } else {
@@ -241,17 +255,44 @@ function formatBigDecimalToString2(amount) {
 
   return formattedAmount;
 }
+
+const handleLogin = async () => {
+  await authStore.login();
+  await refresh();
+};
 </script>
 
 <template>
-  <div class="dog-container">
+  <div class="container">
     <div class="header">
       <div style="display: flex; align-items: center; align-content: center">
         <img :src="adsIcon" style="width: 30%; margin-right: 8px" />
         <h1 class="title" style="margin: 0px">Dogvertiser</h1>
       </div>
       <div style="display: flex">
-        <div class="sign-out" @click="refresh" style="margin-right: 4px">
+        <div
+          class="sign-out"
+          @click="back"
+          style="display: flex; align-items: center"
+          v-if="screenHistory.length > 1"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            style="width: 14px; height: 14px; margin-right: 4px"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3"
+            />
+          </svg>
+          Back
+        </div>
+        <div class="sign-out" @click="refresh">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -267,26 +308,10 @@ function formatBigDecimalToString2(amount) {
             />
           </svg>
         </div>
-        <div class="sign-out" @click="back" style="margin-right: 4px">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            style="width: 14px; height: 14px"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3"
-            />
-          </svg>
-        </div>
+
         <div
           class="sign-out"
           @click="showWallet = !showWallet"
-          style="margin-right: 4px"
           v-if="authStore.isAuthenticated"
         >
           <svg
@@ -304,6 +329,10 @@ function formatBigDecimalToString2(amount) {
             />
           </svg>
         </div>
+        <div class="sign-out" @click="toScreen('main')" v-if="authStore.isAuthenticated">
+          My Ads
+        </div>
+        <div class="sign-out" @click="toScreen('all-ads')">All Ads</div>
         <div
           class="dogvertiser-create-button"
           @click="toScreen('new-ad')"
@@ -313,7 +342,7 @@ function formatBigDecimalToString2(amount) {
         </div>
         <div
           class="dogvertiser-create-button"
-          @click="authStore.login"
+          @click="handleLogin"
           v-if="!authStore.isAuthenticated"
         >
           SIGN IN
@@ -381,18 +410,22 @@ function formatBigDecimalToString2(amount) {
     </div>
     <div
       v-if="currentScreen.screen == 'main'"
-      style="
-        background-color: white;
-        min-height: 100%;
-        max-height: 500px;
-        overflow: auto;
-        font-family: Arial, sans-serif;
-      "
+      style="background-color: #c0c0c0; overflow: auto; font-family: Arial, sans-serif"
       class="dog-container"
     >
       <div v-if="authStore.isAuthenticated">
         <div class="my-ads">
           <h3>Dogvertiser has burned {{ formatBigDecimalToString2(totalBurned) }} EXE</h3>
+          <div style="font-size: 14px">
+            <strong>How it works</strong>
+            <br />
+            1. Create a new ad, this costs 10 EXE which is burned.
+            <br />
+            2. Optionally boost your ad by burning more EXE to increase the frequency it
+            appears.
+            <br />
+            3. Much wow.
+          </div>
         </div>
         <div class="my-ads">
           <h3>My Ads</h3>
@@ -400,7 +433,7 @@ function formatBigDecimalToString2(amount) {
           <div class="ad-list">
             <!-- Example Ad Card -->
             <div class="" v-if="myAds.length == 0">
-              <a @click="currentScreen.screen = 'new-ad'"
+              <a @click="toScreen('new-ad')"
                 >You haven't created any ads yet. Create one now!</a
               >
             </div>
@@ -445,7 +478,7 @@ function formatBigDecimalToString2(amount) {
                 :style="`pointer-events: ${
                   isBoosting.status && isBoosting.index == ad.index ? 'none' : ''
                 }`"
-                @click="handleBoost(ad.index)"
+                @click="handleBoost(ad)"
               >
                 <span class="button__text" style="font-size: 16px"
                   >🚀 &nbsp; Boost Ad</span
@@ -461,6 +494,87 @@ function formatBigDecimalToString2(amount) {
         <div><h2 style="margin-top: 0px">Dogvertiser</h2></div>
       </div>
     </div>
+
+    <div
+      v-if="currentScreen.screen == 'all-ads'"
+      style="background-color: #c0c0c0; overflow: auto; font-family: Arial, sans-serif"
+      class="dog-container"
+    >
+      <div>
+        <div class="my-ads">
+          <h3>Dogvertiser has burned {{ formatBigDecimalToString2(totalBurned) }} EXE</h3>
+          <div style="font-size: 14px">
+            <strong>How it works</strong>
+            <br />
+            1. Create a new ad, this costs 10 EXE which is burned.
+            <br />
+            2. Optionally boost your ad by burning more EXE to increase the frequency it
+            appears.
+            <br />
+            3. Much wow.
+          </div>
+        </div>
+        <div class="my-ads">
+          <h3>All Ads</h3>
+          <!-- List of Ads -->
+          <div class="ad-list">
+            <!-- Example Ad Card -->
+            <div class="" v-if="allAds.length == 0">
+              <a @click="toScreen('new-ad')">No ads have been created yet.</a>
+            </div>
+            <div class="ad-card" v-for="ad in allAds" v-if="allAds" key="ad.index">
+              <div
+                style="display: flex; align-items: center; justify-content: space-between"
+              >
+                <h4 style="margin: 0; padding: 0">{{ ad.title }}</h4>
+              </div>
+              <div>
+                <div
+                  style="
+                    margin-top: 4px;
+                    background-color: rgb(255, 223, 223);
+                    color: rgb(144, 0, 0);
+                    padding: 2px 8px;
+                    border-radius: 4px;
+                    font-size: 12px;
+                    font-weight: bold;
+                  "
+                >
+                  <span v-if="isBoosting.index != ad.index"
+                    >{{ formatBigDecimalToString(ad.total_burned) }} EXE Burned</span
+                  >
+                  <span v-else-if="isBoosting.status && isBoosting.index == ad.index"
+                    >Boosting...</span
+                  >
+                </div>
+              </div>
+              <div class="ad-url">
+                Links to <a :href="ad.link" target="_blank">{{ ad.link }}</a>
+              </div>
+              <br />
+
+              <img :src="ad.image" alt="Ad Image" />
+              <div
+                :class="`button ${
+                  isBoosting.status && isBoosting.index == ad.index
+                    ? 'button--loading'
+                    : ''
+                }`"
+                :style="`pointer-events: ${
+                  isBoosting.status && isBoosting.index == ad.index ? 'none' : ''
+                }`"
+                @click="handleBoost(ad)"
+              >
+                <span class="button__text" style="font-size: 16px"
+                  >🚀 &nbsp; Boost Ad</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div v-if="currentScreen.screen == 'new-ad'">
       <NewDogvertisement :refresh="refresh" />
     </div>
@@ -497,6 +611,7 @@ function formatBigDecimalToString2(amount) {
   color: white;
   padding: 8px 16px;
   border: none;
+  margin-left: 4px;
   border-radius: 4px;
   cursor: pointer;
 }
@@ -510,8 +625,9 @@ function formatBigDecimalToString2(amount) {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between !important;
-  min-height: 100%;
+  justify-content: center;
+  min-height: 500px;
+  max-height: 100%;
 }
 .sign-in-button {
   background-color: #4caf50;
@@ -538,6 +654,7 @@ function formatBigDecimalToString2(amount) {
   padding: 8px 16px;
   border-radius: 4px;
   cursor: pointer;
+  margin-left: 4px;
 }
 
 .tab-menu {
@@ -571,6 +688,7 @@ function formatBigDecimalToString2(amount) {
 }
 
 .ad-card {
+  background-color: white;
   width: auto;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -591,8 +709,15 @@ function formatBigDecimalToString2(amount) {
 .dog-container {
   -webkit-font-smoothing: antialiased !important;
   -moz-osx-font-smoothing: grayscale !important;
-  background-color: white;
-  height: 100%;
+  background-color: #c0c0c0;
+  max-height: 100%;
+  min-height: 100%;
+  max-width: 100%;
+}
+
+.container {
+  max-height: 500px;
+  overflow-y: scroll;
 }
 
 .ad-description {
@@ -601,12 +726,10 @@ function formatBigDecimalToString2(amount) {
 
 .boost-button {
   background-color: #4caf50;
-  color: white;
+  color: #c0c0c0;
   padding: 8px 16px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
 }
 </style>
-./dogvertiser/NewDogvertisement.vue
-../../auth../../stores/dogvertiserNavStore../../../declarations/dogvertiser
