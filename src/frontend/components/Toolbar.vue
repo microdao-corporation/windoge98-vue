@@ -62,7 +62,11 @@ function handleWindowClick(windowId: number) {
             rel="preload"
             style="margin-right: 10px; padding-top: 1px; padding-bottom: 1px"
           />
-          {{ window.title }}
+          {{
+            window.title.length > 18
+              ? window.title.substring(0, 18) + "..."
+              : window.title
+          }}
         </div>
       </div>
     </div>

@@ -1,4 +1,19 @@
-<script setup lang="ts" />
+<script setup lang="ts">
+import { onMounted } from "vue";
+import { useWindowStore } from "./stores/useWindowStore";
+
+const store = useWindowStore();
+onMounted(() => {
+  // random time between 50 seconds and 8 minutes
+  let time = Math.floor(Math.random() * 450000) + 30000;
+  setInterval(() => {
+    let existingCount = store.windows.filter((w) => w.type === "ad").length;
+    if (existingCount < 4) {
+      store.openAdWindow();
+    }
+  }, time);
+});
+</script>
 
 <template>
   <RouterView />

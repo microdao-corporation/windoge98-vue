@@ -113,7 +113,16 @@ actor Dogvertiser {
         ad.1;
       },
     );
-    return res;
+    return Array.sort<Types.Advertisement>(
+      res,
+      func(a, b) : Order.Order {
+        if (a.total_burned > b.total_burned) {
+          return #less;
+        } else {
+          return #greater;
+        };
+      },
+    );
   };
 
   public shared query ({ caller }) func fetch_user_ads() : async [Types.Advertisement] {

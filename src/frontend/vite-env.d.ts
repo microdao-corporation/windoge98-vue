@@ -3,7 +3,7 @@ declare module "vue-draggable-resizable-vue3";
 declare module "./hooks/icrc1-idl";
 declare module "./hooks/clippy-idl";
 
-type WindowType = "welcome" | "developers" | "newbie_guide" | VirtualWindowType;
+type WindowType = "welcome" | "developers" | "newbie_guide" | "ad" | VirtualWindowType;
 
 type Dimensions = {
   height: number | string;

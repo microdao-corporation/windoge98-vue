@@ -55,7 +55,7 @@ export const useWindowStore = defineStore("windowStore", {
           visible: true,
           active: false,
           maximised: false,
-          type: "developers",
+          type: "ad",
           subType: "unknown",
           dimensions: {
             height: 440,
@@ -96,6 +96,29 @@ export const useWindowStore = defineStore("windowStore", {
           }
         }
       });
+    },
+
+    openAdWindow() {
+      let id = uuidv4();
+      this.windows.push({
+        id: id,
+        zIndex: 1,
+        title: "Congratulations! Much wow! You just won an annoying ad!",
+        icon: defaultAppIcon,
+        component: PopupWindow,
+        visible: true,
+        active: false,
+        maximised: false,
+        type: "ad",
+        subType: "unknown",
+        dimensions: {
+          height: 440,
+          width: 600,
+          x: 200,
+          y: 400,
+        },
+      });
+      this.activateWindow(id);
     },
 
     closeWindow(id) {
@@ -157,7 +180,7 @@ export const useWindowStore = defineStore("windowStore", {
       switch (windowData.type) {
         case "welcome":
           return { component: WelcomeWindow, props: {} };
-        case "developers":
+        case "ad":
           return { component: PopupWindow, props: {} };
         case "newbie_guide":
           return { component: NewbieGuide, props: {} };
