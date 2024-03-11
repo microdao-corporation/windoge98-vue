@@ -230,10 +230,12 @@ hr.start-menu {
 }
 
 .loader {
-  width: 20px;
-  height: 20px;
-  border: 3px solid lightblue;
+  width: 14px;
+  height: 14px;
+  border: 2px solid blue;
   border-radius: 50%;
+  margin-left: 8px;
+  margin-right: 8px;
   display: inline-block;
   position: relative;
   box-sizing: border-box;
@@ -245,9 +247,9 @@ hr.start-menu {
   position: absolute;
   left: 50%;
   top: 0;
-  background: #ff3d00;
+  background: red;
   width: 2px;
-  height: 9px;
+  height: 6px;
   transform: translateX(-50%);
 }
 

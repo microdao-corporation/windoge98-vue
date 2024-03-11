@@ -20,6 +20,7 @@ const creationErrors = ref([]);
 const showWallet = ref(false);
 const allAds = ref([]);
 const totalBurned = ref(0);
+const loadingMyAds = ref(false);
 const isBoosting = ref({
   status: false,
   index: null,
@@ -29,29 +30,10 @@ const { isAuthenticated } = storeToRefs(authStore);
 const { currentScreen, back, toScreen, screenHistory } = useDogvertiserNavStore();
 
 onMounted(async () => {
-  if (authStore.dogvertiserActor !== null && authStore.dogvertiserActor !== undefined) {
-    console.log(authStore.dogvertiserActor.whoami());
-    whoami.value = await authStore.dogvertiserActor.whoami();
-
-    let dogvertiseBalanceRaw = await authStore.dogvertiserActor.exe_balance_of(
-      whoami.value
-    );
-    // Ensure dogvertiserBalance is formatted with 8 decimal places
-    dogvertiserBalance.value = Number(dogvertiseBalanceRaw);
-
-    let newBalanceRaw = await authStore.windogeActor.icrc1_balance_of({
-      owner: Principal.fromText(whoami.value),
-      subaccount: [],
-    });
-    // Ensure balance is formatted with 8 decimal places
-    balance.value = Number(newBalanceRaw);
-    handleGetMyads();
-  } else {
-    // Handle the case when authStore.dogvertiserActor is null or undefined
-    await authStore.init();
-  }
-  allAds.value = await authStore.dogvertiserActor.fetch_ads();
-  totalBurned.value = await authStore.dogvertiserActor.fetch_total_burned();
+  loadingMyAds.value = true;
+  await authStore.init();
+  await refresh();
+  loadingMyAds.value = false;
 });
 
 const handleDappDeposit = async () => {
@@ -92,11 +74,18 @@ const handleTransferToWalletl = async () => {
   isTransfering.value = false;
 };
 
-const handleGetMyads = async () => {
-  //@ts-ignore
-  let userAds = await authStore.dogvertiserActor.fetch_user_ads();
-  myAds.value = userAds;
-};
+async function handleGetMyads() {
+  loadingMyAds.value = true;
+  try {
+    let userAdsRaw = await authStore.dogvertiserActor.fetch_user_ads();
+    myAds.value = userAdsRaw;
+    console.log("userAds", myAds.value);
+  } catch (error) {
+    console.error("Error fetching user ads:", error);
+  } finally {
+    loadingMyAds.value = false;
+  }
+}
 
 watch(isAuthenticated, async (value) => {
   if (value) {
@@ -125,30 +114,37 @@ watch(isAuthenticated, async (value) => {
 });
 
 const refresh = async () => {
-  if (authStore.dogvertiserActor !== null && authStore.dogvertiserActor !== undefined) {
-    isTransfering.value = true;
+  // Ensure the dogvertiserActor is initialized
+  if (!authStore.dogvertiserActor) {
+    await authStore.init();
+  }
+
+  isTransfering.value = true;
+
+  try {
     whoami.value = await authStore.dogvertiserActor.whoami();
     let dogvertiseBalanceRaw = await authStore.dogvertiserActor.exe_balance_of(
       whoami.value
     );
-    // Ensure dogvertiserBalance is formatted with 8 decimal places
-    dogvertiserBalance.value = Number(dogvertiseBalanceRaw);
+    dogvertiserBalance.value = Number(dogvertiseBalanceRaw).toFixed(8); // Formatting with 8 decimal places
 
     let newBalanceRaw = await authStore.windogeActor.icrc1_balance_of({
       owner: Principal.fromText(whoami.value),
       subaccount: [],
     });
-    // Ensure balance is formatted with 8 decimal places
-    balance.value = Number(newBalanceRaw);
-    handleGetMyads();
-  } else {
-    // Handle the case when authStore.dogvertiserActor is null or undefined
-    await authStore.init();
-  }
-  allAds.value = await authStore.dogvertiserActor.fetch_ads();
-  totalBurned.value = await authStore.dogvertiserActor.fetch_total_burned();
+    balance.value = Number(newBalanceRaw).toFixed(8); // Formatting with 8 decimal places
 
-  isTransfering.value = false;
+    let userAds = await authStore.dogvertiserActor.fetch_user_ads();
+    // Ensure userAds is a valid JSON string before parsing
+    console.log("userAds", userAds);
+  } catch (error) {
+    console.error("An error occurred during the refresh process:", error);
+    // Handle errors appropriately
+  } finally {
+    allAds.value = await authStore.dogvertiserActor.fetch_ads();
+    totalBurned.value = await authStore.dogvertiserActor.fetch_total_burned();
+    isTransfering.value = false;
+  }
 };
 
 const handleTransfer = async () => {
@@ -454,10 +450,13 @@ const handleLogin = async () => {
           <!-- List of Ads -->
           <div class="ad-list">
             <!-- Example Ad Card -->
-            <div class="" v-if="myAds.length == 0">
+            <div class="" v-if="myAds.length == 0 && !loadingMyAds">
               <a @click="toScreen('new-ad')"
                 >You haven't created any ads yet. Create one now!</a
               >
+            </div>
+            <div v-if="loadingMyAds">
+              <div class="spinner"><span class="loader"></span> Loading...</div>
             </div>
             <div class="ad-card" v-for="ad in myAds" v-if="myAds" key="ad.index">
               <div
@@ -490,7 +489,7 @@ const handleLogin = async () => {
               </div>
               <br />
 
-              <img :src="ad.image" alt="Ad Image" />
+              <img :src="ad.image" alt="Ad Image" width="250" heigh="250" />
               <div
                 :class="`button ${
                   isBoosting.status && isBoosting.index == ad.index
@@ -577,7 +576,7 @@ const handleLogin = async () => {
               </div>
               <br />
 
-              <img :src="ad.image" alt="Ad Image" />
+              <img :src="ad.image" alt="Ad Image" height="250" width="250" />
               <div
                 :class="`button ${
                   isBoosting.status && isBoosting.index == ad.index
@@ -740,8 +739,12 @@ const handleLogin = async () => {
 }
 
 .container {
-  max-height: 500px;
-  overflow-y: scroll;
+  max-height: 600px;
+  overflow-y: auto;
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+  font-family: Arial, sans-serif;
 }
 
 .ad-description {

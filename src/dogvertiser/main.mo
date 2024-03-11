@@ -126,7 +126,6 @@ actor Dogvertiser {
   };
 
   public shared query ({ caller }) func fetch_user_ads() : async [Types.Advertisement] {
-    let user_ads_buff = Buffer.Buffer<Types.Advertisement>(0);
     let entriesArray = Iter.toArray<(Text, Types.Advertisement)>(advertisements.entries());
     let adsArray = Array.append(_stable_ads, entriesArray);
     let user_ads : [(Text, Types.Advertisement)] = Array.filter<(Text, Types.Advertisement)>(
@@ -135,10 +134,12 @@ actor Dogvertiser {
         ad.1.caller == caller;
       },
     );
-    for (ad in Iter.fromArray(user_ads)) {
-      user_ads_buff.add(ad.1);
-    };
-    return Buffer.toArray(user_ads_buff);
+    return Array.map<(Text, Types.Advertisement), Types.Advertisement>(
+      user_ads,
+      func(ad : (Text, Types.Advertisement)) : Types.Advertisement {
+        ad.1;
+      },
+    );
   };
 
   // Public functions

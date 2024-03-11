@@ -43,6 +43,7 @@ const emit = defineEmits(["onClose", "onMaximise", "onMinimise"]);
 }
 
 .window {
+  min-width: 100%;
   min-height: 100%;
   display: flex;
   flex-direction: column;
@@ -55,6 +56,5 @@ const emit = defineEmits(["onClose", "onMaximise", "onMinimise"]);
   display: flex;
   padding: 8px;
   flex-direction: column;
-  min-height: 100%;
 }
 </style>

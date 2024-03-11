@@ -6,16 +6,6 @@ import { dogvertiser } from "../../declarations/dogvertiser";
 const allAds: Ref<Advertisement[]> = ref([]);
 const randomAds: Ref<Advertisement[]> = ref([]);
 
-interface Advertisement {
-  index: BigInt;
-  title?: string;
-  description: string;
-  image: string;
-  link: string;
-  total_burned: BigInt;
-  timestamp: BigInt;
-}
-
 function customJsonSerialize(obj: any) {
   return JSON.stringify(obj, (_, value) => {
     if (typeof value === "bigint") {

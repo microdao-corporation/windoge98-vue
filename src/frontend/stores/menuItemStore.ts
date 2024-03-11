@@ -58,6 +58,7 @@ export const useMenuItemStore = defineStore("startMenu", () => {
     async (isAuthenticated) => {
       if (isAuthenticated) {
         if (authStore.dogvertiserActor) {
+          // @ts-ignore
           fullWho.value = await authStore.dogvertiserActor.whoami();
           console.log("Got whoami", fullWho.value);
           whoami.value = fullWho.value.substring(0, 8);

@@ -68,11 +68,15 @@ type VirtualWindowSubtype = "openchat" | "unknown" | "none" | "dogvertiser";
 
 type Subaccount = Uint8Array | number[];
 
-interface DogvertiserActor {
-  whoami: () => Promise<{ owner: string; subaccount: string }>;
-  dogvertiserCanister: () => Promise<string>;
-  whoamisub: () => Promise<Subaccount>;
-  fetch_ads: () => Promise<[]>;
-}
-
 interface WindogeActor { }
+
+interface Advertisement {
+  index: BigInt;
+  title: string;
+  description?: string;
+  image: string;
+  link: string;
+  total_burned: BigInt;
+  timestamp: BigInt;
+}
+type Subaccount = Uint8Array | number[];
