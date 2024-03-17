@@ -47,8 +47,8 @@ export const openNewWindow = async (item: MenuItem) => {
           2,
       },
     };
-    console.log("Opening new window", windowData);
     windowStore.windows.push(windowData);
+    windowStore.activateWindow(windowData.id);
   }
   return windowData;
 };

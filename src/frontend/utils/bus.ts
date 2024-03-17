@@ -20,6 +20,7 @@ class EventBus {
       windowStore.windows.push({
         id: uuidv4(),
         title: win.name,
+        zIndex: 100,
         icon: win.icon,
         url: win.url,
         visible: true,

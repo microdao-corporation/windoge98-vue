@@ -59,7 +59,7 @@ const startMenuDataStructure: StartMenuData = {
         {
           name: "ICPCoins",
           icon: icpcoinsLogo,
-          url: "https://icpcoins.com/#/token/EXE",
+          url: "https://aqs24-xaaaa-aaaal-qbbea-cai.ic0.app",
           iconHeight: 30,
           virtualWindow: "iframe",
           subType: "unknown",
@@ -82,6 +82,7 @@ const startMenuDataStructure: StartMenuData = {
           iconHeight: 30,
           virtualWindow: "iframe",
           subType: "openchat",
+          visible: true,
         },
         {
           name: "Sonic DEX",

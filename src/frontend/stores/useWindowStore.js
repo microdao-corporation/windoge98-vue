@@ -71,7 +71,6 @@ export const useWindowStore = defineStore("windowStore", {
         if (w.id == id) {
           w.visible = true;
           if (w.active) {
-            this.highestZIndex++;
             w.zIndex = this.highestZIndex;
           } else {
             w.zIndex = 1;

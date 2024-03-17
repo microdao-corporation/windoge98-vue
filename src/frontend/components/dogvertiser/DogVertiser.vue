@@ -46,7 +46,8 @@ const handleDappDeposit = async () => {
       subaccount: [whoamisub], // Pass the extracted array as the subaccount
     };
 
-    let transerBalance = BigInt(balance.value);
+    let transerBalance = BigInt(balance.value - 1000000);
+    console.log("transerBalance", transerBalance);
     // @ts-ignore
     let transferResult = await authStore.windogeActor.icrc1_transfer({
       fee: [],

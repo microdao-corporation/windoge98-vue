@@ -1,37 +1,23 @@
 import Result "mo:base/Result";
 import Time "mo:base/Time";
-import Int "mo:base/Int";
 import Principal "mo:base/Principal";
-import Error "mo:base/Error";
 import HashMap "mo:base/HashMap";
 import Iter "mo:base/Iter";
 import Text "mo:base/Text";
 import Nat "mo:base/Nat";
-import Prelude "mo:base/Prelude";
-import Nat32 "mo:base/Nat32";
-import Nat64 "mo:base/Nat64";
 import Buffer "mo:base/Buffer";
 import WT "./windoge";
 import Order "mo:base/Order";
-import Random "mo:base/Random";
+import Blob "mo:base/Blob";
+import Array "mo:base/Array";
+import Types "./types";
 import { setTimer; recurringTimer } = "mo:base/Timer";
 import { abs } = "mo:base/Int";
-
-//gives error in vscode but should still work
-
-import Types "./types";
 import {
-  to_account;
   to_subaccount;
-  hash_nat;
   hash_text;
   is_url;
 } "utils";
-
-import Blob "mo:base/Blob";
-import Array "mo:base/Array";
-import Nat8 "mo:base/Nat8";
-import Debug "mo:base/Debug";
 
 actor Dogvertiser {
 
@@ -85,17 +71,9 @@ actor Dogvertiser {
     return _ad_creation_fee;
   };
 
-  public query func stable_and_heap() : async [(Text, Types.Advertisement)] {
-    // _stable_ads + advertisements
-    let entriesArray = Iter.toArray<(Text, Types.Advertisement)>(advertisements.entries());
-    let adsArray = Array.append(_stable_ads, entriesArray);
-    return adsArray;
-
-  };
-
   public shared query func fetch_total_burned() : async Nat {
-    let heapArray = Buffer.toArray(burn_records);
-    let join : [Types.BurnRecord] = Array.append(_stable_burn_records, heapArray);
+    let heap_array = Buffer.toArray(burn_records);
+    let join : [Types.BurnRecord] = Array.append(_stable_burn_records, heap_array);
     var totalBurned : Nat = 0;
     for (record in Iter.fromArray(join)) {
       totalBurned := totalBurned + record.amount;
@@ -105,10 +83,9 @@ actor Dogvertiser {
 
   public shared query func fetch_ads() : async [Types.Advertisement] {
     // Convert the Buffer to an Array
-    let entriesArray = Iter.toArray<(Text, Types.Advertisement)>(advertisements.entries());
-    let adsArray = Array.append(_stable_ads, entriesArray);
+    let entries_array = Iter.toArray<(Text, Types.Advertisement)>(advertisements.entries());
     let res = Array.map<(Text, Types.Advertisement), Types.Advertisement>(
-      adsArray,
+      entries_array,
       func(ad : (Text, Types.Advertisement)) : Types.Advertisement {
         ad.1;
       },
@@ -126,10 +103,9 @@ actor Dogvertiser {
   };
 
   public shared query ({ caller }) func fetch_user_ads() : async [Types.Advertisement] {
-    let entriesArray = Iter.toArray<(Text, Types.Advertisement)>(advertisements.entries());
-    let adsArray = Array.append(_stable_ads, entriesArray);
+    let entries_array = Iter.toArray<(Text, Types.Advertisement)>(advertisements.entries());
     let user_ads : [(Text, Types.Advertisement)] = Array.filter<(Text, Types.Advertisement)>(
-      adsArray,
+      entries_array,
       func(ad : (Text, Types.Advertisement)) : Bool {
         ad.1.caller == caller;
       },
@@ -191,7 +167,7 @@ actor Dogvertiser {
           created_at_time = null;
         };
         let response : Types.TransferResult = await Windoge.icrc1_transfer(request);
-        let newBurnt = advertisement.total_burned + amount;
+        let new_burnt = advertisement.total_burned + amount;
 
         switch (response) {
           case (#Ok(msg)) {
@@ -203,17 +179,17 @@ actor Dogvertiser {
             };
             burn_records.add(burnRecord);
             // Update the total_burned in the buffer
-            let updatedMessage = {
+            let updated_message = {
               index = advertisement.index;
               title = advertisement.title;
               link = advertisement.link;
               image = advertisement.image;
               caller = advertisement.caller;
-              total_burned = newBurnt;
+              total_burned = new_burnt;
               timestamp = advertisement.timestamp;
               description = advertisement.description;
             };
-            advertisements.put(Nat.toText(index), updatedMessage);
+            advertisements.put(Nat.toText(index), updated_message);
             return #ok(msg);
           };
           case (#Err(msg)) {
@@ -222,11 +198,11 @@ actor Dogvertiser {
         };
       };
       case null {
-        let errorMessage : Types.TransferError = #GenericError {
+        let error_msg : Types.TransferError = #GenericError {
           message = "Ad Not found";
           error_code = 1;
         };
-        #err errorMessage;
+        #err error_msg;
       };
     };
 
@@ -235,11 +211,11 @@ actor Dogvertiser {
   public shared ({ caller }) func create_advertisement(ad : Types.NewAdRequest) : async Result.Result<Nat, Types.TransferError> {
     switch (validate_advertisement(ad)) {
       case (#err(msg)) {
-        let errorMessage : Types.TransferError = #GenericError {
+        let error_msg : Types.TransferError = #GenericError {
           message = msg;
           error_code = 1;
         };
-        return #err errorMessage;
+        return #err error_msg;
       };
       case (#ok(_)) {
         let request : WT.TransferArgs = {
@@ -265,9 +241,9 @@ actor Dogvertiser {
               timestamp = Time.now();
             };
             burn_records.add(burnRecord);
-            let newid = advertisements.size();
-            let newAd : Types.Advertisement = {
-              index = newid;
+            let new_id = advertisements.size();
+            let new_ad : Types.Advertisement = {
+              index = new_id;
               link = ad.link;
               image = ad.image;
               caller = caller;
@@ -276,7 +252,7 @@ actor Dogvertiser {
               title = ad.title;
               description = ad.description;
             };
-            advertisements.put(Nat.toText(newid), newAd);
+            advertisements.put(Nat.toText(new_id), new_ad);
             return #ok(msg);
 
           };
@@ -288,20 +264,12 @@ actor Dogvertiser {
     };
   };
 
-  public shared (msg) func set_ad_creation_fee(fee : Nat) {
+  public shared (msg) func set_ad_creation_fee(fee : Nat) : async Result.Result<Nat, Text> {
     if (Principal.fromText("7ohni-sbpse-y327l-syhzk-jn6n4-hw277-erei5-xhkjr-lbh6b-rjqei-sqe") != msg.caller) {
-      return;
+      return #err("Unauthorized");
     };
     _ad_creation_fee := fee;
-  };
-
-  public shared func move_to_stable() : async Result.Result<Text, Text> {
-    let ads_in_heap = advertisements.size();
-    _stable_ads := Array.append(_stable_ads, Iter.toArray(advertisements.entries()));
-    _stable_burn_records := Array.append(_stable_burn_records, Buffer.toArray(burn_records));
-    advertisements := HashMap.fromIter<Text, Types.Advertisement>(Iter.fromArray([]), 0, Text.equal, hash_text);
-    burn_records := Buffer.Buffer<Types.BurnRecord>(0);
-    #ok("Moved " # Nat.toText(ads_in_heap) # " ads to stable storage.");
+    #ok(fee);
   };
 
   public query func fetch_stable_ads() : async [(Text, Types.Advertisement)] {
@@ -325,18 +293,6 @@ actor Dogvertiser {
     };
   };
 
-  private func move_stable() : async () {
-    let post = await move_to_stable();
-  };
-
-  ignore setTimer<system>(
-    #seconds 10,
-    func() : async () {
-      ignore recurringTimer<system>(#seconds 60, move_stable);
-      let post = await move_to_stable();
-    },
-  );
-
   // Upgrade canister
   system func preupgrade() {
     // Serialize your data structures and store them in stable variables
@@ -347,10 +303,9 @@ actor Dogvertiser {
 
   system func postupgrade() {
     // Reinitialize `advertisements` as empty
-    advertisements := HashMap.fromIter<Text, Types.Advertisement>(Iter.fromArray([]), 0, Text.equal, hash_text);
-
+    advertisements := HashMap.fromIter<Text, Types.Advertisement>(Iter.fromArray(_stable_ads), 0, Text.equal, hash_text);
     // Reinitialize emmpty buffer
-    burn_records := Buffer.Buffer<Types.BurnRecord>(0);
+    burn_records := Buffer.fromArray(_stable_burn_records);
   };
 
 };

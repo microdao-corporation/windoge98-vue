@@ -61,10 +61,10 @@ const uploadAdvertisement = async () => {
     let response = await authStore.dogvertiserActor.create_advertisement(
       advertisementData
     );
-    console.log("Advertisement created:", response.err);
+    console.log("Advertisement created:", response);
     if (response.err) {
       Object.keys(response.err).forEach((key) => {
-        state.errors.push(response.err[key].message);
+        state.errors.push(key);
       });
     } else {
       // Reset form values

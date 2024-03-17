@@ -29,6 +29,7 @@ import mergeIcon from "../assets/merge_icon.png";
 import keysIcon from "../assets/keys-4.png";
 import { initialise } from "@open-ic/openchat-xframe";
 import adsIcon from "../assets/advertise_icon.png";
+import catalyzeAvatar from "../assets/catalyze-avatar.png";
 
 export const useMenuItemStore = defineStore("startMenu", () => {
   const authStore = useAuthStore();
@@ -104,6 +105,15 @@ export const useMenuItemStore = defineStore("startMenu", () => {
             visible: true,
           },
           {
+            name: "Catalyze",
+            icon: catalyzeAvatar,
+            url: "https://aqs24-xaaaa-aaaal-qbbea-cai.ic0.app",
+            iconHeight: 30,
+            virtualWindow: "iframe",
+            subType: "unknown",
+            visible: true,
+          },
+          {
             name: "Dogvertiser",
             icon: adsIcon,
             iconHeight: 28,
@@ -140,6 +150,7 @@ export const useMenuItemStore = defineStore("startMenu", () => {
             virtualWindow: "iframe",
             subType: "openchat",
             init: initialiseOpenChat,
+            visible: true,
           },
           {
             name: "Sonic DEX",
